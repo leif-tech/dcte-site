@@ -595,11 +595,6 @@
     .recent-grid .shop-card{min-width:220px;scroll-snap-align:start;flex-shrink:0}
 
     /* ===== MESSENGER WIDGET ===== */
-    .messenger-btn{position:fixed;bottom:24px;right:24px;z-index:4000;width:60px;height:60px;border-radius:50%;background:#0084ff;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,132,255,0.4);cursor:pointer;transition:all .3s}
-    .messenger-btn:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,132,255,0.5)}
-    .messenger-btn svg{width:28px;height:28px}
-    .messenger-tooltip{position:absolute;right:70px;top:50%;transform:translateY(-50%);background:var(--navy);color:#fff;padding:8px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
-    .messenger-btn:hover .messenger-tooltip{opacity:1}
 
     /* ===== PRODUCT DETAIL ===== */
     .product-detail{display:none;position:fixed;inset:0;z-index:4500;background:#fff;overflow-y:auto}
@@ -1205,11 +1200,8 @@
     </div>
   </footer>
 
-  <!-- MESSENGER FLOATING BUTTON -->
-  <a href="https://m.me/DCTE168" target="_blank" class="messenger-btn" id="messengerBtn">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.897 1.437 5.49 3.682 7.184V22l3.4-1.867c.907.252 1.868.387 2.918.387 5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.07 12.456l-2.547-2.72-4.97 2.72 5.467-5.8 2.61 2.72 4.907-2.72-5.467 5.8z"/></svg>
-    <div class="messenger-tooltip">Chat with us!</div>
-  </a>
+  <!-- AI CHATBOT -->
+  <script src="/widget.js" data-bot-id="35842a66-4c04-4421-a326-8f98e65edfce" data-api-url="https://whitelabel-ai-production.up.railway.app"></script>
 
   <!-- CART DRAWER -->
   <div class="cart-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
