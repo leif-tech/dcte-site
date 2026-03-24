@@ -130,7 +130,7 @@
             </div>
             <div class="form-group"><label>Email address <span class="req">*</span></label><input type="email" id="email" placeholder="you@email.com" required></div>
             <div class="form-group"><label>Order notes (optional)</label><textarea id="notes" placeholder="Notes about your order, e.g. special notes for delivery."></textarea></div>
-          </form>
+          </form><!-- form validation handled in JS -->
         </div>
 
         <div class="card">
@@ -224,7 +224,7 @@
           <div class="check">&#10003;</div>
           <h3>Order Placed!</h3>
           <p>Send your <strong>payment screenshot</strong> to our Facebook Messenger so we can verify and process your order.</p>
-          <a href="https://m.me/DCTE168" target="_blank" rel="noopener" class="btn btn-fb">
+          <a href="https://www.facebook.com/messages/t/DCTE168" target="_blank" rel="noopener" class="btn btn-fb">
             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.434 5.503 3.678 7.2V22l3.455-1.896A10.7 10.7 0 0012 20.486c5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.077 12.456l-2.549-2.72-4.974 2.72 5.472-5.81 2.613 2.72 4.91-2.72-5.472 5.81z"/></svg>
             Send Proof via Messenger
           </a>
@@ -283,11 +283,12 @@
       const fname = document.getElementById('fname').value.trim();
       const lname = document.getElementById('lname').value.trim();
       const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const email = document.getElementById('email').value.trim();
 
-      if (!fname || !lname || !street || !phone || !email) {
-        alert('Please fill in all required fields (name, address, phone, email).');
+      if (!fname || !lname || !street || !city || !phone || !email) {
+        alert('Please fill in all required fields (name, address, city, phone, email).');
         return;
       }
 
@@ -314,10 +315,9 @@
           document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
         })
         .catch(() => {
-          // Still show success (order saved on server) but notify
-          btn.style.display = 'none';
-          document.getElementById('successMsg').classList.add('show');
-          document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          btn.textContent = 'Place Order';
+          btn.disabled = false;
+          alert('Order could not be placed. Please try again or message us on Facebook.');
         });
     }
   </script>

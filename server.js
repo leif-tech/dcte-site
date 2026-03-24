@@ -44,6 +44,11 @@ app.post('/api/order', (req, res) => {
   res.json({ success: true, orderId: order.id });
 });
 
+// API 404 handler
+app.all('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
 // Catch-all: serve index.html for SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

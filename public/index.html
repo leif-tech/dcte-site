@@ -414,7 +414,7 @@
 
     /* ===== FEATURED GRID (homepage) ===== */
     .featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-    .feat-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer}
+    .feat-card{position:relative;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer}
     .feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(139,47,201,0.1);border-color:rgba(139,47,201,0.15)}
     .feat-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative}
     .feat-card-img img{width:100%;height:100%;object-fit:contain;padding:16px;transition:transform .3s}
@@ -457,7 +457,7 @@
     .shop-count{font-size:0.85rem;color:var(--text-dim);font-weight:600}
     .shop-header select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.84rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--text);cursor:pointer}
     .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .shop-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
+    .shop-card{position:relative;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
     .shop-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(139,47,201,0.08);border-color:rgba(139,47,201,0.15)}
     .shop-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;overflow:hidden}
     .shop-card-img img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .3s}
@@ -1561,7 +1561,7 @@
             <div class="pd-price-note">${p.cat==='bundle'?'Brand New w/ 1 Year Warranty &bull; Home Credit installment available':'Cash price &bull; Contact us for installment options'}</div>
             <div class="pd-actions">
               <button class="pd-buy" onclick="buyNow('${p.name.replace(/'/g,"\\'")}',${p.price})">Buy Now</button>
-              <a href="https://m.me/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
+              <a href="https://www.facebook.com/messages/t/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
             </div>
             ${specRows?`<div class="pd-specs"><h3>Specifications</h3><table class="pd-specs-table"><tbody>${specRows}</tbody></table></div>`:''}
             <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.8rem;color:var(--text-dim)">
@@ -1895,7 +1895,7 @@
       const low=Math.round(model.val[0]*mult/100)*100;
       const high=Math.round(model.val[1]*mult/100)*100;
       document.getElementById('estResult').style.display='block';
-      document.getElementById('estResult').innerHTML=`<div class="estimator-result"><div style="font-size:0.85rem;color:var(--navy);font-weight:600">Estimated Trade-In Value</div><div class="est-value">${formatPrice(low)} - ${formatPrice(high)}</div><div class="est-note">* This is an estimate only. Visit our store for an exact assessment.</div><a href="https://m.me/DCTE168" target="_blank" style="display:inline-block;margin-top:12px;padding:10px 24px;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase">Message Us to Trade In</a></div>`;
+      document.getElementById('estResult').innerHTML=`<div class="estimator-result"><div style="font-size:0.85rem;color:var(--navy);font-weight:600">Estimated Trade-In Value</div><div class="est-value">${formatPrice(low)} - ${formatPrice(high)}</div><div class="est-note">* This is an estimate only. Visit our store for an exact assessment.</div><a href="https://www.facebook.com/messages/t/DCTE168" target="_blank" style="display:inline-block;margin-top:12px;padding:10px 24px;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase">Message Us to Trade In</a></div>`;
     }
 
     // ===== RECOMMENDED BUILDS =====
@@ -1948,7 +1948,7 @@
         actDiv.innerHTML=`
           <button class="pd-buy" onclick="addToCart(${idx})">Add to Cart</button>
           <button class="pd-buy" style="background:var(--navy)" onclick="buyNow('${p.name.replace(/'/g,"\\'")}',${p.price})">Buy Now</button>
-          <a href="https://m.me/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
+          <a href="https://www.facebook.com/messages/t/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
           <button class="pd-msg" onclick="toggleWish(${idx});this.innerHTML=isWished(${idx})?'&#10003; In Wishlist':'&#9825; Add to Wishlist'" style="font-size:0.78rem">${isWished(idx)?'&#10003; In Wishlist':'&#9825; Add to Wishlist'}</button>
           <button class="pd-msg" onclick="toggleCompare(${idx})" style="font-size:0.78rem">&#9878; Compare</button>
           <a href="https://shopee.ph/dcte168" target="_blank" class="pd-msg" style="color:#ee4d2d;border-color:#ee4d2d;font-size:0.78rem">&#128722; Shopee Store</a>
