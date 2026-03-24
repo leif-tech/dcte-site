@@ -882,7 +882,7 @@
           </div>
         </div>
         <div class="loc-map">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15838.5!2d125.61!3d7.07!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f96d7a1f0e4b3d%3A0xDCTE_Agdao!2sAgdao%2C%20Davao%20City!5e0!3m2!1sen!2sph!4v1" allowfullscreen="" loading="lazy"></iframe>
+          <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=DCTE+Davao+Computer+Trade-in+Express,Davao+City,Philippines&zoom=14" allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
     </div>
@@ -1076,7 +1076,7 @@
       {cat:"psu",label:"PSU / UPS",name:"AWP Wise Aide 650VA 360W UPS AVR",price:1950,img:W+"2025/04/PROCESSOR-96-300x300.png"},
       {cat:"psu",label:"PSU / UPS",name:"Secure AVR 500W 3-Socket 220V",price:235,img:W+"2025/04/PROCESSOR-92-300x300.png"},
       {cat:"monitor",label:"Monitor",name:"Gamdias Apollo 35\" Flat VA WQ35VF 180Hz",price:16450,img:W+"2025/04/PROCESSOR-48-300x300.png"},
-      {cat:"monitor",label:"Monitor",name:"Gamdias Atalas 32\" Curved VA Q32VC 165Hz",price:12780,img:W+"2025/04/PROCESSOR-50-300x300.png"},
+      {cat:"monitor",label:"Monitor",name:"Gamdias Atlas 32\" Curved VA Q32VC 165Hz",price:12780,img:W+"2025/04/PROCESSOR-50-300x300.png"},
       {cat:"monitor",label:"Monitor",name:"Gamdias Atlas 32\" Curved VA DHD32C 240Hz",price:11160,img:W+"2025/04/PROCESSOR-51-300x300.png"},
       {cat:"monitor",label:"Monitor",name:"Gamdias Atlas 27\" Flat IPS QHD27FIC 180Hz",price:10000,img:W+"2025/04/PROCESSOR-53-300x300.png"},
       {cat:"monitor",label:"Monitor",name:"Gamdias Atlas 27\" Flat IPS 27F21 192Hz",price:8750,img:W+"2025/04/PROCESSOR-52-300x300.png"},
@@ -1098,18 +1098,24 @@
     ];
 
     function formatPrice(p){return'\u20B1'+p.toLocaleString('en-PH')}
-    function escName(s){return s.replace(/'/g,"\\'")}
 
     // BUY NOW - redirect to checkout page
     function buyNow(name,price,btn){
       window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price,'_blank');
     }
 
+    // Safe card renderer to avoid quote issues in onclick
+    function cardHTML(p,prefix){
+      const imgClick=p.img?` onclick="openLightbox('${p.img.replace(/-300x300/,'')}')"`:''
+      const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'<div class="placeholder">&#128187;</div>'
+      return `<div class="${prefix}-card"><div class="${prefix}-card-img"${imgClick}>${imgInner}</div><div class="${prefix}-card-body"><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" data-name="${p.name.replace(/"/g,'&quot;')}" data-price="${p.price}" onclick="buyNow(this.dataset.name,this.dataset.price,this)">Buy Now</button></div></div></div>`
+    }
+
     // FEATURED PRODUCTS (homepage - 8 hand-picked items across categories)
-    const featured=[0,1,7,8,9,10,76,93]; // indices: GPUs, CPUs, monitors, cooler
+    const featured=[0,1,7,8,9,10,78,95]; // GPUs, CPUs, Monitor, Cooler
     function renderFeatured(){
       const picks=featured.map(i=>products[i]).filter(Boolean);
-      document.getElementById('featuredGrid').innerHTML=picks.map(p=>`<div class="feat-card"><div class="feat-card-img" ${p.img?'onclick="openLightbox(\''+p.img.replace(/-300x300/,'')+'\')"':''}>${p.img?'<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">':'<div class="placeholder">&#128187;</div>'}</div><div class="feat-card-body"><div class="feat-card-cat">${p.label}</div><div class="feat-card-name">${p.name}</div><div class="feat-card-bottom"><span class="feat-card-price">${formatPrice(p.price)}</span><button onclick="buyNow('${escName(p.name)}',${p.price},this)" class="feat-card-btn">Buy Now</button></div></div></div>`).join('');
+      document.getElementById('featuredGrid').innerHTML=picks.map(p=>cardHTML(p,'feat')).join('');
     }
     renderFeatured();
 
@@ -1133,19 +1139,31 @@
         document.querySelectorAll('#filterCats input').forEach(cb=>{cb.checked=cb.value===cat});
       }
       filterShop();
-      window.scrollTo(0,0);
+      document.getElementById('shopPage').scrollTop=0;
     }
     function closeShop(){
       document.getElementById('shopPage').classList.remove('open');
       document.body.style.overflow='';
     }
 
-    // Extract unique brands from product names
+    // Extract brand from product name
     function getBrand(name){
       const brands=['ASUS','GIGABYTE','MSI','BIOSTAR','AMD','Intel','Patriot','Kingston','OCPC','TeamGroup','T-Force','Corsair','DeepCool','Gamdias','OMNIA','ACER','Jonsbo','1stPlayer','Secure','APC','AWP'];
       for(const b of brands){if(name.toLowerCase().includes(b.toLowerCase()))return b}
       return 'Other';
     }
+
+    // Search aliases so users can find products by common terms
+    const searchAliases={
+      'video card':'gpu','video cards':'gpu','graphics card':'gpu','graphics':'gpu','gpu':'gpu','graphic card':'gpu',
+      'processor':'cpu','processors':'cpu','cpu':'cpu',
+      'motherboard':'mobo','motherboards':'mobo','mobo':'mobo','mainboard':'mobo',
+      'memory':'ram','ram':'ram','ddr4':'ram','ddr5':'ram',
+      'psu':'psu','power supply':'psu','ups':'psu','avr':'psu',
+      'monitor':'monitor','monitors':'monitor','screen':'monitor','display':'monitor',
+      'case':'case','cases':'case','casing':'case','chassis':'case','tower':'case',
+      'cooler':'cooler','coolers':'cooler','fan':'cooler','cooling':'cooler','aio':'cooler'
+    };
 
     const categories=[{key:'all',label:'All'},{key:'gpu',label:'Video Cards'},{key:'cpu',label:'Processors'},{key:'mobo',label:'Motherboards'},{key:'ram',label:'Memory'},{key:'psu',label:'PSU / UPS'},{key:'monitor',label:'Monitors'},{key:'case',label:'Cases'},{key:'cooler',label:'Coolers'}];
 
@@ -1155,10 +1173,17 @@
       // Categories
       const catDiv=document.getElementById('filterCats');
       catDiv.innerHTML=categories.map(c=>`<label><input type="checkbox" value="${c.key}" ${c.key==='all'?'checked':''} onchange="handleCatFilter(this)">${c.label}<span style="margin-left:auto;font-size:0.72rem;color:var(--text-dim)">${c.key==='all'?products.length:products.filter(p=>p.cat===c.key).length}</span></label>`).join('');
-      // Brands
-      const allBrands=[...new Set(products.map(p=>getBrand(p.name)))].sort();
+      // Brands - initial full list
+      updateBrands(products);
+    }
+
+    // Dynamically update brand checkboxes based on visible products
+    function updateBrands(visibleProducts){
       const brandDiv=document.getElementById('filterBrands');
-      brandDiv.innerHTML=allBrands.map(b=>`<label><input type="checkbox" value="${b}" checked onchange="filterShop()">${b}</label>`).join('');
+      const prevChecked=new Set([...document.querySelectorAll('#filterBrands input:checked')].map(c=>c.value));
+      const isFirstBuild=brandDiv.innerHTML==='';
+      const visibleBrands=[...new Set(visibleProducts.map(p=>getBrand(p.name)))].sort();
+      brandDiv.innerHTML=visibleBrands.map(b=>`<label><input type="checkbox" value="${b}" ${isFirstBuild||prevChecked.has(b)?'checked':''} onchange="filterShop()">${b}</label>`).join('');
     }
 
     function handleCatFilter(cb){
@@ -1166,23 +1191,35 @@
       if(cb.value==='all'){
         checks.forEach(c=>c.checked=cb.checked);
       }else{
-        checks[0].checked=false; // uncheck "All"
+        checks[0].checked=false;
         const anyChecked=[...checks].slice(1).some(c=>c.checked);
-        if(!anyChecked)checks[0].checked=true; // if none, check all
+        if(!anyChecked)checks[0].checked=true;
       }
+      // Update brands based on selected categories before filtering
+      const catChecks=[...document.querySelectorAll('#filterCats input:checked')].map(c=>c.value);
+      const catProducts=catChecks.includes('all')?products:products.filter(p=>catChecks.includes(p.cat));
+      updateBrands(catProducts);
       filterShop();
     }
 
     function filterShop(){
-      const search=document.getElementById('shopSearch')?.value.toLowerCase()||'';
+      const search=document.getElementById('shopSearch')?.value.toLowerCase().trim()||'';
       const catChecks=[...document.querySelectorAll('#filterCats input:checked')].map(c=>c.value);
       const brandChecks=[...document.querySelectorAll('#filterBrands input:checked')].map(c=>c.value);
       const minP=parseFloat(document.getElementById('priceMin')?.value)||0;
       const maxP=parseFloat(document.getElementById('priceMax')?.value)||Infinity;
       const sort=document.getElementById('shopSort')?.value||'default';
 
+      // Resolve search aliases to category keys
+      const searchCat=searchAliases[search]||null;
+
       let filtered=products.filter(p=>{
-        if(search&&!p.name.toLowerCase().includes(search))return false;
+        if(search){
+          const nameMatch=p.name.toLowerCase().includes(search);
+          const labelMatch=p.label.toLowerCase().includes(search);
+          const catMatch=searchCat&&p.cat===searchCat;
+          if(!nameMatch&&!labelMatch&&!catMatch)return false;
+        }
         if(!catChecks.includes('all')&&!catChecks.includes(p.cat))return false;
         if(!brandChecks.includes(getBrand(p.name)))return false;
         if(p.price<minP||p.price>maxP)return false;
@@ -1193,8 +1230,23 @@
       else if(sort==='price-high')filtered.sort((a,b)=>b.price-a.price);
       else if(sort==='name')filtered.sort((a,b)=>a.name.localeCompare(b.name));
 
+      // Update brands to reflect current search+category results (before brand filter)
+      if(search||!catChecks.includes('all')){
+        const preBrandFiltered=products.filter(p=>{
+          if(search){
+            const nameMatch=p.name.toLowerCase().includes(search);
+            const labelMatch=p.label.toLowerCase().includes(search);
+            const catMatch=searchCat&&p.cat===searchCat;
+            if(!nameMatch&&!labelMatch&&!catMatch)return false;
+          }
+          if(!catChecks.includes('all')&&!catChecks.includes(p.cat))return false;
+          return true;
+        });
+        updateBrands(preBrandFiltered);
+      }
+
       document.getElementById('shopCount').textContent=filtered.length+' product'+(filtered.length!==1?'s':'');
-      document.getElementById('shopGrid').innerHTML=filtered.map(p=>`<div class="shop-card"><div class="shop-card-img" ${p.img?'onclick="openLightbox(\''+p.img.replace(/-300x300/,'')+'\')"':''}>${p.img?'<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">':'<div class="placeholder">&#128187;</div>'}</div><div class="shop-card-body"><div class="shop-card-cat">${p.label}</div><div class="shop-card-name">${p.name}</div><div class="shop-card-bottom"><span class="shop-card-price">${formatPrice(p.price)}</span><button onclick="buyNow('${escName(p.name)}',${p.price},this)" class="shop-card-btn">Buy Now</button></div></div></div>`).join('')||'<p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">No products found matching your filters.</p>';
+      document.getElementById('shopGrid').innerHTML=filtered.map(p=>cardHTML(p,'shop')).join('')||'<p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">No products found matching your filters.</p>';
     }
 
     function resetFilters(){
@@ -1203,7 +1255,7 @@
       document.getElementById('priceMax').value='';
       document.getElementById('shopSort').value='default';
       document.querySelectorAll('#filterCats input').forEach(c=>c.checked=c.value==='all');
-      document.querySelectorAll('#filterBrands input').forEach(c=>c.checked=true);
+      updateBrands(products);
       filterShop();
     }
 
