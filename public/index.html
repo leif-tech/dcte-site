@@ -393,6 +393,16 @@
     /* Alt section bg */
     .section-alt{background:var(--card-alt)}
 
+    /* ===== HOME SEARCH ===== */
+    .search-section{padding:48px 0 56px;background:var(--card-alt)}
+    .home-search-wrap{max-width:640px;margin:0 auto}
+    .home-search{display:flex;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(139,47,201,0.1);border:1px solid var(--border);background:#fff}
+    .home-search input{flex:1;padding:16px 20px;border:none;font-size:1rem;font-family:'Open Sans',sans-serif;outline:none;background:transparent;color:var(--navy)}
+    .home-search input::placeholder{color:#a0aec0}
+    .home-search-btn{padding:16px 32px;background:var(--grad);color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.5px;border:none;cursor:pointer;transition:opacity .3s;white-space:nowrap}
+    .home-search-btn:hover{opacity:0.9}
+    @media(max-width:480px){.home-search{flex-direction:column}.home-search-btn{padding:14px 20px}}
+
     /* ===== FEATURED GRID (homepage) ===== */
     .featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
     .feat-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
@@ -496,7 +506,7 @@
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#" class="shop-link" onclick="event.preventDefault();openShop('all')">Shop</a>
-        <a href="#categories">Categories</a>
+        <a href="#search">Search</a>
         <a href="#services">Services</a>
         <a href="#trade-in">Trade-In</a>
         <a href="#reviews">Reviews</a>
@@ -510,7 +520,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#about" onclick="closeMobile()">About</a>
     <a href="#" onclick="closeMobile();openShop('all')">Shop</a>
-    <a href="#categories" onclick="closeMobile()">Categories</a>
+    <a href="#search" onclick="closeMobile()">Search</a>
     <a href="#services" onclick="closeMobile()">Services</a>
     <a href="#trade-in" onclick="closeMobile()">Trade-In</a>
     <a href="#reviews" onclick="closeMobile()">Reviews</a>
@@ -579,25 +589,18 @@
     </div>
   </div>
 
-  <!-- BROWSE CATEGORIES -->
-  <section class="section" id="categories">
+  <!-- SEARCH BAR -->
+  <section class="section search-section" id="search">
     <div class="container">
       <div class="section-header fade-in">
-        <p class="section-label">Browse Categories</p>
-        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-label">Find What You Need</p>
+        <h2 class="section-title">Search Products</h2>
       </div>
-      <div class="cat-scroll fade-in">
-        <div class="cat-track">
-          <a href="#shop" class="cat-card glass" data-filter="gpu"><div class="cat-card-icon">&#127918;</div><h3>Video Cards</h3><span class="count">7 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="cpu"><div class="cat-card-icon">&#9889;</div><h3>Processors</h3><span class="count">12 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="mobo"><div class="cat-card-icon">&#128204;</div><h3>Motherboards</h3><span class="count">29 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="ram"><div class="cat-card-icon">&#128190;</div><h3>Memory</h3><span class="count">25 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="psu"><div class="cat-card-icon">&#128268;</div><h3>Power Supply</h3><span class="count">13 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="monitor"><div class="cat-card-icon">&#128421;</div><h3>Monitors</h3><span class="count">12 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="case"><div class="cat-card-icon">&#128187;</div><h3>Cases</h3><span class="count">5 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="cooler"><div class="cat-card-icon">&#10052;</div><h3>Coolers</h3><span class="count">3 items</span></a>
-          <a href="#shop" class="cat-card glass" data-filter="all"><div class="cat-card-icon">&#128269;</div><h3>View All</h3><span class="count">97 items</span></a>
-        </div>
+      <div class="home-search-wrap fade-in">
+        <form class="home-search" onsubmit="homeSearch(event)">
+          <input type="text" id="homeSearchInput" placeholder="Search for PC parts... (e.g. RTX 4060, DDR5, monitor, cooler)">
+          <button type="submit" class="home-search-btn">Search</button>
+        </form>
       </div>
     </div>
   </section>
@@ -1173,10 +1176,15 @@
       filterShop();
     }
 
-    // Category card clicks open shop page filtered
-    document.querySelectorAll('.cat-card[data-filter]').forEach(c=>c.addEventListener('click',e=>{
-      e.preventDefault();openShop(c.dataset.filter);
-    }));
+    // HOME SEARCH - opens shop page with search term pre-filled
+    function homeSearch(e){
+      e.preventDefault();
+      const q=document.getElementById('homeSearchInput').value.trim();
+      if(!q)return;
+      openShop('all');
+      document.getElementById('shopSearch').value=q;
+      filterShop();
+    }
   </script>
 </body>
 </html>
