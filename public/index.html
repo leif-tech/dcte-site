@@ -414,7 +414,7 @@
 
     /* ===== FEATURED GRID (homepage) ===== */
     .featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-    .feat-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    .feat-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer}
     .feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(139,47,201,0.1);border-color:rgba(139,47,201,0.15)}
     .feat-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative}
     .feat-card-img img{width:100%;height:100%;object-fit:contain;padding:16px;transition:transform .3s}
@@ -457,11 +457,11 @@
     .shop-count{font-size:0.85rem;color:var(--text-dim);font-weight:600}
     .shop-header select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.84rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--text);cursor:pointer}
     .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .shop-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+    .shop-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
     .shop-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(139,47,201,0.08);border-color:rgba(139,47,201,0.15)}
-    .shop-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
+    .shop-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;overflow:hidden}
     .shop-card-img img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .3s}
-    .shop-card-img:hover img{transform:scale(1.08)}
+    .shop-card:hover .shop-card-img img{transform:scale(1.08)}
     .shop-card-img .placeholder{font-size:2.5rem;color:#cbd5e1}
     .shop-card-body{padding:14px 16px 16px}
     .shop-card-cat{font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--purple);margin-bottom:4px}
@@ -472,6 +472,48 @@
     .shop-card-btn:hover{opacity:0.9}
     @media(max-width:900px){.shop-layout{grid-template-columns:1fr}.shop-sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:16px}.shop-search{grid-column:1/-1}.shop-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:480px){.shop-grid{grid-template-columns:1fr}.shop-sidebar{grid-template-columns:1fr}}
+
+    /* ===== PRODUCT DETAIL ===== */
+    .product-detail{display:none;position:fixed;inset:0;z-index:4500;background:#fff;overflow-y:auto}
+    .product-detail.open{display:block}
+    .pd-topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2}
+    .pd-back{background:none;border:none;font-size:0.88rem;color:var(--purple);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Open Sans',sans-serif}
+    .pd-back:hover{color:var(--pink)}
+    .pd-content{max-width:1100px;margin:0 auto;padding:32px 24px 60px}
+    .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px}
+    .pd-img-wrap{background:var(--card-alt);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:center;aspect-ratio:1;overflow:hidden;cursor:zoom-in}
+    .pd-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s}
+    .pd-img-wrap:hover img{transform:scale(1.06)}
+    .pd-info{display:flex;flex-direction:column;justify-content:flex-start}
+    .pd-cat{font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--purple);margin-bottom:8px}
+    .pd-name{font-family:'Montserrat',sans-serif;font-size:1.5rem;font-weight:800;color:var(--navy);line-height:1.3;margin-bottom:8px}
+    .pd-brand{font-size:0.85rem;color:var(--text-dim);margin-bottom:20px}
+    .pd-price{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;color:var(--pink);margin-bottom:6px}
+    .pd-price-note{font-size:0.78rem;color:var(--text-dim);margin-bottom:24px}
+    .pd-actions{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+    .pd-buy{padding:14px 36px;background:var(--grad);color:#fff;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.92rem;text-transform:uppercase;cursor:pointer;letter-spacing:0.5px;transition:all .3s}
+    .pd-buy:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,47,201,0.3)}
+    .pd-msg{padding:14px 24px;background:transparent;color:var(--purple);border:2px solid var(--purple);border-radius:10px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase;cursor:pointer;letter-spacing:0.5px;transition:all .3s;text-decoration:none;display:flex;align-items:center;gap:6px}
+    .pd-msg:hover{background:var(--purple);color:#fff}
+    .pd-specs{margin-bottom:32px}
+    .pd-specs h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+    .pd-specs-table{width:100%;border-collapse:collapse}
+    .pd-specs-table tr{border-bottom:1px solid var(--border)}
+    .pd-specs-table tr:last-child{border-bottom:none}
+    .pd-specs-table td{padding:10px 12px;font-size:0.85rem}
+    .pd-specs-table td:first-child{font-weight:600;color:var(--navy);width:35%;white-space:nowrap}
+    .pd-specs-table td:last-child{color:var(--text)}
+    .pd-specs-table tr:nth-child(even){background:var(--card-alt)}
+    .pd-related h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px}
+    .pd-related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    @media(max-width:768px){
+      .pd-grid{grid-template-columns:1fr;gap:24px}
+      .pd-img-wrap{aspect-ratio:auto;max-height:350px}
+      .pd-name{font-size:1.2rem}
+      .pd-price{font-size:1.4rem}
+      .pd-related-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:480px){.pd-related-grid{grid-template-columns:1fr}}
 
     /* ===== LIGHTBOX ===== */
     .lightbox{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;cursor:zoom-out}
@@ -757,6 +799,15 @@
     <img id="lightboxImg" src="" alt="Product Image">
   </div>
 
+  <!-- PRODUCT DETAIL OVERLAY -->
+  <div class="product-detail" id="productDetail">
+    <div class="pd-topbar">
+      <button class="pd-back" onclick="closeProductDetail()">&#8249; Back to Shop</button>
+      <a href="/" style="text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;color:var(--navy)">DCTE</a>
+    </div>
+    <div class="pd-content" id="pdContent"></div>
+  </div>
+
   <!-- SERVICES -->
   <section class="section section-alt" id="services">
     <div class="container">
@@ -995,7 +1046,6 @@
       {cat:"gpu",label:"Video Card",name:"ASUS GeForce DUAL RTX 3050 OC 8GB V2",price:14795,img:W+"2025/04/PROCESSOR-2025-04-10T023347.322-300x300.png"},
       {cat:"gpu",label:"Video Card",name:"GIGABYTE Radeon RX 6600 Eagle 8GB GDDR6 128-Bit 3-Fan",price:14650,img:W+"2025/04/PROCESSOR-2025-04-10T024732.892-300x300.png"},
       {cat:"gpu",label:"Video Card",name:"OCPC GeForce GTX 1050 Ti 4GB GDDR5 128-Bit",price:8150,img:W+"2025/04/PROCESSOR-2025-04-10T025117.805-300x300.png"},
-      {cat:"gpu",label:"Video Card",name:"ASUS GeForce GT 1030 2GB",price:5450,img:null},
       {cat:"cpu",label:"Processor",name:"Intel Core i7-12700 2.10GHz 12C/20T 25MB S1700 (w/ HSF)",price:14980,img:W+"2025/04/PROCESSOR-28-300x300.png"},
       {cat:"cpu",label:"Processor",name:"AMD Ryzen 5 7500F 3.7GHz 6C/12T 32MB AM5 (w/ HSF)",price:10250,img:W+"2025/04/PROCESSOR-5-300x300.png"},
       {cat:"cpu",label:"Processor",name:"AMD Ryzen 7 5700G 3.8GHz 8C/16T 16MB AM4 (w/ HSF)",price:8750,img:W+"2025/04/PROCESSOR-300x300.png"},
@@ -1089,30 +1139,136 @@
       {cat:"monitor",label:"Monitor",name:"Gamdias Atlas 22\" Flat VA VH22F 100Hz",price:4840,img:W+"2025/04/PROCESSOR-56-300x300.png"},
       {cat:"case",label:"Case",name:"Cuirass White",price:3500,img:W+"2024/08/5BF98521-2CC2-45F0-B3EC-13C4E697B214-13764-000003E508CBB979-300x300.jpg"},
       {cat:"case",label:"Case",name:"O11-V Black",price:3400,img:W+"2024/08/D0408D82-D668-46D7-9E81-C252CEE27E07-897-0000007C4257AF27-300x300.jpg"},
-      {cat:"case",label:"Case",name:"Jonsbo D41 MESH White",price:2950,img:null},
       {cat:"case",label:"Case",name:"O11-V White",price:2950,img:W+"2024/08/B9C862FA-10C8-4ED4-B19E-2953B1AF46C1-897-0000007C0DC67F4E-300x300.jpg"},
       {cat:"case",label:"Case",name:"Cuirass Black",price:2000,img:W+"2024/08/C246CBFF-F3CA-46CC-AE8C-887DFC608398-13764-000003E50B589E63-300x300.jpg"},
       {cat:"cooler",label:"Cooler",name:"DeepCool Mystique 360 LCD AIO Liquid Cooler",price:10000,img:W+"2024/08/IMG_0592-scaled-300x300.jpg"},
-      {cat:"cooler",label:"Cooler",name:"LS720 SE Digital Black 360mm LCD AIO Liquid Cooler",price:7200,img:null},
       {cat:"cooler",label:"Cooler",name:"DeepCool AG500 Digital WH Air Cooler",price:2450,img:W+"2024/08/6A0B95C4-CAF8-4711-8C69-1CB05EF8E58E-10562-000003472C630206-300x300.jpg"},
     ];
+
+    // Product specs database
+    const specDB={
+      "ASUS GeForce DUAL RTX 4060 OC 8GB V2":{"GPU Chip":"NVIDIA RTX 4060 (AD107)","Memory":"8GB GDDR6","Memory Bus":"128-bit","Boost Clock":"2535 MHz (OC)","Fans":"2 (Axial-tech)","Interface":"PCIe 4.0 x8","Rec. PSU":"550W"},
+      "GIGABYTE GeForce RTX 4060 Gaming OC 8GB GDDR6 128-Bit 3-Fan":{"GPU Chip":"NVIDIA RTX 4060 (AD107)","Memory":"8GB GDDR6","Memory Bus":"128-bit","Boost Clock":"2550 MHz (OC)","Fans":"3 (WINDFORCE 3X)","Interface":"PCIe 4.0 x8","Rec. PSU":"550W"},
+      "GIGABYTE GeForce RTX 4060 Windforce OC 8GB GDDR6 128-Bit 2-Fan":{"GPU Chip":"NVIDIA RTX 4060 (AD107)","Memory":"8GB GDDR6","Memory Bus":"128-bit","Boost Clock":"2535 MHz (OC)","Fans":"2 (WINDFORCE 2X)","Interface":"PCIe 4.0 x8","Rec. PSU":"550W"},
+      "ASUS GeForce DUAL RTX 3050 OC 8GB V2":{"GPU Chip":"NVIDIA RTX 3050 (GA106)","Memory":"8GB GDDR6","Memory Bus":"128-bit","Boost Clock":"1852 MHz (OC)","Fans":"2 (Axial-tech)","Interface":"PCIe 4.0 x8","Rec. PSU":"550W"},
+      "GIGABYTE Radeon RX 6600 Eagle 8GB GDDR6 128-Bit 3-Fan":{"GPU Chip":"AMD RX 6600 (Navi 23)","Memory":"8GB GDDR6","Memory Bus":"128-bit","Boost Clock":"2491 MHz","Fans":"3 (WINDFORCE 3X)","Interface":"PCIe 4.0 x8","Rec. PSU":"500W"},
+      "OCPC GeForce GTX 1050 Ti 4GB GDDR5 128-Bit":{"GPU Chip":"NVIDIA GTX 1050 Ti (GP107)","Memory":"4GB GDDR5","Memory Bus":"128-bit","Boost Clock":"1392 MHz","Fans":"1","Interface":"PCIe 3.0 x16","Rec. PSU":"300W"},
+      "Intel Core i7-12700 2.10GHz 12C/20T 25MB S1700 (w/ HSF)":{"Cores / Threads":"12C / 20T (8P + 4E)","Base Clock":"2.1 GHz","Boost Clock":"4.9 GHz","Cache":"25MB Smart Cache","Socket":"LGA 1700","TDP":"65W (180W Turbo)","iGPU":"Intel UHD 770"},
+      "AMD Ryzen 5 7500F 3.7GHz 6C/12T 32MB AM5 (w/ HSF)":{"Cores / Threads":"6C / 12T","Base Clock":"3.7 GHz","Boost Clock":"5.0 GHz","Cache":"32MB L3","Socket":"AM5","TDP":"65W","iGPU":"None"},
+      "AMD Ryzen 7 5700G 3.8GHz 8C/16T 16MB AM4 (w/ HSF)":{"Cores / Threads":"8C / 16T","Base Clock":"3.8 GHz","Boost Clock":"4.6 GHz","Cache":"16MB L3","Socket":"AM4","TDP":"65W","iGPU":"Radeon Vega 8"},
+      "Intel Core i3-12100 4.30GHz 4C/8T 12MB S1700 (w/ HSF)":{"Cores / Threads":"4C / 8T","Base Clock":"3.3 GHz","Boost Clock":"4.3 GHz","Cache":"12MB Smart Cache","Socket":"LGA 1700","TDP":"60W (89W Turbo)","iGPU":"Intel UHD 730"},
+      "AMD Ryzen 7 5700X 3.4GHz 8C/16T 32MB AM4 (w/ HSF)":{"Cores / Threads":"8C / 16T","Base Clock":"3.4 GHz","Boost Clock":"4.6 GHz","Cache":"32MB L3","Socket":"AM4","TDP":"65W","iGPU":"None"},
+      "Intel Core i3-13100 3.40GHz 4C/8T 12MB S1700 (w/ HSF)":{"Cores / Threads":"4C / 8T","Base Clock":"3.4 GHz","Boost Clock":"4.5 GHz","Cache":"12MB Smart Cache","Socket":"LGA 1700","TDP":"60W (89W Turbo)","iGPU":"Intel UHD 730"},
+      "Intel Core i5-11400 2.6GHz 6C/12T 12MB S1200 (w/ HSF)":{"Cores / Threads":"6C / 12T","Base Clock":"2.6 GHz","Boost Clock":"4.4 GHz","Cache":"12MB Smart Cache","Socket":"LGA 1200","TDP":"65W","iGPU":"Intel UHD 730"},
+      "Intel Core i3-12100 4.30GHz 4C/8T 12MB Tray S1700 (w/ HSF)":{"Cores / Threads":"4C / 8T","Base Clock":"3.3 GHz","Boost Clock":"4.3 GHz","Cache":"12MB Smart Cache","Socket":"LGA 1700","TDP":"60W (89W Turbo)","iGPU":"Intel UHD 730"},
+      "Intel Core i3-10105 3.7GHz 4C/8T 6MB S1200 (w/ HSF)":{"Cores / Threads":"4C / 8T","Base Clock":"3.7 GHz","Boost Clock":"4.4 GHz","Cache":"6MB Smart Cache","Socket":"LGA 1200","TDP":"65W","iGPU":"Intel UHD 630"},
+      "AMD Ryzen 5 5600X 3.7GHz 6C/12T 32MB AM4 (w/ HSF)":{"Cores / Threads":"6C / 12T","Base Clock":"3.7 GHz","Boost Clock":"4.6 GHz","Cache":"32MB L3","Socket":"AM4","TDP":"65W","iGPU":"None"},
+      "AMD Ryzen 5 5600 3.5GHz 6C/12T 32MB AM4 Tray":{"Cores / Threads":"6C / 12T","Base Clock":"3.5 GHz","Boost Clock":"4.4 GHz","Cache":"32MB L3","Socket":"AM4","TDP":"65W","iGPU":"None"},
+      "AMD Ryzen 5 5500 3.6GHz 6C/12T 16MB AM4 Tray":{"Cores / Threads":"6C / 12T","Base Clock":"3.6 GHz","Boost Clock":"4.2 GHz","Cache":"16MB L3","Socket":"AM4","TDP":"65W","iGPU":"None"},
+      "GIGABYTE B850 AORUS ELITE WIFI 7 4xDDR5 AM5 (ATX)":{"Chipset":"AMD B850","Socket":"AM5","Form Factor":"ATX","Memory":"DDR5, 4 Slots, 256GB Max","WiFi":"WiFi 7","M.2 Slots":"3 (1x PCIe 5.0, 2x PCIe 4.0)"},
+      "ASUS TUF Gaming B550M PLUS WIFI II AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"WiFi 6","M.2 Slots":"2 (1x PCIe 4.0, 1x PCIe 3.0)"},
+      "GIGABYTE B650M D3HP AX DDR5 WiFi 6E AM5 (M-ATX)":{"Chipset":"AMD B650","Socket":"AM5","Form Factor":"Micro-ATX","Memory":"DDR5, 4 Slots, 256GB Max","WiFi":"WiFi 6E","M.2 Slots":"2 (PCIe 4.0)"},
+      "GIGABYTE B760M-DS3H AX DDR4 S1700 (M-ATX)":{"Chipset":"Intel B760","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"WiFi 6E","M.2 Slots":"2 (PCIe 4.0)"},
+      "GIGABYTE B760M DS3H DDR5 S1700 (M-ATX)":{"Chipset":"Intel B760","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR5, 4 Slots, 256GB Max","WiFi":"No","M.2 Slots":"2 (PCIe 4.0)"},
+      "ASUS B760M-K D5 S1700 (M-ATX)":{"Chipset":"Intel B760","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR5, 2 Slots, 96GB Max","WiFi":"No","M.2 Slots":"2 (PCIe 4.0)"},
+      "GIGABYTE B550M AORUS ELITE AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"2 (1x PCIe 4.0, 1x PCIe 3.0)"},
+      "GIGABYTE B550M DS3H AC WiFi AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"WiFi 5 (802.11ac)","M.2 Slots":"2"},
+      "MSI B550M PRO-VDH WIFI AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"WiFi 6","M.2 Slots":"2"},
+      "MSI PRO B760M-P DDR4 S1700 (M-ATX)":{"Chipset":"Intel B760","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"2 (PCIe 4.0)"},
+      "ASUS PRIME B550M-A AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"2"},
+      "GIGABYTE B550M-DS3H AM4 (M-ATX)":{"Chipset":"AMD B550","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"2"},
+      "BIOSTAR B660MX-E-PRO S1700 (M-ATX)":{"Chipset":"Intel B660","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"2"},
+      "ASUS PRIME H610M-K D5 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR5, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"2"},
+      "ASUS PRIME H610M-E D4 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"2"},
+      "GIGABYTE B450M DS3H WIFI AM4 (M-ATX)":{"Chipset":"AMD B450","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 64GB Max","WiFi":"WiFi 5 (802.11ac)","M.2 Slots":"1 (PCIe 3.0)"},
+      "GIGABYTE H610M-H DDR4 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "ASUS PRIME H610M-K DDR4 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "BIOSTAR B760MX2-E D4 S1700 (M-ATX)":{"Chipset":"Intel B760","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1 (PCIe 4.0)"},
+      "MSI PRO H610M-E DDR4 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "GIGABYTE H610M-K DDR4 S1700 (M-ATX)":{"Chipset":"Intel H610","Socket":"LGA 1700","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "ASUS PRIME B450M-K II CSM AM4 (M-ATX)":{"Chipset":"AMD B450","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "ASUS PRIME H510M-K R2.0 S1200 (M-ATX)":{"Chipset":"Intel H510","Socket":"LGA 1200","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "GIGABYTE B450M DS3H V3 AM4 (M-ATX)":{"Chipset":"AMD B450","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 4 Slots, 128GB Max","WiFi":"No","M.2 Slots":"1"},
+      "GIGABYTE H510M-K V2 (M-ATX)":{"Chipset":"Intel H510","Socket":"LGA 1200","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "MSI PRO H510M-B S1200 (M-ATX)":{"Chipset":"Intel H510","Socket":"LGA 1200","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "MSI B450M-A PRO MAX II AM4 (M-ATX)":{"Chipset":"AMD B450","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "GIGABYTE A520M-K AM4 (M-ATX)":{"Chipset":"AMD A520","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "GIGABYTE B450M-K AM4 (M-ATX)":{"Chipset":"AMD B450","Socket":"AM4","Form Factor":"Micro-ATX","Memory":"DDR4, 2 Slots, 64GB Max","WiFi":"No","M.2 Slots":"1"},
+      "Patriot Viper Elite 5 RGB DDR5 32GB 6200MT/s (2x16GB) White":{"Type":"DDR5","Capacity":"32GB (2x16GB)","Speed":"6200MT/s","CAS Latency":"CL42","Voltage":"1.35V","RGB":"Yes"},
+      "Patriot Viper Elite 5 TUF Gaming RGB DDR5 6000 32GB (2x16GB)":{"Type":"DDR5","Capacity":"32GB (2x16GB)","Speed":"6000MT/s","CAS Latency":"CL36","Voltage":"1.35V","RGB":"Yes"},
+      "Patriot Viper Venom DDR5 32GB 5600MT/s (2x16GB)":{"Type":"DDR5","Capacity":"32GB (2x16GB)","Speed":"5600MT/s","CAS Latency":"CL36","Voltage":"1.25V","RGB":"No"},
+      "Patriot Viper Venom RGB DDR5 32GB 5600MT/s (2x16GB)":{"Type":"DDR5","Capacity":"32GB (2x16GB)","Speed":"5600MT/s","CAS Latency":"CL36","Voltage":"1.25V","RGB":"Yes"},
+      "Patriot Viper Steel DDR4 3600 CL20 32GB (2x16GB)":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3600MHz","CAS Latency":"CL20","Voltage":"1.35V","RGB":"No"},
+      "Patriot Viper Steel DDR4 3200 RGB 32GB (2x16GB)":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3200MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"Yes"},
+      "T-Force Delta RGB 2x16GB DDR4 3600MHz Black":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3600MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"Yes"},
+      "T-Force Delta RGB 2x16GB DDR4 3600MHz White":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3600MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"Yes"},
+      "Patriot Viper Steel DDR4 3600 CL18 32GB (2x16GB)":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3600MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"No"},
+      "Patriot Viper Venom DDR5 16GB 5200MT/s (2x8GB)":{"Type":"DDR5","Capacity":"16GB (2x8GB)","Speed":"5200MT/s","CAS Latency":"CL36","Voltage":"1.2V","RGB":"No"},
+      "Kingston Fury Beast 2x16GB DDR4 3200MHz":{"Type":"DDR4","Capacity":"32GB (2x16GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "Patriot Viper Steel DDR4 3600 RGB 16GB (2x8GB)":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3600MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"Yes"},
+      "Patriot Viper Steel DDR4 3200 RGB 16GB (2x8GB)":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3200MHz","CAS Latency":"CL18","Voltage":"1.35V","RGB":"Yes"},
+      "OCPC X3treme RGB 16GB DDR4 3200MHz (2x8GB) Blue":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"Yes"},
+      "Patriot Viper Steel DDR4 3600 CL17 16GB (2x8GB)":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3600MHz","CAS Latency":"CL17","Voltage":"1.35V","RGB":"No"},
+      "OCPC XT II 16GB DDR4 3200MHz (2x8GB) Black":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "OCPC XT II 16GB DDR4 3200MHz (2x8GB) White":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "Kingston Fury Beast 2x8GB DDR4 3200MHz Black":{"Type":"DDR4","Capacity":"16GB (2x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "Kingston Fury Beast 16GB DDR4 3200MHz Single":{"Type":"DDR4","Capacity":"16GB (1x16GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "Kingston Fury Beast 8GB DDR4 3200MHz Single":{"Type":"DDR4","Capacity":"8GB (1x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "OCPC XT II 8GB DDR4 3200MHz Black":{"Type":"DDR4","Capacity":"8GB (1x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "OCPC XT II 8GB DDR4 3200MHz White":{"Type":"DDR4","Capacity":"8GB (1x8GB)","Speed":"3200MHz","CAS Latency":"CL16","Voltage":"1.35V","RGB":"No"},
+      "TeamGroup Elite+ 8GB DDR4 3200MHz Black/Gold":{"Type":"DDR4","Capacity":"8GB (1x8GB)","Speed":"3200MHz","CAS Latency":"CL22","Voltage":"1.2V","RGB":"No"},
+      "TeamGroup Elite+ 8GB DDR4 3200MHz Red/Black":{"Type":"DDR4","Capacity":"8GB (1x8GB)","Speed":"3200MHz","CAS Latency":"CL22","Voltage":"1.2V","RGB":"No"},
+      "OCPC V-Series 8GB DDR3 1600MHz":{"Type":"DDR3","Capacity":"8GB (1x8GB)","Speed":"1600MHz","CAS Latency":"CL11","Voltage":"1.5V","RGB":"No"},
+      "Secure UPS 5000VA 230V AVR 6-Outlet":{"Type":"UPS","VA Rating":"5000VA","Wattage":"3500W","Outlets":"6","AVR":"Yes"},
+      "Secure UPS 3000VA 6-Socket AVR":{"Type":"UPS","VA Rating":"3000VA","Wattage":"2100W","Outlets":"6","AVR":"Yes"},
+      "1stPlayer NGDP 750W 80+ Gold Full Modular":{"Type":"PSU","Wattage":"750W","Efficiency":"80+ Gold","Modular":"Full Modular","Connectors":"ATX 3.1 / PCIe 5.1"},
+      "Secure SVC-2000VA 1600W AVR":{"Type":"AVR","VA Rating":"2000VA","Wattage":"1600W","Outlets":"3"},
+      "APC BV800I-MS Easy UPS 450W AVR":{"Type":"UPS","VA Rating":"800VA","Wattage":"450W","Outlets":"4 Universal","AVR":"Yes"},
+      "1stPlayer ACK 750W 80+ Silver Gaming PSU":{"Type":"PSU","Wattage":"750W","Efficiency":"80+ Silver","Modular":"Non-Modular"},
+      "Secure UPS 1500VA 1000W 4-Socket AVR":{"Type":"UPS","VA Rating":"1500VA","Wattage":"1000W","Outlets":"4","AVR":"Yes"},
+      "1stPlayer ACK 650W 80+ White Gaming PSU":{"Type":"PSU","Wattage":"650W","Efficiency":"80+ White","Modular":"Non-Modular"},
+      "1stPlayer ACK 550W 80+ White Gaming PSU":{"Type":"PSU","Wattage":"550W","Efficiency":"80+ White","Modular":"Non-Modular"},
+      "APC UPS 650VA BVX650I-PH AVR 4-Socket":{"Type":"UPS","VA Rating":"650VA","Wattage":"360W","Outlets":"4 Universal","AVR":"Yes"},
+      "Secure UPS 1000VA 700W 4-Socket AVR":{"Type":"UPS","VA Rating":"1000VA","Wattage":"700W","Outlets":"4","AVR":"Yes"},
+      "AWP Wise Aide 650VA 360W UPS AVR":{"Type":"UPS","VA Rating":"650VA","Wattage":"360W","Outlets":"4","AVR":"Yes"},
+      "Secure AVR 500W 3-Socket 220V":{"Type":"AVR","Wattage":"500W","Outlets":"3 Sockets"},
+      "Gamdias Apollo 35\" Flat VA WQ35VF 180Hz":{"Screen Size":"35\"","Panel":"VA","Resolution":"3440x1440 (UWQHD)","Refresh Rate":"180Hz","Response Time":"1ms MPRT","Type":"Flat","Ports":"2x DP 1.4, 1x HDMI 2.0"},
+      "Gamdias Atlas 32\" Curved VA Q32VC 165Hz":{"Screen Size":"31.5\"","Panel":"VA","Resolution":"2560x1440 (QHD)","Refresh Rate":"165Hz","Response Time":"1ms MPRT","Type":"Curved (R1500)","Ports":"2x HDMI, 2x DP"},
+      "Gamdias Atlas 32\" Curved VA DHD32C 240Hz":{"Screen Size":"31.5\"","Panel":"VA","Resolution":"1920x1080 (FHD)","Refresh Rate":"240Hz","Response Time":"1ms MPRT","Type":"Curved (R1500)","Ports":"2x HDMI, 2x DP"},
+      "Gamdias Atlas 27\" Flat IPS QHD27FIC 180Hz":{"Screen Size":"27\"","Panel":"IPS","Resolution":"2560x1440 (QHD)","Refresh Rate":"180Hz","Response Time":"1ms MPRT","Type":"Flat","Ports":"HDMI, DP"},
+      "Gamdias Atlas 27\" Flat IPS 27F21 192Hz":{"Screen Size":"27\"","Panel":"IPS","Resolution":"1920x1080 (FHD)","Refresh Rate":"192Hz","Response Time":"5ms GTG","Type":"Flat","Ports":"HDMI, DP"},
+      "OMNIA CV27HCD 27\" Curved VA 165Hz Black":{"Screen Size":"27\"","Panel":"VA","Resolution":"1920x1080 (FHD)","Refresh Rate":"165Hz","Response Time":"1ms MPRT","Type":"Curved (R1500)","Ports":"DP, HDMI, USB-C"},
+      "Gamdias Atlas 24\" Curved VA HD24C II 180Hz":{"Screen Size":"23.8\"","Panel":"VA","Resolution":"1920x1080 (FHD)","Refresh Rate":"180Hz","Response Time":"1ms MPRT","Type":"Curved (R3000)","Ports":"2x HDMI, 2x DP"},
+      "OMNIA 027IHC 27\" Flat IPS 100Hz Silver":{"Screen Size":"27\"","Panel":"IPS","Resolution":"1920x1080 (FHD)","Refresh Rate":"100Hz","Response Time":"1ms","Type":"Flat","Ports":"HDMI, USB-C"},
+      "ACER KA252Q 24.5\" IPS 1ms 120Hz FHD":{"Screen Size":"24.5\"","Panel":"IPS","Resolution":"1920x1080 (FHD)","Refresh Rate":"120Hz","Response Time":"1ms VRB","Type":"Flat","Ports":"1x HDMI, 1x VGA"},
+      "OMNIA 0238CIU 23.8\" Flat IPS 100Hz Black":{"Screen Size":"23.8\"","Panel":"IPS","Resolution":"1920x1080 (FHD)","Refresh Rate":"100Hz","Response Time":"1ms","Type":"Flat","Ports":"HDMI, USB-C"},
+      "Gamdias Atlas 24\" Flat IPS HD238IF II 100Hz":{"Screen Size":"23.8\"","Panel":"IPS","Resolution":"1920x1080 (FHD)","Refresh Rate":"100Hz","Response Time":"4ms","Type":"Flat","Ports":"1x HDMI, 1x VGA"},
+      "Gamdias Atlas 22\" Flat VA VH22F 100Hz":{"Screen Size":"21.5\"","Panel":"VA","Resolution":"1920x1080 (FHD)","Refresh Rate":"100Hz","Response Time":"3ms","Type":"Flat","Ports":"1x HDMI, 1x VGA"},
+      "Cuirass White":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"7x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio"},
+      "O11-V Black":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"10x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio, USB-C"},
+      "O11-V White":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"10x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio, USB-C"},
+      "Cuirass Black":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"7x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio"},
+      "DeepCool Mystique 360 LCD AIO Liquid Cooler":{"Type":"360mm AIO Liquid","Socket":"LGA1700/1200/1151, AM5/AM4","Fans":"3x 120mm (500-2150 RPM)","Noise":"Up to 36.5 dB(A)","Special":"2.83\" TFT LCD Display, 5th Gen Pump"},
+      "DeepCool AG500 Digital WH Air Cooler":{"Type":"Single-Tower Air","Socket":"LGA1700/1200/1151, AM5/AM4","Fans":"1x 120mm (500-1850 RPM)","Noise":"29.4 dB(A)","Special":"CPU Temp LCD Display, 5 Heatpipes, 240W TDP"}
+    };
 
     function formatPrice(p){return'\u20B1'+p.toLocaleString('en-PH')}
 
     // BUY NOW - redirect to checkout page
     function buyNow(name,price,btn){
+      if(btn)btn.stopPropagation&&btn.stopPropagation();
       window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price,'_blank');
     }
 
-    // Safe card renderer to avoid quote issues in onclick
+    // Safe card renderer — whole card is clickable for product detail
     function cardHTML(p,prefix){
-      const imgClick=p.img?` onclick="openLightbox('${p.img.replace(/-300x300/,'')}')"`:''
+      const idx=products.indexOf(p);
       const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'<div class="placeholder">&#128187;</div>'
-      return `<div class="${prefix}-card"><div class="${prefix}-card-img"${imgClick}>${imgInner}</div><div class="${prefix}-card-body"><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" data-name="${p.name.replace(/"/g,'&quot;')}" data-price="${p.price}" onclick="buyNow(this.dataset.name,this.dataset.price,this)">Buy Now</button></div></div></div>`
+      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})"><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" data-name="${p.name.replace(/"/g,'&quot;')}" data-price="${p.price}" onclick="event.stopPropagation();buyNow(this.dataset.name,this.dataset.price,this)">Buy Now</button></div></div></div>`
     }
 
     // FEATURED PRODUCTS (homepage - 8 hand-picked items across categories)
-    const featured=[0,1,7,8,9,10,78,95]; // GPUs, CPUs, Monitor, Cooler
+    const featured=[0,1,6,7,8,9,86,92]; // GPUs, CPUs, Monitor, Cooler
     function renderFeatured(){
       const picks=featured.map(i=>products[i]).filter(Boolean);
       document.getElementById('featuredGrid').innerHTML=picks.map(p=>cardHTML(p,'feat')).join('');
@@ -1128,7 +1284,53 @@
       if(e&&e.target.tagName==='IMG')return;
       document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';
     }
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){
+        if(document.getElementById('productDetail').classList.contains('open'))closeProductDetail();
+        else closeLightbox();
+      }
+    });
+
+    // PRODUCT DETAIL PAGE
+    function openProductDetail(idx){
+      const p=products[idx];if(!p)return;
+      const specs=specDB[p.name]||{};
+      const fullImg=p.img?p.img.replace(/-300x300/,''):null;
+      const brand=getBrand(p.name);
+      // Related: same category, excluding current, max 4
+      const related=products.filter((r,i)=>r.cat===p.cat&&i!==idx).slice(0,4);
+      const specRows=Object.entries(specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+      document.getElementById('pdContent').innerHTML=`
+        <div class="pd-grid">
+          <div class="pd-img-wrap" ${fullImg?`onclick="openLightbox('${fullImg}')"`:''}>${p.img?`<img src="${fullImg}" alt="${p.name.replace(/"/g,'&quot;')}">`:'<div class="placeholder" style="font-size:4rem">&#128187;</div>'}</div>
+          <div class="pd-info">
+            <div class="pd-cat">${p.label}</div>
+            <h1 class="pd-name">${p.name}</h1>
+            <div class="pd-brand">Brand: <strong>${brand}</strong></div>
+            <div class="pd-price">${formatPrice(p.price)}</div>
+            <div class="pd-price-note">Cash price &bull; Contact us for installment options</div>
+            <div class="pd-actions">
+              <button class="pd-buy" onclick="buyNow('${p.name.replace(/'/g,"\\'")}',${p.price})">Buy Now</button>
+              <a href="https://m.me/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
+            </div>
+            ${specRows?`<div class="pd-specs"><h3>Specifications</h3><table class="pd-specs-table"><tbody>${specRows}</tbody></table></div>`:''}
+            <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.8rem;color:var(--text-dim)">
+              <span>&#9989; Available at DCTE Ma-a & Agdao branches</span>
+              <span>&#128666; Delivery available in Davao City</span>
+            </div>
+          </div>
+        </div>
+        ${related.length?`<div class="pd-related"><h3>Related Products</h3><div class="pd-related-grid">${related.map(r=>cardHTML(r,'shop')).join('')}</div></div>`:''}
+      `;
+      document.getElementById('productDetail').classList.add('open');
+      document.getElementById('productDetail').scrollTop=0;
+      document.body.style.overflow='hidden';
+    }
+    function closeProductDetail(){
+      document.getElementById('productDetail').classList.remove('open');
+      document.body.style.overflow='';
+    }
 
     // SHOP PAGE
     function openShop(cat){
