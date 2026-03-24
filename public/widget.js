@@ -18,12 +18,8 @@
     #wlai-header { padding: 16px; background: #0066cc; color: white; display: flex; align-items: center; gap: 10px; }
     #wlai-header-name { font-weight: 700; font-size: 15px; }
     #wlai-header-sub { font-size: 12px; opacity: 0.8; }
-    .wlai-loading { display: flex; align-items: center; gap: 8px; padding: 16px; color: #888; font-size: 13px; }
-    .wlai-loading-dot { display: inline-block; width: 6px; height: 6px; background: #888; border-radius: 50%; animation: wlai-bounce 1.2s infinite; }
-    .wlai-loading-dot:nth-child(2) { animation-delay: 0.2s; }
-    .wlai-loading-dot:nth-child(3) { animation-delay: 0.4s; }
     #wlai-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .wlai-msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .wlai-msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
     .wlai-msg.bot { background: #222; color: #eee; align-self: flex-start; border-bottom-left-radius: 4px; }
     .wlai-msg.user { background: #0066cc; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
     .wlai-typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; background: #222; border-radius: 12px; border-bottom-left-radius: 4px; align-self: flex-start; }
@@ -121,8 +117,7 @@
     showChat();
   });
 
-  // Load bot info with loading state
-  document.getElementById('wlai-header-name').innerHTML = '<span class="wlai-loading-dot"></span><span class="wlai-loading-dot"></span><span class="wlai-loading-dot"></span>';
+  // Load bot info
   fetch(`${apiUrl}/api/chat/${botId}/info`)
     .then(r => r.json()).then(data => {
     botName = data.bot_name || 'Assistant';
@@ -134,13 +129,36 @@
     document.getElementById('wlai-lead-submit').style.background = primaryColor;
     if (data.greeting_message) addMessage(data.greeting_message, 'bot');
   }).catch(() => {
-    document.getElementById('wlai-header-name').textContent = 'DCTE Assistant';
+    document.getElementById('wlai-header-name').textContent = 'Assistant';
   });
+
+  // Format bot responses — ensure product lists have proper line breaks
+  function formatText(text) {
+    // Strip markdown bold/italic
+    text = text.replace(/\*\*/g, '');
+    // If already well-formatted with line breaks, return as-is
+    if ((text.match(/\n\s*\n/g) || []).length >= 3) return text;
+    // Count price patterns (₱ or P followed by digits)
+    var prices = text.match(/[₱P]\d[\d,]+/g) || [];
+    if (prices.length < 3) return text;
+    // Common words that follow prices in normal sentences (NOT product names)
+    var skip = /^(pwede|para|sa|ang|ug|og|kay|kung|pero|lang|ra|na|da|ba|man|pud|pod|sad|hangtod|gikan|each|per|for|and|or|the|is|are|to|in|of|with|from|up|but|not|so|if|at|by|as|on|naa|wala|dili|mao|kini|namo|nila|available|only|also|nga|tag|matag|every|all|this|that|our|your|its|we|you|they|it|has|have|can|will|may|just|more|less|about|around|between|both|which|what|when|how|free|total|price|worth|below|above|under|over|most|best|good|great|cheap|affordable|starting|ranging|range|priced|costs|cost|inclusive|plus|minus|off|discount|kana|kini|mura|pila|diri|dire|adto|didto|ari|ani|ato|imo|imu|among|ilang|tanan|gamay|dako|bag-o|daan|unsa|asa|kanus-a|ngano|pila|kinsa|ako|iya|kami|kita|sila|siya|ikaw)$/i;
+    // After a price, add line break before next product/brand name
+    text = text.replace(/([₱P]\d[\d,]+[.,:;]?)\s+(\S+)/g, function(match, price, next) {
+      if (skip.test(next)) return match;
+      return price + '\n\n' + next;
+    });
+    return text;
+  }
 
   function addMessage(text, type) {
     const msg = document.createElement('div');
     msg.className = `wlai-msg ${type}`;
-    msg.textContent = text;
+    // Format bot messages for readability
+    if (type === 'bot') text = formatText(text);
+    // Escape HTML then convert newlines to <br>
+    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    msg.innerHTML = escaped.replace(/\n/g, '<br>');
     messages.appendChild(msg);
     messages.scrollTop = messages.scrollHeight;
   }
