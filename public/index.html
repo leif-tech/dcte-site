@@ -1270,7 +1270,7 @@
     document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
     // CONTACT FORM
-    function handleSubmit(e){e.preventDefault();const f=e.target,b=f.querySelector('button[type="submit"]'),o=b.innerHTML;b.innerHTML='Sending...';b.disabled=true;setTimeout(()=>{b.innerHTML='&#10003; Sent!';b.style.background='linear-gradient(135deg,#22c55e,#16a34a)';f.reset();setTimeout(()=>{b.innerHTML=o;b.style.background='';b.disabled=false},3000)},1000)}
+    // handleSubmit defined below with real server submission
 
     // PRODUCT DATA
     const W='https://dctestore.com/wp-content/uploads/';
@@ -1495,11 +1495,25 @@
       window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price,'_blank');
     }
 
-    // Safe card renderer — whole card is clickable for product detail
+    // Product meta: stock, condition, badges
+    const productMeta={};
+    products.forEach((p,i)=>{productMeta[i]={stock:'in',condition:'new',badge:null}});
+    [0,1,2].forEach(i=>productMeta[i].badge='hot');
+    [6,7].forEach(i=>productMeta[i].badge='new');
+    [48,49].forEach(i=>productMeta[i].badge='new');
+    [86,87,88].forEach(i=>productMeta[i].badge='sale');
+
+    // Card renderer with badges — whole card is clickable
     function cardHTML(p,prefix){
       const idx=products.indexOf(p);
-      const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'<div class="placeholder">&#128187;</div>'
-      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})"><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" data-name="${p.name.replace(/"/g,'&quot;')}" data-price="${p.price}" onclick="event.stopPropagation();buyNow(this.dataset.name,this.dataset.price,this)">Buy Now</button></div></div></div>`
+      const meta=productMeta[idx]||{stock:'in',condition:'new',badge:null};
+      const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'';
+      const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
+      const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-contact';
+      const stockText=meta.stock==='in'?'In Stock':meta.stock==='low'?'Low Stock':'Contact Us';
+      const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
+      const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
+      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
     }
 
     // FEATURED PRODUCTS (homepage - 8 hand-picked items across categories)
@@ -1812,35 +1826,6 @@
       document.getElementById('compareModal').classList.add('open');
     }
     updateCompareBar();
-
-    // ===== UPDATE CARD HTML WITH BADGES + ACTIONS =====
-    // Add product meta: stock, condition, badge
-    const productMeta={};
-    products.forEach((p,i)=>{
-      // Default: all brand new, in stock
-      productMeta[i]={stock:'in',condition:'new',badge:null};
-    });
-    // Mark some as featured/hot/new/sale
-    [0,1,2].forEach(i=>productMeta[i].badge='hot'); // RTX 4060s
-    [6,7].forEach(i=>productMeta[i].badge='new'); // Latest CPUs
-    [48,49].forEach(i=>productMeta[i].badge='new'); // DDR5 RAM
-    [86,87,88].forEach(i=>productMeta[i].badge='sale'); // Top monitors
-
-    // Override cardHTML to include badges + cart/wish/compare
-    function cardHTML(p,prefix){
-      const idx=products.indexOf(p);
-      const meta=productMeta[idx]||{stock:'in',condition:'new',badge:null};
-      const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'';
-      const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
-      const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-contact';
-      const stockText=meta.stock==='in'?'In Stock':meta.stock==='low'?'Low Stock':'Contact Us';
-      const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
-      const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
-      const shopeeLink='https://shopee.ph/dcte168';
-      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
-    }
-    // Re-render featured with new cards
-    renderFeatured();
 
     // ===== FIX CONTACT FORM =====
     function handleSubmit(e){
