@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCTE Admin Panel</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Open Sans',sans-serif;background:#0f0f23;color:#e2e8f0;min-height:100vh}
+    :root{--pink:#e91e8c;--purple:#8b2fc9;--cyan:#5cb8e6;--navy:#1a1a3e;--grad:linear-gradient(135deg,#e91e8c,#8b2fc9,#5cb8e6);--card:#1a1a2e;--card-hover:#22223a;--border:rgba(255,255,255,0.08);--text:#cbd5e1;--text-dim:#64748b;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b}
+    a{color:var(--cyan);text-decoration:none}
+    button{cursor:pointer;border:none;font-family:inherit;background:none;color:inherit}
+    input,select,textarea{font-family:inherit;font-size:0.85rem;background:#12122a;color:#e2e8f0;border:1px solid var(--border);border-radius:6px;padding:8px 12px;outline:none;width:100%}
+    input:focus,select:focus,textarea:focus{border-color:var(--purple)}
+    select{appearance:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.82rem}
+    th{font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);position:sticky;top:0;background:#0f0f23;z-index:1}
+    tr:hover{background:var(--card-hover)}
+
+    /* Login Screen */
+    .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+    .login-box{background:var(--card);border-radius:16px;padding:40px;max-width:380px;width:100%;text-align:center;border:1px solid var(--border)}
+    .login-box h1{font-family:'Montserrat',sans-serif;font-size:1.4rem;margin-bottom:6px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .login-box p{color:var(--text-dim);font-size:0.82rem;margin-bottom:24px}
+    .login-box input{margin-bottom:12px}
+    .login-box .btn{width:100%;margin-top:8px}
+    .login-error{color:var(--danger);font-size:0.78rem;margin-top:8px;min-height:20px}
+
+    /* Layout */
+    .admin-wrap{display:none}
+    .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px}
+    .topbar h1{font-family:'Montserrat',sans-serif;font-size:1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex:1}
+    .topbar .user{font-size:0.78rem;color:var(--text-dim)}
+    .topbar .btn-sm{font-size:0.72rem;padding:6px 14px}
+
+    /* Tabs */
+    .tabs{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto}
+    .tab-btn{font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600;padding:14px 20px;color:var(--text-dim);border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s}
+    .tab-btn:hover{color:#e2e8f0}
+    .tab-btn.active{color:var(--pink);border-bottom-color:var(--pink)}
+
+    /* Content */
+    .content{padding:24px;max-width:1400px;margin:0 auto}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* Cards */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+    .stat-card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
+    .stat-card .label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);font-family:'Montserrat',sans-serif;font-weight:600}
+    .stat-card .value{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:700;margin-top:4px}
+    .stat-card .value.pink{color:var(--pink)}
+    .stat-card .value.purple{color:var(--purple)}
+    .stat-card .value.cyan{color:var(--cyan)}
+    .stat-card .value.green{color:var(--success)}
+    .stat-card .value.warn{color:var(--warning)}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.78rem;transition:opacity 0.2s}
+    .btn:hover{opacity:0.85}
+    .btn-primary{background:var(--grad);color:#fff}
+    .btn-secondary{background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid var(--border)}
+    .btn-danger{background:var(--danger);color:#fff}
+    .btn-success{background:var(--success);color:#fff}
+
+    /* Toolbar */
+    .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .toolbar input[type="text"]{max-width:300px}
+    .toolbar .spacer{flex:1}
+
+    /* Table wrapper */
+    .table-wrap{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:auto;max-height:calc(100vh - 280px)}
+
+    /* Modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.open{display:flex}
+    .modal{background:#12122a;border-radius:16px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--border)}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
+    .modal-header h2{font-family:'Montserrat',sans-serif;font-size:1rem}
+    .modal-header .close{font-size:1.4rem;color:var(--text-dim);padding:4px}
+    .modal-body{padding:24px}
+    .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+    /* Form */
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin-bottom:4px;font-family:'Montserrat',sans-serif}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .img-preview{width:80px;height:80px;border-radius:8px;background:#1a1a2e;border:1px solid var(--border);overflow:hidden;margin-top:6px;display:flex;align-items:center;justify-content:center}
+    .img-preview img{width:100%;height:100%;object-fit:cover}
+
+    /* Specs editor */
+    .spec-rows{display:flex;flex-direction:column;gap:6px}
+    .spec-row{display:flex;gap:8px;align-items:center}
+    .spec-row input{flex:1}
+    .spec-row .remove-spec{color:var(--danger);font-size:1.2rem;padding:4px;flex-shrink:0}
+
+    /* Order detail */
+    .order-detail{background:var(--card);border-radius:12px;padding:20px;margin-top:12px;border:1px solid var(--border)}
+    .order-detail h4{font-family:'Montserrat',sans-serif;font-size:0.85rem;margin-bottom:8px}
+    .order-items{margin-top:8px}
+    .order-item{display:flex;justify-content:space-between;padding:6px 0;font-size:0.82rem;border-bottom:1px solid var(--border)}
+
+    /* Status badges */
+    .status{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.68rem;font-weight:600;text-transform:uppercase;font-family:'Montserrat',sans-serif;letter-spacing:0.3px}
+    .status-pending{background:rgba(245,158,11,0.15);color:var(--warning)}
+    .status-confirmed{background:rgba(59,130,246,0.15);color:#3b82f6}
+    .status-shipped{background:rgba(139,47,201,0.15);color:var(--purple)}
+    .status-completed{background:rgba(34,197,94,0.15);color:var(--success)}
+
+    /* Stock badges */
+    .stock-in{color:var(--success)}
+    .stock-low{color:var(--warning)}
+    .stock-out{color:var(--danger)}
+
+    /* Badge pills */
+    .badge-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;text-transform:uppercase}
+    .badge-hot{background:rgba(233,30,140,0.15);color:var(--pink)}
+    .badge-new{background:rgba(92,184,230,0.15);color:var(--cyan)}
+    .badge-sale{background:rgba(34,197,94,0.15);color:var(--success)}
+
+    /* Low stock alert */
+    .alert{padding:12px 16px;border-radius:8px;font-size:0.82rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .alert-warning{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--warning)}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .form-row{grid-template-columns:1fr}
+      .stat-grid{grid-template-columns:1fr 1fr}
+      .content{padding:16px}
+      .tabs{padding:0 12px}
+      .tab-btn{padding:12px 14px;font-size:0.72rem}
+    }
+    @media(max-width:480px){
+      .stat-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>DCTE Admin</h1>
+    <p>Sign in to manage your store</p>
+    <form onsubmit="doLogin(event)">
+      <input type="text" id="loginUser" placeholder="Username" autocomplete="username" required>
+      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+    </form>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- Admin Panel -->
+<div class="admin-wrap" id="adminWrap">
+  <div class="topbar">
+    <h1>DCTE Admin</h1>
+    <span class="user" id="adminUser"></span>
+    <a href="/" class="btn btn-secondary btn-sm">View Store</a>
+    <button class="btn btn-secondary btn-sm" onclick="doLogout()">Logout</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('products',this)">Products</button>
+    <button class="tab-btn" onclick="switchTab('orders',this)">Orders</button>
+    <button class="tab-btn" onclick="switchTab('contacts',this)">Contacts</button>
+  </div>
+
+  <div class="content">
+    <!-- Dashboard -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="stat-grid" id="statsGrid"></div>
+      <div id="lowStockAlert"></div>
+      <h3 style="font-family:'Montserrat',sans-serif;font-size:0.9rem;margin-bottom:12px">Recent Orders</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentOrdersBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="tab-content" id="tab-products">
+      <div class="toolbar">
+        <input type="text" id="prodSearch" placeholder="Search products..." oninput="renderProducts()">
+        <select id="prodCatFilter" onchange="renderProducts()" style="max-width:180px"><option value="">All Categories</option></select>
+        <span class="spacer"></span>
+        <button class="btn btn-secondary" onclick="exportProducts()">Export Backup</button>
+        <button class="btn btn-primary" onclick="openProductModal()">+ Add Product</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Badge</th><th>Actions</th></tr></thead>
+        <tbody id="productsBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Orders -->
+    <div class="tab-content" id="tab-orders">
+      <div class="toolbar">
+        <input type="text" id="orderSearch" placeholder="Search orders..." oninput="renderOrders()">
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody id="ordersBody"></tbody></table>
+      </div>
+      <div id="orderDetailWrap"></div>
+    </div>
+
+    <!-- Contacts -->
+    <div class="tab-content" id="tab-contacts">
+      <div class="toolbar">
+        <input type="text" id="contactSearch" placeholder="Search contacts..." oninput="renderContacts()">
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th></tr></thead>
+        <tbody id="contactsBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Product</h2>
+      <button class="close" onclick="closeProductModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editProductId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="fCat" onchange="autoLabel()">
+            <option value="gpu">Video Card</option>
+            <option value="cpu">Processor</option>
+            <option value="mobo">Motherboard</option>
+            <option value="ram">Memory</option>
+            <option value="psu">PSU / UPS</option>
+            <option value="monitor">Monitor</option>
+            <option value="case">Case</option>
+            <option value="cooler">Cooler</option>
+            <option value="bundle">PC Bundle</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Label</label>
+          <input type="text" id="fLabel" placeholder="e.g. Video Card">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="fName" placeholder="Full product name" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price (PHP)</label>
+          <input type="number" id="fPrice" placeholder="0" min="0" required>
+        </div>
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="text" id="fImg" placeholder="https://..." oninput="previewImg()">
+          <div class="img-preview" id="imgPreview"><span style="color:var(--text-dim);font-size:0.7rem">No image</span></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Stock Status</label>
+          <select id="fStock">
+            <option value="in">In Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Contact Us</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="fCondition">
+            <option value="new">Brand New</option>
+            <option value="preowned">Pre-Owned</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Badge</label>
+        <select id="fBadge">
+          <option value="">None</option>
+          <option value="hot">Hot</option>
+          <option value="new">New</option>
+          <option value="sale">Sale</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Specifications</label>
+        <div class="spec-rows" id="specRows"></div>
+        <button class="btn btn-secondary" onclick="addSpecRow()" style="margin-top:8px;font-size:0.72rem">+ Add Spec</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveProductBtn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = '';
+  let token = sessionStorage.getItem('dcte_admin_token') || '';
+  let adminUsername = sessionStorage.getItem('dcte_admin_user') || '';
+  let allProducts = [], allOrders = [], allContacts = [];
+
+  const catLabels = {gpu:'Video Card',cpu:'Processor',mobo:'Motherboard',ram:'Memory',psu:'PSU / UPS',monitor:'Monitor',case:'Case',cooler:'Cooler',bundle:'PC Bundle'};
+
+  // ── Auth ───────────────────────────────────────────────────
+
+  async function doLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    btn.textContent = 'Signing in...'; btn.disabled = true;
+    try {
+      const res = await fetch(API + '/api/admin/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: document.getElementById('loginUser').value,
+          password: document.getElementById('loginPass').value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      token = data.token;
+      adminUsername = data.username;
+      sessionStorage.setItem('dcte_admin_token', token);
+      sessionStorage.setItem('dcte_admin_user', adminUsername);
+      showAdmin();
+    } catch (err) {
+      document.getElementById('loginError').textContent = err.message;
+    }
+    btn.textContent = 'Sign In'; btn.disabled = false;
+  }
+
+  function doLogout() {
+    token = ''; adminUsername = '';
+    sessionStorage.removeItem('dcte_admin_token');
+    sessionStorage.removeItem('dcte_admin_user');
+    document.getElementById('loginScreen').style.display = '';
+    document.getElementById('adminWrap').style.display = 'none';
+  }
+
+  async function verifyToken() {
+    if (!token) return false;
+    try {
+      const res = await fetch(API + '/api/admin/verify', { headers: authHeaders() });
+      return res.ok;
+    } catch { return false; }
+  }
+
+  function authHeaders() {
+    return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+  }
+
+  async function showAdmin() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    document.getElementById('adminUser').textContent = adminUsername;
+    await loadDashboard();
+    await loadProducts();
+  }
+
+  // ── Tabs ───────────────────────────────────────────────────
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'products') loadProducts();
+    if (name === 'orders') loadOrders();
+    if (name === 'contacts') loadContacts();
+  }
+
+  // ── Dashboard ──────────────────────────────────────────────
+
+  async function loadDashboard() {
+    try {
+      const res = await fetch(API + '/api/admin/stats', { headers: authHeaders() });
+      if (!res.ok) { if (res.status === 401) return doLogout(); throw new Error('Failed'); }
+      const s = await res.json();
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><div class="label">Total Products</div><div class="value purple">${s.totalProducts}</div></div>
+        <div class="stat-card"><div class="label">Total Orders</div><div class="value cyan">${s.totalOrders}</div></div>
+        <div class="stat-card"><div class="label">Total Contacts</div><div class="value pink">${s.totalContacts}</div></div>
+        <div class="stat-card"><div class="label">Total Revenue</div><div class="value green">${formatPrice(s.totalRevenue)}</div></div>
+      `;
+      if (s.lowStock > 0) {
+        document.getElementById('lowStockAlert').innerHTML = `<div class="alert alert-warning">&#9888; ${s.lowStock} product(s) with low stock</div>`;
+      } else {
+        document.getElementById('lowStockAlert').innerHTML = '';
+      }
+      const tbody = document.getElementById('recentOrdersBody');
+      tbody.innerHTML = s.recentOrders.map(o => `
+        <tr>
+          <td style="font-weight:600">${o.id}</td>
+          <td>${o.customer ? (o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
+          <td>${formatPrice(parseFloat(o.total) || 0)}</td>
+          <td><span class="status status-${(o.status||'pending').toLowerCase()}">${o.status || 'Pending'}</span></td>
+          <td>${formatDate(o.timestamp)}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-dim)">No orders yet</td></tr>';
+    } catch (err) { console.error(err); }
+  }
+
+  // ── Products ───────────────────────────────────────────────
+
+  async function loadProducts() {
+    try {
+      const res = await fetch(API + '/api/admin/products', { headers: authHeaders() });
+      if (!res.ok) { if (res.status === 401) return doLogout(); return; }
+      allProducts = await res.json();
+      // Populate category filter
+      const sel = document.getElementById('prodCatFilter');
+      const cats = [...new Set(allProducts.map(p => p.cat))];
+      sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('');
+      renderProducts();
+    } catch (err) { console.error(err); }
+  }
+
+  function renderProducts() {
+    const search = (document.getElementById('prodSearch').value || '').toLowerCase();
+    const catFilter = document.getElementById('prodCatFilter').value;
+    let list = allProducts;
+    if (search) list = list.filter(p => p.name.toLowerCase().includes(search) || p.cat.includes(search));
+    if (catFilter) list = list.filter(p => p.cat === catFilter);
+    const tbody = document.getElementById('productsBody');
+    tbody.innerHTML = list.map(p => `
+      <tr>
+        <td><div style="width:40px;height:40px;border-radius:6px;overflow:hidden;background:#1a1a2e">${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">` : ''}</div></td>
+        <td style="font-weight:500;max-width:300px">${p.name}</td>
+        <td>${catLabels[p.cat] || p.cat}</td>
+        <td style="font-weight:600">${formatPrice(p.price)}</td>
+        <td><span class="stock-${p.stock === 'in' ? 'in' : p.stock === 'low' ? 'low' : 'out'}">${p.stock === 'in' ? 'In Stock' : p.stock === 'low' ? 'Low Stock' : 'Contact'}</span></td>
+        <td>${p.badge ? `<span class="badge-pill badge-${p.badge}">${p.badge}</span>` : '-'}</td>
+        <td>
+          <button onclick="editProduct('${p.id}')" style="color:var(--cyan);font-size:0.78rem;margin-right:8px">Edit</button>
+          <button onclick="deleteProduct('${p.id}','${p.name.replace(/'/g, "\\'")}')" style="color:var(--danger);font-size:0.78rem">Delete</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:40px">No products found</td></tr>';
+  }
+
+  function openProductModal(product) {
+    document.getElementById('editProductId').value = product ? product.id : '';
+    document.getElementById('modalTitle').textContent = product ? 'Edit Product' : 'Add Product';
+    document.getElementById('fCat').value = product ? product.cat : 'gpu';
+    document.getElementById('fLabel').value = product ? product.label : 'Video Card';
+    document.getElementById('fName').value = product ? product.name : '';
+    document.getElementById('fPrice').value = product ? product.price : '';
+    document.getElementById('fImg').value = product ? product.img : '';
+    document.getElementById('fStock').value = product ? product.stock : 'in';
+    document.getElementById('fCondition').value = product ? product.condition : 'new';
+    document.getElementById('fBadge').value = product ? (product.badge || '') : '';
+    previewImg();
+    // Specs
+    const specDiv = document.getElementById('specRows');
+    specDiv.innerHTML = '';
+    if (product && product.specs) {
+      Object.entries(product.specs).forEach(([k, v]) => addSpecRow(k, v));
+    }
+    if (!product || !product.specs || Object.keys(product.specs).length === 0) {
+      addSpecRow();
+    }
+    document.getElementById('productModal').classList.add('open');
+  }
+
+  function closeProductModal() {
+    document.getElementById('productModal').classList.remove('open');
+  }
+
+  function autoLabel() {
+    const cat = document.getElementById('fCat').value;
+    document.getElementById('fLabel').value = catLabels[cat] || cat;
+  }
+
+  function previewImg() {
+    const url = document.getElementById('fImg').value;
+    const preview = document.getElementById('imgPreview');
+    if (url) {
+      preview.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<span style=\\'color:var(--danger);font-size:0.65rem\\'>Invalid URL</span>'">`;
+    } else {
+      preview.innerHTML = '<span style="color:var(--text-dim);font-size:0.7rem">No image</span>';
+    }
+  }
+
+  function addSpecRow(key, val) {
+    const div = document.getElementById('specRows');
+    const row = document.createElement('div');
+    row.className = 'spec-row';
+    row.innerHTML = `<input type="text" placeholder="Key (e.g. Memory)" value="${key || ''}"><input type="text" placeholder="Value (e.g. 8GB DDR6)" value="${val || ''}"><button class="remove-spec" onclick="this.parentElement.remove()">&times;</button>`;
+    div.appendChild(row);
+  }
+
+  async function saveProduct() {
+    const id = document.getElementById('editProductId').value;
+    const specs = {};
+    document.querySelectorAll('#specRows .spec-row').forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const k = inputs[0].value.trim(), v = inputs[1].value.trim();
+      if (k && v) specs[k] = v;
+    });
+    const body = {
+      cat: document.getElementById('fCat').value,
+      label: document.getElementById('fLabel').value,
+      name: document.getElementById('fName').value,
+      price: parseFloat(document.getElementById('fPrice').value),
+      img: document.getElementById('fImg').value,
+      stock: document.getElementById('fStock').value,
+      condition: document.getElementById('fCondition').value,
+      badge: document.getElementById('fBadge').value || null,
+      specs
+    };
+    if (!body.name || !body.price) return alert('Name and price are required');
+    const btn = document.getElementById('saveProductBtn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    try {
+      const url = id ? `${API}/api/admin/products/${id}` : `${API}/api/admin/products`;
+      const method = id ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
+      closeProductModal();
+      await loadProducts();
+    } catch (err) { alert(err.message); }
+    btn.textContent = 'Save Product'; btn.disabled = false;
+  }
+
+  function editProduct(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (p) openProductModal(p);
+  }
+
+  async function deleteProduct(id, name) {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${API}/api/admin/products/${id}`, { method: 'DELETE', headers: authHeaders() });
+      if (!res.ok) throw new Error('Failed to delete');
+      await loadProducts();
+    } catch (err) { alert(err.message); }
+  }
+
+  function exportProducts() {
+    window.open(API + '/api/admin/export/products?token=' + token);
+  }
+
+  // ── Orders ─────────────────────────────────────────────────
+
+  async function loadOrders() {
+    try {
+      const res = await fetch(API + '/api/admin/orders', { headers: authHeaders() });
+      if (!res.ok) return;
+      allOrders = await res.json();
+      renderOrders();
+    } catch (err) { console.error(err); }
+  }
+
+  function renderOrders() {
+    const search = (document.getElementById('orderSearch').value || '').toLowerCase();
+    let list = allOrders;
+    if (search) list = list.filter(o => (o.id || '').toLowerCase().includes(search) || ((o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '')).toLowerCase().includes(search));
+    const tbody = document.getElementById('ordersBody');
+    tbody.innerHTML = list.map(o => `
+      <tr>
+        <td style="font-weight:600">${o.id}</td>
+        <td>${o.customer ? (o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
+        <td>${o.items ? o.items.length : 0}</td>
+        <td style="font-weight:600">${formatPrice(parseFloat(o.total) || 0)}</td>
+        <td>${o.payment || 'N/A'}</td>
+        <td>
+          <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px 8px;font-size:0.72rem;background:#12122a;border-radius:4px">
+            ${['Pending','Confirmed','Shipped','Completed'].map(s => `<option value="${s}" ${(o.status||'Pending')===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+        <td>${formatDate(o.timestamp)}</td>
+        <td><button onclick="toggleOrderDetail('${o.id}')" style="color:var(--cyan);font-size:0.72rem">Details</button></td>
+      </tr>
+      <tr id="detail-${o.id}" style="display:none"><td colspan="8">${orderDetailHTML(o)}</td></tr>
+    `).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No orders yet</td></tr>';
+  }
+
+  function orderDetailHTML(o) {
+    const c = o.customer || {};
+    const addr = o.shipping || {};
+    return `
+      <div class="order-detail">
+        <h4>Customer</h4>
+        <p>${c.firstName || ''} ${c.lastName || ''} &bull; ${c.email || ''} &bull; ${c.phone || ''}</p>
+        ${addr.address ? `<p style="margin-top:4px;color:var(--text-dim)">${addr.address}, ${addr.city || ''} ${addr.province || ''} ${addr.zip || ''}</p>` : ''}
+        ${o.notes ? `<p style="margin-top:8px"><strong>Notes:</strong> ${o.notes}</p>` : ''}
+        <h4 style="margin-top:12px">Items</h4>
+        <div class="order-items">
+          ${(o.items || []).map(i => `<div class="order-item"><span>${i.name || i.product || 'Item'} x${i.qty || i.quantity || 1}</span><span>${formatPrice(parseFloat(i.price || i.amount || 0) * (i.qty || i.quantity || 1))}</span></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleOrderDetail(id) {
+    const row = document.getElementById('detail-' + id);
+    if (row) row.style.display = row.style.display === 'none' ? '' : 'none';
+  }
+
+  async function updateOrderStatus(id, status) {
+    try {
+      await fetch(`${API}/api/admin/orders/${id}/status`, {
+        method: 'PUT', headers: authHeaders(), body: JSON.stringify({ status })
+      });
+    } catch (err) { alert('Failed to update status'); }
+  }
+
+  // ── Contacts ───────────────────────────────────────────────
+
+  async function loadContacts() {
+    try {
+      const res = await fetch(API + '/api/admin/contacts', { headers: authHeaders() });
+      if (!res.ok) return;
+      allContacts = await res.json();
+      renderContacts();
+    } catch (err) { console.error(err); }
+  }
+
+  function renderContacts() {
+    const search = (document.getElementById('contactSearch').value || '').toLowerCase();
+    let list = allContacts;
+    if (search) list = list.filter(c => (c.name || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search) || (c.message || '').toLowerCase().includes(search));
+    const tbody = document.getElementById('contactsBody');
+    tbody.innerHTML = list.map(c => `
+      <tr>
+        <td style="font-weight:500">${c.name}</td>
+        <td><a href="mailto:${c.email}">${c.email}</a></td>
+        <td>${c.phone || '-'}</td>
+        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.message}</td>
+        <td>${formatDate(c.timestamp)}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:40px">No contacts yet</td></tr>';
+  }
+
+  // ── Helpers ────────────────────────────────────────────────
+
+  function formatPrice(n) {
+    return '\u20B1' + (n || 0).toLocaleString('en-PH');
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '-';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // ── Export fix (token via header not query) ────────────────
+  // Override export to use auth header
+  async function exportProducts() {
+    try {
+      const res = await fetch(API + '/api/admin/export/products', { headers: authHeaders() });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'products-backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) { alert(err.message); }
+  }
+
+  // ── Init ───────────────────────────────────────────────────
+
+  (async function init() {
+    if (token && await verifyToken()) {
+      showAdmin();
+    } else {
+      token = '';
+      sessionStorage.removeItem('dcte_admin_token');
+    }
+  })();
+</script>
+</body>
+</html>

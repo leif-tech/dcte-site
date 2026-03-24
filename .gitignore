@@ -1,3 +1,5 @@
 node_modules
 .env
-data/
+data/orders.json
+data/contacts.json
+1
