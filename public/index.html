@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DCTE - Davao Computer Trade-in Express | Trade to Upgrade</title>
+  <title>DCTE | Davao Computer Trade-in Express | Trade to Upgrade</title>
   <meta name="description" content="1st in the Philippines to offer PC parts trade-ins. Trade your old computer parts for huge discounts on upgrades. Custom PC builds, repairs, and more in Davao City.">
   <meta name="keywords" content="DCTE, Davao Computer Trade-in Express, PC trade-in Philippines, computer parts Davao, gaming PC build, trade to upgrade, custom PC Davao City">
   <meta name="author" content="Davao Computer Trade-in Express">
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DCTE - Davao Computer Trade-in Express | Trade to Upgrade">
+  <meta property="og:title" content="DCTE | Davao Computer Trade-in Express | Trade to Upgrade">
   <meta property="og:description" content="1st in the Philippines to offer PC parts trade-ins! Trade your old PC parts for huge discounts. Custom builds, repairs, GPU/CPU sales in Davao City.">
   <meta property="og:image" content="/hero-1.jpg">
   <meta property="og:url" content="https://dcte-site-production.up.railway.app">
-  <meta property="og:site_name" content="DCTE - Davao Computer Trade-in Express">
+  <meta property="og:site_name" content="DCTE | Davao Computer Trade-in Express">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DCTE - Trade to Upgrade | PC Trade-In Davao">
+  <meta name="twitter:title" content="DCTE | Trade to Upgrade | PC Trade-In Davao">
   <meta name="twitter:description" content="1st in the Philippines to offer PC parts trade-ins! Custom gaming PC builds & upgrades in Davao City.">
   <meta name="twitter:image" content="/hero-1.jpg">
   <!-- Google Analytics -->
@@ -284,17 +284,16 @@
 
     /* ===== TRADE-IN STEPS ===== */
     .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
-    .steps-row::before{content:'';position:absolute;top:44px;left:16%;right:16%;height:2px;background:var(--grad);opacity:0.2}
     .step{text-align:center;padding:32px 20px}
     .step-num{
       width:56px;height:56px;border-radius:50%;background:var(--grad);
       display:flex;align-items:center;justify-content:center;
       font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:800;color:#fff;
-      margin:0 auto 20px;position:relative;z-index:1;box-shadow:0 4px 20px rgba(139,47,201,0.25);
+      margin:0 auto 20px;box-shadow:0 4px 20px rgba(139,47,201,0.25);
     }
     .step h3{font-family:'Montserrat',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:8px}
     .step p{color:var(--text);font-size:0.84rem;line-height:1.6}
-    @media(max-width:768px){.steps-row{grid-template-columns:1fr}.steps-row::before{display:none}}
+    @media(max-width:768px){.steps-row{grid-template-columns:1fr}}
 
     /* ===== REVIEWS ===== */
     .reviews-big{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
@@ -419,15 +418,6 @@
     /* Alt section bg */
     .section-alt{background:var(--card-alt)}
 
-    /* ===== HOME SEARCH ===== */
-    .search-section{padding:48px 0 56px;background:var(--card-alt)}
-    .home-search-wrap{max-width:640px;margin:0 auto}
-    .home-search{display:flex;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(139,47,201,0.1);border:1px solid var(--border);background:#fff}
-    .home-search input{flex:1;padding:16px 20px;border:none;font-size:1rem;font-family:'Open Sans',sans-serif;outline:none;background:transparent;color:var(--navy)}
-    .home-search input::placeholder{color:#a0aec0}
-    .home-search-btn{padding:16px 32px;background:var(--grad);color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.5px;border:none;cursor:pointer;transition:opacity .3s;white-space:nowrap}
-    .home-search-btn:hover{opacity:0.9}
-    @media(max-width:480px){.home-search{flex-direction:column}.home-search-btn{padding:14px 20px}}
 
     /* ===== FEATURED GRID (homepage) ===== */
     .featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -487,8 +477,7 @@
     .shop-card-price{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.92rem;color:var(--pink)}
     .shop-card-btn{padding:6px 12px;background:var(--grad);color:#fff;border-radius:6px;font-size:0.68rem;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;transition:all .3s;display:inline-block}
     .shop-card-btn:hover{opacity:0.9}
-    @media(max-width:900px){.shop-layout{grid-template-columns:1fr}.shop-sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:16px}.shop-search{grid-column:1/-1}.shop-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:480px){.shop-grid{grid-template-columns:1fr}.shop-sidebar{grid-template-columns:1fr}}
+    /* mobile shop overrides are in the mobile filter toggle section below */
 
     /* ===== PRODUCT BADGES ===== */
     .badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:4px;font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;z-index:1;color:#fff}
@@ -594,6 +583,41 @@
     .estimator-result .est-value{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;color:var(--purple);margin:8px 0}
     .estimator-result .est-note{font-size:0.8rem;color:var(--text-dim)}
 
+    /* ===== TRADE-IN BUBBLE + MODAL ===== */
+    .tradein-bubble{
+      position:fixed;bottom:24px;left:24px;z-index:99997;
+      display:flex;align-items:center;gap:8px;
+      padding:14px 22px;border-radius:50px;border:none;cursor:pointer;
+      background:var(--grad);color:#fff;
+      font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;
+      box-shadow:0 4px 24px rgba(139,47,201,0.4);
+      transition:all .3s;text-transform:uppercase;letter-spacing:0.5px;
+    }
+    .tradein-bubble:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(139,47,201,0.5)}
+    .tradein-bubble svg{width:20px;height:20px}
+    @media(max-width:480px){.tradein-bubble-label{display:none}.tradein-bubble{padding:14px;border-radius:50%}.tradein-bubble svg{width:24px;height:24px}}
+    .tradein-modal-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100000;
+      align-items:center;justify-content:center;padding:20px;
+    }
+    .tradein-modal-overlay.open{display:flex}
+    .tradein-modal{
+      background:#fff;border-radius:20px;max-width:640px;width:100%;
+      max-height:90vh;overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    }
+    .tradein-modal-header{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      padding:24px 28px 0;
+    }
+    .tradein-modal-close{
+      font-size:1.8rem;color:var(--text-dim);background:none;border:none;
+      cursor:pointer;padding:0 4px;line-height:1;
+    }
+    .tradein-modal-close:hover{color:var(--navy)}
+    .tradein-modal-body{padding:16px 28px 28px}
+    .tradein-modal .estimator-card{box-shadow:none;border:1px solid var(--border);padding:24px}
+
     /* ===== RECOMMENDED BUILDS ===== */
     .builds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
     .build-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
@@ -609,13 +633,6 @@
     .build-part-name{color:var(--navy);font-weight:600;text-align:right;max-width:60%}
     .build-actions{padding:0 20px 20px;display:flex;gap:8px}
     .build-actions button{flex:1;padding:10px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;cursor:pointer;transition:all .2s}
-
-    /* ===== RECENTLY VIEWED ===== */
-    .recent-section{padding:40px 0}
-    .recent-grid{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
-    .recent-grid::-webkit-scrollbar{height:4px}
-    .recent-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-    .recent-grid .shop-card{min-width:220px;scroll-snap-align:start;flex-shrink:0}
 
     /* ===== MESSENGER WIDGET ===== */
 
@@ -667,6 +684,122 @@
     .lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.4)}
     .lightbox-close{position:absolute;top:20px;right:24px;font-size:2rem;color:#fff;background:none;border:none;cursor:pointer;z-index:1;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:.2s}
     .lightbox-close:hover{background:rgba(255,255,255,0.15)}
+
+    /* ===== BROWSE BY CATEGORY TILES ===== */
+    .cat-tiles-section{padding:60px 0 48px;background:#fff}
+    .cat-tiles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .cat-tiles-grid .cat-tile:nth-child(-n+3){aspect-ratio:1.3}
+    .cat-tile{
+      position:relative;border-radius:16px;overflow:hidden;cursor:pointer;
+      background:var(--navy);aspect-ratio:1.5;display:flex;align-items:flex-end;
+      transition:all .4s;box-shadow:0 4px 20px rgba(26,26,62,0.15);
+    }
+    .cat-tile:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(139,47,201,0.25)}
+    .cat-tile-img{
+      position:absolute;inset:0;transition:transform .5s;
+    }
+    .cat-tile:hover .cat-tile-img{transform:scale(1.05)}
+    .cat-tile-img img{width:100%;height:100%;object-fit:cover}
+    .cat-tile-img .placeholder{font-size:4rem;filter:grayscale(0.3)}
+    .cat-tile-overlay{
+      position:relative;z-index:1;width:100%;padding:20px 24px;
+      background:linear-gradient(transparent,rgba(26,26,62,0.95) 50%);
+      display:flex;align-items:flex-end;justify-content:space-between;
+    }
+    .cat-tile-name{
+      font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:800;
+      text-transform:uppercase;letter-spacing:1.5px;color:#fff;margin-bottom:2px;
+    }
+    .cat-tile-count{font-size:0.72rem;color:rgba(255,255,255,0.55);font-weight:600}
+    .cat-tile-arrow{
+      color:rgba(255,255,255,0.4);font-size:1.3rem;transition:all .3s;
+      transform:translateX(0);flex-shrink:0;
+    }
+    .cat-tile:hover .cat-tile-arrow{color:#fff;transform:translateX(4px)}
+    @media(max-width:900px){.cat-tiles-grid{grid-template-columns:repeat(2,1fr)}.cat-tiles-grid .cat-tile:nth-child(-n+3){aspect-ratio:1.5}}
+    @media(max-width:480px){.cat-tiles-grid{grid-template-columns:1fr}.cat-tile,.cat-tiles-grid .cat-tile:nth-child(-n+3){aspect-ratio:1.6}}
+
+    /* ===== TOAST NOTIFICATIONS ===== */
+    .toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+    .toast{
+      pointer-events:auto;
+      display:flex;align-items:center;gap:12px;padding:14px 20px;
+      background:#fff;border:1px solid var(--border);border-radius:12px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.12);min-width:280px;max-width:380px;
+      transform:translateX(120%);opacity:0;transition:all .4s cubic-bezier(0.4,0,0.2,1);
+      font-size:0.85rem;color:var(--navy);
+    }
+    .toast.show{transform:translateX(0);opacity:1}
+    .toast-icon{font-size:1.2rem;flex-shrink:0}
+    .toast-body{flex:1;min-width:0}
+    .toast-title{font-weight:700;font-family:'Montserrat',sans-serif;font-size:0.78rem;margin-bottom:2px}
+    .toast-msg{font-size:0.78rem;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .toast-close{cursor:pointer;color:var(--text-dim);font-size:1.1rem;padding:4px;border-radius:4px;flex-shrink:0}
+    .toast-close:hover{background:var(--card-alt)}
+    .toast-progress{position:absolute;bottom:0;left:0;height:3px;background:var(--grad);border-radius:0 0 12px 12px;animation:toastProgress 3s linear forwards}
+    @keyframes toastProgress{0%{width:100%}100%{width:0}}
+    @media(max-width:480px){.toast-container{right:12px;left:12px;bottom:16px}.toast{min-width:auto;max-width:none}}
+
+    /* ===== QUICK ACTION BUTTONS ON CARDS ===== */
+    .card-quick-actions{
+      position:absolute;top:10px;right:40px;display:flex;gap:6px;z-index:2;
+      opacity:0;transform:translateY(-6px);transition:all .3s;
+    }
+    .feat-card:hover .card-quick-actions,
+    .shop-card:hover .card-quick-actions{opacity:1;transform:translateY(0)}
+    .card-quick-btn{
+      width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.95);
+      border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:all .2s;color:var(--text-dim);font-size:0.9rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    }
+    .card-quick-btn:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
+    .card-quick-btn.wishlisted{color:var(--pink);background:rgba(233,30,140,0.1);border-color:var(--pink)}
+    @media(max-width:768px){.card-quick-actions{opacity:1;transform:translateY(0)}}
+
+    /* ===== MOBILE FILTER TOGGLE ===== */
+    .mobile-filter-toggle{
+      display:none;padding:12px 20px;background:var(--grad);color:#fff;border-radius:10px;
+      font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;
+      text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;
+      width:100%;justify-content:center;align-items:center;gap:8px;
+    }
+    .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:5999}
+    .filter-overlay.open{display:block}
+    .filter-overlay-close{display:none}
+    @media(max-width:900px){
+      .mobile-filter-toggle{display:flex}
+      .shop-sidebar{
+        display:block!important;position:fixed;top:0;left:0;width:320px;max-width:85vw;height:100%;
+        background:#fff;z-index:6000;padding:20px;overflow-y:auto;
+        box-shadow:4px 0 24px rgba(0,0,0,0.15);
+        transform:translateX(-100%);transition:transform .3s;
+      }
+      .shop-sidebar.open{transform:translateX(0)}
+      .filter-overlay-close{
+        display:flex;align-items:center;justify-content:space-between;
+        margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);
+      }
+      .filter-overlay-close h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy)}
+      .filter-overlay-close button{font-size:1.5rem;color:var(--text-dim);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+      .filter-overlay-close button:hover{background:var(--card-alt)}
+      .shop-layout{grid-template-columns:1fr!important}
+      .shop-grid{grid-template-columns:repeat(2,1fr)!important}
+    }
+    @media(max-width:480px){
+      .shop-grid{grid-template-columns:1fr!important}
+    }
+
+    /* ===== SCROLL TO TOP ===== */
+    .scroll-top-btn{
+      position:fixed;bottom:92px;right:30px;width:40px;height:40px;border-radius:50%;
+      background:var(--grad);color:#fff;border:none;cursor:pointer;z-index:100000;
+      display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+      box-shadow:0 4px 16px rgba(139,47,201,0.3);opacity:0;visibility:hidden;
+      transform:translateY(12px);transition:all .3s;
+    }
+    .scroll-top-btn.show{opacity:1;visibility:visible;transform:translateY(0)}
+    .scroll-top-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,47,201,0.4)}
   </style>
 </head>
 <body>
@@ -742,7 +875,7 @@
             <h1><span class="grad">TRADE</span> to <span class="grad">UPGRADE</span></h1>
             <p class="hero-desc">Your one-stop shop for affordable, quality PC parts and services. Trade in your old components and get huge discounts on upgrades.</p>
             <div class="hero-buttons">
-              <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="btn btn-cyan">Shop on Shopee</a>
+              <a href="#" class="btn btn-cyan" onclick="event.preventDefault();openShop('all')">Shop Now</a>
               <a href="#trade-in" class="btn btn-outline">Learn More</a>
             </div>
           </div>
@@ -764,11 +897,11 @@
       <div class="hero-slide hero-slide-3">
         <div class="container">
           <div class="hero-inner">
-            <div class="hero-badge"><span class="dot"></span> Now Open - 2 Branches</div>
+            <div class="hero-badge"><span class="dot"></span> Now Open | 2 Branches</div>
             <h1>Visit Us in <span class="grad">Davao City</span></h1>
             <p class="hero-desc">Agdao and Ecoland branches ready to serve you. Delivery available to Panabo, Digos, and across Davao City.</p>
             <div class="hero-buttons">
-              <a href="#location" class="btn btn-primary">Find a Store</a>
+              <a href="#location" class="btn btn-primary">See Our Locations</a>
               <a href="tel:09956533350" class="btn btn-outline">Call Now</a>
             </div>
           </div>
@@ -822,21 +955,20 @@
     </div>
   </div>
 
-  <!-- SEARCH BAR -->
-  <section class="section search-section" id="search">
+  <!-- BROWSE BY CATEGORY -->
+  <section class="cat-tiles-section" id="categories">
     <div class="container">
       <div class="section-header fade-in">
-        <p class="section-label">Find What You Need</p>
-        <h2 class="section-title">Search Products</h2>
+        <p class="section-label">What Are You Looking For?</p>
+        <h2 class="section-title">Explore Our Parts</h2>
+        <p class="section-desc">From GPUs to full PC bundles. Pick a category and find your next upgrade.</p>
       </div>
-      <div class="home-search-wrap fade-in">
-        <form class="home-search" onsubmit="homeSearch(event)">
-          <input type="text" id="homeSearchInput" placeholder="Search for PC parts... (e.g. RTX 4060, DDR5, monitor, cooler)">
-          <button type="submit" class="home-search-btn">Search</button>
-        </form>
+      <div class="cat-tiles-grid fade-in" id="catTilesGrid">
+        <p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">Loading categories...</p>
       </div>
     </div>
   </section>
+
 
   <!-- PARTNER BRANDS TICKER -->
   <div class="brand-ticker">
@@ -880,20 +1012,8 @@
     </div>
   </div>
 
-  <!-- FEATURED PRODUCTS (Homepage) -->
-  <section class="section" id="shop">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Featured</p>
-        <h2 class="section-title">Popular Products</h2>
-        <p class="section-desc">Some of our best sellers. Browse the full catalog for more.</p>
-      </div>
-      <div class="featured-grid fade-in" id="featuredGrid"><p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">Loading products...</p></div>
-      <div style="text-align:center;margin-top:36px" class="fade-in">
-        <button class="btn btn-primary" onclick="openShop('all')">Browse All Products</button>
-      </div>
-    </div>
-  </section>
+  <!-- Shop anchor for nav links -->
+  <div id="shop"></div>
 
   <!-- SHOP PAGE (hidden, shown as overlay) -->
   <div class="shop-page" id="shopPage">
@@ -906,8 +1026,13 @@
     </div>
     <div class="shop-body">
       <div class="container">
+        <div class="filter-overlay" id="filterOverlay" onclick="closeMobileFilters()"></div>
         <div class="shop-layout">
-          <aside class="shop-sidebar">
+          <aside class="shop-sidebar" id="shopSidebar">
+            <div class="filter-overlay-close">
+              <h3>Filters</h3>
+              <button onclick="closeMobileFilters()">&times;</button>
+            </div>
             <div class="shop-search">
               <input type="text" id="shopSearch" placeholder="Search products..." oninput="filterShop()">
             </div>
@@ -930,6 +1055,7 @@
             <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;padding:10px 16px;font-size:0.78rem" onclick="resetFilters()">Reset Filters</button>
           </aside>
           <main class="shop-main">
+            <button class="mobile-filter-toggle" onclick="openMobileFilters()">&#9776; Filters &amp; Sort</button>
             <div class="shop-header">
               <span class="shop-count" id="shopCount">97 products</span>
               <select id="shopSort" onchange="filterShop()">
@@ -967,11 +1093,11 @@
       <div class="section-header fade-in">
         <p class="section-label">What We Offer</p>
         <h2 class="section-title">Our Services</h2>
-        <p class="section-desc">From trade-ins to full custom builds - everything you need for your PC under one roof.</p>
+        <p class="section-desc">From trade-ins to full custom builds, everything you need for your PC under one roof.</p>
       </div>
       <div class="services-grid">
         <div class="service-card glass fade-in"><div class="svc-icon">&#128260;</div><h3>Trade-In Program</h3><p>Bring in your old CPU, GPU, RAM, motherboard, or any PC component. We assess its value and give you a discount on your next upgrade.</p></div>
-        <div class="service-card glass fade-in"><div class="svc-icon">&#128187;</div><h3>Custom PC Builds</h3><p>From budget school rigs to high-end gaming monsters - our team builds PCs tailored to your needs and budget.</p></div>
+        <div class="service-card glass fade-in"><div class="svc-icon">&#128187;</div><h3>Custom PC Builds</h3><p>From budget school rigs to high-end gaming monsters, our team builds PCs tailored to your needs and budget.</p></div>
         <div class="service-card glass fade-in"><div class="svc-icon">&#128295;</div><h3>PC Repair & Upgrades</h3><p>Slow performance? Hardware issues? We diagnose and fix problems fast. Need a RAM or SSD upgrade? We handle that too.</p></div>
         <div class="service-card glass fade-in"><div class="svc-icon">&#9889;</div><h3>CPU & GPU Sales</h3><p>Shop the latest processors and graphics cards from AMD and Intel. Brand new and quality pre-owned at competitive prices.</p></div>
       </div>
@@ -987,9 +1113,16 @@
         <p class="section-desc">Our trade-in process is fast, fair, and hassle-free.</p>
       </div>
       <div class="steps-row">
-        <div class="step glass fade-in"><div class="step-num">1</div><h3>Bring Your Parts</h3><p>Visit our Agdao or Ecoland branch with your old PC parts - CPUs, GPUs, RAM, motherboards, PSUs, and more.</p></div>
+        <div class="step glass fade-in"><div class="step-num">1</div><h3>Bring Your Parts</h3><p>Visit our Agdao or Ecoland branch with your old PC parts: CPUs, GPUs, RAM, motherboards, PSUs, and more.</p></div>
         <div class="step glass fade-in"><div class="step-num">2</div><h3>Get Assessed</h3><p>Our technicians test and evaluate your components on the spot. Fair trade-in value within minutes.</p></div>
         <div class="step glass fade-in"><div class="step-num">3</div><h3>Upgrade & Save</h3><p>Apply your trade-in value as a discount on any new parts or builds. Walk out with a better PC.</p></div>
+      </div>
+      <div class="tradein-hint fade-in" style="text-align:center;margin-top:32px">
+        <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Want to know how much your old parts are worth?</p>
+        <button onclick="document.getElementById('tradeinModal').classList.add('open')" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Try the Trade-In Estimator
+        </button>
       </div>
     </div>
   </section>
@@ -1002,7 +1135,7 @@
           <p class="section-label">& Who We Are</p>
           <h2 class="section-title">About DCTE</h2>
           <div class="about-text">
-            <p>Davao Computer Trade-in Express (DCTE) is the first computer store in the Philippines to offer a dedicated PC parts trade-in program. We make upgrading your setup easy and affordable - bring in your old components, get them assessed, and walk out with better hardware at a fraction of the price.</p>
+            <p>Davao Computer Trade-in Express (DCTE) is the first computer store in the Philippines to offer a dedicated PC parts trade-in program. We make upgrading your setup easy and affordable. Bring in your old components, get them assessed, and walk out with better hardware at a fraction of the price.</p>
             <p>Whether you're a student building your first PC, a gamer chasing higher frames, or a professional needing a workstation upgrade, DCTE has the parts, expertise, and the best deals in Mindanao.</p>
           </div>
           <div class="about-features">
@@ -1024,41 +1157,50 @@
     </div>
   </section>
 
-  <!-- TRADE-IN ESTIMATOR -->
-  <section class="section" id="estimator">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Find Out Your Value</p>
-        <h2 class="section-title">Trade-In Estimator</h2>
-        <p class="section-desc">Get an estimated trade-in value for your old PC parts. Bring them to our store for an exact assessment.</p>
-      </div>
-      <div class="estimator-card fade-in">
-        <label for="estType">Component Type</label>
-        <div class="est-types" id="estTypes">
-          <button class="est-type-btn" data-val="gpu" onclick="selectEstType(this)"><span class="est-type-icon">🎮</span>GPU / Video Card</button>
-          <button class="est-type-btn" data-val="cpu" onclick="selectEstType(this)"><span class="est-type-icon">⚡</span>CPU / Processor</button>
-          <button class="est-type-btn" data-val="ram" onclick="selectEstType(this)"><span class="est-type-icon">🧩</span>RAM / Memory</button>
-          <button class="est-type-btn" data-val="mobo" onclick="selectEstType(this)"><span class="est-type-icon">🔧</span>Motherboard</button>
-          <button class="est-type-btn" data-val="psu" onclick="selectEstType(this)"><span class="est-type-icon">🔌</span>Power Supply</button>
-          <button class="est-type-btn" data-val="monitor" onclick="selectEstType(this)"><span class="est-type-icon">🖥️</span>Monitor</button>
+  <!-- TRADE-IN ESTIMATOR BUBBLE + MODAL -->
+  <button class="tradein-bubble" id="tradeinBubble" onclick="document.getElementById('tradeinModal').classList.add('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <span class="tradein-bubble-label">Trade-In</span>
+  </button>
+  <div class="tradein-modal-overlay" id="tradeinModal">
+    <div class="tradein-modal">
+      <div class="tradein-modal-header">
+        <div>
+          <p class="section-label" style="margin-bottom:4px;text-align:left">Find Out Your Value</p>
+          <h2 style="font-family:'Montserrat',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy)">Trade-In Estimator</h2>
         </div>
-        <input type="hidden" id="estType" value="">
-        <label for="estModel">Model / Series</label>
-        <select id="estModel" onchange="updateEstCondition()">
-          <option value="">Select model...</option>
-        </select>
-        <label for="estCond">Condition</label>
-        <select id="estCond" onchange="calcEstimate()">
-          <option value="">Select condition...</option>
-          <option value="excellent">Excellent - Works perfectly, no scratches</option>
-          <option value="good">Good - Works well, minor wear</option>
-          <option value="fair">Fair - Works but has issues or cosmetic damage</option>
-          <option value="broken">Not Working - For parts only</option>
-        </select>
-        <div id="estResult" style="display:none"></div>
+        <button class="tradein-modal-close" onclick="document.getElementById('tradeinModal').classList.remove('open')">&times;</button>
+      </div>
+      <div class="tradein-modal-body">
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:20px">Get an estimated trade-in value for your old PC parts. Bring them to our store for an exact assessment.</p>
+        <div class="estimator-card">
+          <label for="estType">Component Type</label>
+          <div class="est-types" id="estTypes">
+            <button class="est-type-btn" data-val="gpu" onclick="selectEstType(this)"><span class="est-type-icon">🎮</span>GPU / Video Card</button>
+            <button class="est-type-btn" data-val="cpu" onclick="selectEstType(this)"><span class="est-type-icon">⚡</span>CPU / Processor</button>
+            <button class="est-type-btn" data-val="ram" onclick="selectEstType(this)"><span class="est-type-icon">🧩</span>RAM / Memory</button>
+            <button class="est-type-btn" data-val="mobo" onclick="selectEstType(this)"><span class="est-type-icon">🔧</span>Motherboard</button>
+            <button class="est-type-btn" data-val="psu" onclick="selectEstType(this)"><span class="est-type-icon">🔌</span>Power Supply</button>
+            <button class="est-type-btn" data-val="monitor" onclick="selectEstType(this)"><span class="est-type-icon">🖥️</span>Monitor</button>
+          </div>
+          <input type="hidden" id="estType" value="">
+          <label for="estModel">Model / Series</label>
+          <select id="estModel" onchange="updateEstCondition()">
+            <option value="">Select model...</option>
+          </select>
+          <label for="estCond">Condition</label>
+          <select id="estCond" onchange="calcEstimate()">
+            <option value="">Select condition...</option>
+            <option value="excellent">Excellent: Works perfectly, no scratches</option>
+            <option value="good">Good: Works well, minor wear</option>
+            <option value="fair">Fair: Works but has issues or cosmetic damage</option>
+            <option value="broken">Not Working: For parts only</option>
+          </select>
+          <div id="estResult" style="display:none"></div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- RECOMMENDED BUILDS -->
   <section class="section section-alt" id="builds">
@@ -1072,13 +1214,6 @@
     </div>
   </section>
 
-  <!-- RECENTLY VIEWED -->
-  <div class="recent-section" id="recentSection" style="display:none">
-    <div class="container">
-      <h3 style="font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px">Recently Viewed</h3>
-      <div class="recent-grid" id="recentGrid"></div>
-    </div>
-  </div>
 
   <!-- REVIEWS -->
   <section class="section" id="reviews">
@@ -1121,12 +1256,12 @@
       <div class="loc-grid fade-in">
         <div class="loc-cards">
           <div class="loc-card glass">
-            <h3>&#128205; Branch 1 - Agdao</h3>
+            <h3>&#128205; Branch 1 | Agdao</h3>
             <p class="addr">Agdao Sitio Coreas Leon Garcia, Davao City (in front of Shell)</p>
             <a href="https://maps.app.goo.gl/b5cYKX8HaVByKo5dA" target="_blank" rel="noopener" class="loc-link">&#10132; Open in Google Maps</a>
           </div>
           <div class="loc-card glass">
-            <h3>&#128205; Branch 2 - Ecoland</h3>
+            <h3>&#128205; Branch 2 | Ecoland</h3>
             <p class="addr">Ecoland Quimpo Blvd., Davao City (beside Motolite)</p>
             <a href="https://maps.app.goo.gl/eiJf1PiikvJ7RPbf6" target="_blank" rel="noopener" class="loc-link">&#10132; Open in Google Maps</a>
           </div>
@@ -1161,8 +1296,8 @@
           <div class="contact-item"><div class="contact-icon">&#128222;</div><div><div class="label">Phone</div><div class="value"><a href="tel:09956533350">0995 653 3350</a></div></div></div>
           <div class="contact-item"><div class="contact-icon">&#128222;</div><div><div class="label">Phone (Alt)</div><div class="value"><a href="tel:09153502729">0915 350 2729</a></div></div></div>
           <div class="contact-item"><div class="contact-icon">&#9993;</div><div><div class="label">Email</div><div class="value"><a href="mailto:joannamasarieta1@gmail.com">joannamasarieta1@gmail.com</a></div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 1 - Agdao</div><div class="value">Sitio Coreas Leon Garcia (in front of Shell)</div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 2 - Ecoland</div><div class="value">Quimpo Blvd. (beside Motolite)</div></div></div>
+          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 1 | Agdao</div><div class="value">Sitio Coreas Leon Garcia (in front of Shell)</div></div></div>
+          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 2 | Ecoland</div><div class="value">Quimpo Blvd. (beside Motolite)</div></div></div>
           <div class="social-links">
             <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="social-link" title="Facebook"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
             <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="social-link" title="TikTok"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
@@ -1222,6 +1357,12 @@
       </div>
     </div>
   </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCROLL TO TOP -->
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8593;</button>
 
   <!-- AI CHATBOT -->
   <script src="/widget.js" data-bot-id="35842a66-4c04-4421-a326-8f98e65edfce" data-api-url="https://whitelabel-ai-production.up.railway.app"></script>
@@ -1301,7 +1442,7 @@
         });
         productsLoaded=true;
         if(typeof renderFeatured==='function')renderFeatured();
-        if(typeof renderRecent==='function')renderRecent();
+
         if(typeof renderWish==='function')renderWish();
         if(typeof updateCompareBar==='function')updateCompareBar();
         if(typeof renderCart==='function')renderCart();
@@ -1311,7 +1452,8 @@
         if(typeof filtersBuilt!=='undefined'){filtersBuilt=false;}
       }catch(e){
         console.error('Failed to load products:',e);
-        document.getElementById('featuredGrid').innerHTML='<p style="text-align:center;color:#ef4444;padding:40px;grid-column:1/-1">Failed to load products. Please refresh.</p>';
+        const catGrid=document.getElementById('catTilesGrid');
+        if(catGrid)catGrid.innerHTML='<p style="text-align:center;color:#ef4444;padding:40px;grid-column:1/-1">Failed to load products. Please refresh.</p>';
       }
     }
 
@@ -1327,7 +1469,7 @@
 
     // Product meta now loaded from API via loadProducts()
 
-    // Card renderer with badges — whole card is clickable
+    // Card renderer with badges  - whole card is clickable
     function cardHTML(p,prefix){
       const idx=products.indexOf(p);
       const meta=productMeta[idx]||{stock:'in',condition:'new',badge:null};
@@ -1337,16 +1479,74 @@
       const stockText=meta.stock==='in'?'In Stock':meta.stock==='low'?'Low Stock':'Contact Us';
       const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
       const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
-      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
+      const wishIcon=isWished(idx)?'&#9829;':'&#9825;';
+      const wishClass=isWished(idx)?' wishlisted':'';
+      const quickActions=`<div class="card-quick-actions"><button class="card-quick-btn${wishClass}" onclick="event.stopPropagation();toggleWish(${idx})" title="Wishlist">${wishIcon}</button><button class="card-quick-btn" onclick="event.stopPropagation();toggleCompare(${idx});showToast('Compare Updated','${p.name.replace(/'/g,"\\'")}','&#9878;')" title="Compare">&#9878;</button></div>`;
+      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
     }
 
-    // FEATURED PRODUCTS (homepage - 8 hand-picked items across categories)
-    const featured=[0,1,6,7,8,9,86,92]; // GPUs, CPUs, Monitor, Cooler
-    function renderFeatured(){
-      const picks=featured.map(i=>products[i]).filter(Boolean);
-      document.getElementById('featuredGrid').innerHTML=picks.map(p=>cardHTML(p,'feat')).join('');
+    // ===== CATEGORY TILES (homepage) =====
+    const catTileConfig=[
+      {key:'gpu',label:'Video Cards',icon:'🎮'},
+      {key:'cpu',label:'Processors',icon:'⚡'},
+      {key:'mobo',label:'Motherboards',icon:'🔧'},
+      {key:'ram',label:'Memory',icon:'🧩'},
+      {key:'psu',label:'PSU / UPS',icon:'🔌'},
+      {key:'monitor',label:'Monitors',icon:'🖥️'},
+      {key:'case',label:'Cases',icon:'🗄️'},
+      {key:'cooler',label:'Coolers',icon:'❄️'},
+      {key:'bundle',label:'PC Bundles',icon:'💻'}
+    ];
+    function renderCategoryTiles(){
+      const grid=document.getElementById('catTilesGrid');
+      const tiles=catTileConfig.map(c=>{
+        const catProducts=products.filter(p=>p.cat===c.key);
+        if(!catProducts.length)return '';
+        const imgHTML=`<img src="/cat-images/${c.key}.jpg" alt="${c.label}" loading="lazy">`;
+        return `<div class="cat-tile" onclick="openShop('${c.key}')">
+          <div class="cat-tile-img">${imgHTML}</div>
+          <div class="cat-tile-overlay">
+            <div><div class="cat-tile-name">${c.label}</div><div class="cat-tile-count">${catProducts.length} product${catProducts.length!==1?'s':''}</div></div>
+            <span class="cat-tile-arrow">&#8594;</span>
+          </div>
+        </div>`;
+      }).filter(Boolean).join('');
+      grid.innerHTML=tiles||'<p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">No categories found.</p>';
     }
-    // renderFeatured() called by loadProducts() after data loads
+    function renderFeatured(){renderCategoryTiles();}
+
+    // ===== TOAST NOTIFICATION SYSTEM =====
+    function showToast(title,msg,icon){
+      const container=document.getElementById('toastContainer');
+      const toast=document.createElement('div');
+      toast.className='toast';
+      toast.innerHTML=`<span class="toast-icon">${icon||'&#10003;'}</span><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div><span class="toast-close" onclick="this.parentElement.remove()">&times;</span><div class="toast-progress"></div>`;
+      container.appendChild(toast);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>toast.classList.add('show')));
+      setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>toast.remove(),400)},3000);
+    }
+
+    // ===== MOBILE FILTER TOGGLE =====
+    function openMobileFilters(){
+      document.getElementById('shopSidebar').classList.add('open');
+      document.getElementById('filterOverlay').classList.add('open');
+    }
+    function closeMobileFilters(){
+      document.getElementById('shopSidebar').classList.remove('open');
+      document.getElementById('filterOverlay').classList.remove('open');
+    }
+
+    // ===== SCROLL TO TOP =====
+    (function(){
+      const btn=document.getElementById('scrollTopBtn');
+      function checkScroll(){
+        const target=document.getElementById('shopPage').classList.contains('open')?document.getElementById('shopPage'):window;
+        const scrollY=target===window?window.scrollY:target.scrollTop;
+        btn.classList.toggle('show',scrollY>400);
+      }
+      window.addEventListener('scroll',checkScroll,{passive:true});
+      document.getElementById('shopPage').addEventListener('scroll',checkScroll,{passive:true});
+    })();
 
     // LIGHTBOX
     function openLightbox(src){
@@ -1446,22 +1646,24 @@
     const categories=[{key:'all',label:'All'},{key:'bundle',label:'PC Bundles'},{key:'gpu',label:'Video Cards'},{key:'cpu',label:'Processors'},{key:'mobo',label:'Motherboards'},{key:'ram',label:'Memory'},{key:'psu',label:'PSU / UPS'},{key:'monitor',label:'Monitors'},{key:'case',label:'Cases'},{key:'cooler',label:'Coolers'}];
 
     let filtersBuilt=false;
+    let brandsInitialized=false;
     function buildFilters(){
       if(filtersBuilt)return;filtersBuilt=true;
+      brandsInitialized=false;
       // Categories
       const catDiv=document.getElementById('filterCats');
       catDiv.innerHTML=categories.map(c=>`<label><input type="checkbox" value="${c.key}" ${c.key==='all'?'checked':''} onchange="handleCatFilter(this)">${c.label}<span style="margin-left:auto;font-size:0.72rem;color:var(--text-dim)">${c.key==='all'?products.length:products.filter(p=>p.cat===c.key).length}</span></label>`).join('');
-      // Brands - initial full list
-      updateBrands(products);
+      // Brands - initial full list (all checked)
+      updateBrands(products,true);
     }
 
     // Dynamically update brand checkboxes based on visible products
-    function updateBrands(visibleProducts){
+    function updateBrands(visibleProducts,forceCheckAll){
       const brandDiv=document.getElementById('filterBrands');
       const prevChecked=new Set([...document.querySelectorAll('#filterBrands input:checked')].map(c=>c.value));
-      const isFirstBuild=brandDiv.innerHTML==='';
+      brandsInitialized=true;
       const visibleBrands=[...new Set(visibleProducts.map(p=>getBrand(p.name)))].sort();
-      brandDiv.innerHTML=visibleBrands.map(b=>`<label><input type="checkbox" value="${b}" ${isFirstBuild||prevChecked.has(b)?'checked':''} onchange="filterShop()">${b}</label>`).join('');
+      brandDiv.innerHTML=visibleBrands.map(b=>`<label><input type="checkbox" value="${b}" ${prevChecked.has(b)?'checked':''} onchange="filterShop()">${b}</label>`).join('');
     }
 
     function handleCatFilter(cb){
@@ -1473,7 +1675,7 @@
         const anyChecked=[...checks].slice(1).some(c=>c.checked);
         if(!anyChecked)checks[0].checked=true;
       }
-      // Update brands based on selected categories before filtering
+      // Update available brands based on selected categories (keep none checked by default)
       const catChecks=[...document.querySelectorAll('#filterCats input:checked')].map(c=>c.value);
       const catProducts=catChecks.includes('all')?products:products.filter(p=>catChecks.includes(p.cat));
       updateBrands(catProducts);
@@ -1499,7 +1701,7 @@
           if(!nameMatch&&!labelMatch&&!catMatch)return false;
         }
         if(!catChecks.includes('all')&&!catChecks.includes(p.cat))return false;
-        if(!brandChecks.includes(getBrand(p.name)))return false;
+        if(brandChecks.length&&!brandChecks.includes(getBrand(p.name)))return false;
         if(p.price<minP||p.price>maxP)return false;
         return true;
       });
@@ -1537,15 +1739,6 @@
       filterShop();
     }
 
-    // HOME SEARCH - opens shop page with search term pre-filled
-    function homeSearch(e){
-      e.preventDefault();
-      const q=document.getElementById('homeSearchInput').value.trim();
-      if(!q)return;
-      openShop('all');
-      document.getElementById('shopSearch').value=q;
-      filterShop();
-    }
 
     // ===== NAVBAR SEARCH WITH AUTO-SUGGEST =====
     function navAutoSuggest(){
@@ -1575,11 +1768,12 @@
     let cart=JSON.parse(localStorage.getItem('dcte_cart')||'[]');
     function saveCart(){localStorage.setItem('dcte_cart',JSON.stringify(cart));renderCart();updateCartBadge()}
     function updateCartBadge(){const t=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartBadge').textContent=t||''}
-    function addToCart(idx,qty=1){
+    function addToCart(idx,qty=1,silent=false){
       const p=products[idx];if(!p)return;
       const existing=cart.find(i=>i.idx===idx);
       if(existing){existing.qty+=qty}else{cart.push({idx,qty,name:p.name,price:p.price,img:p.img})}
       saveCart();
+      if(!silent&&typeof showToast==='function')showToast('Added to Cart',p.name,'&#128722;');
     }
     function removeFromCart(idx){cart=cart.filter(i=>i.idx!==idx);saveCart()}
     function updateCartQty(idx,delta){
@@ -1610,8 +1804,13 @@
     function saveWish(){localStorage.setItem('dcte_wish',JSON.stringify(wishlist));renderWish();updateWishBadge()}
     function updateWishBadge(){document.getElementById('wishBadge').textContent=wishlist.length||''}
     function toggleWish(idx){
-      if(wishlist.includes(idx)){wishlist=wishlist.filter(i=>i!==idx)}else{wishlist.push(idx)}
+      const wasWished=wishlist.includes(idx);
+      if(wasWished){wishlist=wishlist.filter(i=>i!==idx)}else{wishlist.push(idx)}
       saveWish();
+      if(typeof showToast==='function'){
+        const p=products[idx];
+        if(p)showToast(wasWished?'Removed from Wishlist':'Added to Wishlist',p.name,wasWished?'&#9825;':'&#9829;');
+      }
     }
     function isWished(idx){return wishlist.includes(idx)}
     function renderWish(){
@@ -1729,12 +1928,17 @@
       document.getElementById('estResult').innerHTML=`<div class="estimator-result"><div style="font-size:0.85rem;color:var(--navy);font-weight:600">Estimated Trade-In Value</div><div class="est-value">${formatPrice(low)} - ${formatPrice(high)}</div><div class="est-note">* This is an estimate only. Visit our store for an exact assessment.</div><a href="https://www.facebook.com/messages/t/DCTE168" target="_blank" style="display:inline-block;margin-top:12px;padding:10px 24px;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase">Message Us to Trade In</a></div>`;
     }
 
+    // Trade-in modal: close on overlay click
+    document.getElementById('tradeinModal').addEventListener('click',function(e){
+      if(e.target===this)this.classList.remove('open');
+    });
+
     // ===== RECOMMENDED BUILDS =====
     const builds=[
-      {name:'PC Set 1 — Entry Build',price:24995,origPrice:27995,use:'Office, Browsing, Light Gaming',parts:{Processor:'AMD Ryzen 5 3400G (4-Core/8-Thread)',Motherboard:'Gigabyte A520M',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'256GB SATA SSD','Power Supply':'800W CVS',Fans:'M05 RGB Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 2 — Black Build',price:29995,origPrice:32995,use:'1080p Gaming, Multitasking',parts:{Processor:'AMD Ryzen 5 5600GT (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W CVS',Fans:'3x Rainbow Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 3 — Dual Monitor',price:42995,origPrice:46995,use:'Dual Monitor Gaming & Streaming',parts:{Processor:'AMD Ryzen 5 5500 (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'GS550W 80+ Rated','Graphics Card':'RX580 8GB 256-bit',Fans:'3x Mirror RGB Fans',Monitor:'2x SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Monitor Mount, Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 4 — Black Build',price:49995,origPrice:54995,use:'1080p-1440p High Settings Gaming',parts:{Processor:'AMD Ryzen 5 5600X (6-Core/12-Thread)',Motherboard:'AM4 B450M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz w/ Heatsink (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W 80+ Bronze','Graphics Card':'RTX 3050 Dual Fan',Fans:'3x Mirror RGB Fans',Monitor:'N-Vision 27" IPS 240Hz',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}}
+      {name:'PC Set 1  - Entry Build',price:24995,origPrice:27995,use:'Office, Browsing, Light Gaming',parts:{Processor:'AMD Ryzen 5 3400G (4-Core/8-Thread)',Motherboard:'Gigabyte A520M',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'256GB SATA SSD','Power Supply':'800W CVS',Fans:'M05 RGB Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 2  - Black Build',price:29995,origPrice:32995,use:'1080p Gaming, Multitasking',parts:{Processor:'AMD Ryzen 5 5600GT (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W CVS',Fans:'3x Rainbow Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 3  - Dual Monitor',price:42995,origPrice:46995,use:'Dual Monitor Gaming & Streaming',parts:{Processor:'AMD Ryzen 5 5500 (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'GS550W 80+ Rated','Graphics Card':'RX580 8GB 256-bit',Fans:'3x Mirror RGB Fans',Monitor:'2x SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Monitor Mount, Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 4  - Black Build',price:49995,origPrice:54995,use:'1080p-1440p High Settings Gaming',parts:{Processor:'AMD Ryzen 5 5600X (6-Core/12-Thread)',Motherboard:'AM4 B450M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz w/ Heatsink (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W 80+ Bronze','Graphics Card':'RTX 3050 Dual Fan',Fans:'3x Mirror RGB Fans',Monitor:'N-Vision 27" IPS 240Hz',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}}
     ];
     document.getElementById('buildsGrid').innerHTML=builds.map(b=>{
       const partsHTML=Object.entries(b.parts).filter(([k])=>k!=='Freebies').map(([k,v])=>`<div class="build-part"><div class="build-part-label">${k}</div><div class="build-part-name">${v}</div></div>`).join('');
@@ -1742,26 +1946,6 @@
       const freebies=b.parts.Freebies?`<div style="margin-top:8px;padding:8px 12px;background:rgba(233,30,140,0.08);border-radius:6px;font-size:0.75rem;color:var(--pink);font-weight:600">🎁 Freebies: ${b.parts.Freebies}</div>`:'';
       return `<div class="build-card"><div class="build-header"><div style="display:inline-block;padding:3px 10px;background:var(--pink);color:#fff;border-radius:4px;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:6px">PROMO</div><h4>${b.name}</h4>${origHTML}<div class="build-price">${formatPrice(b.price)}</div><div class="build-use">${b.use}</div></div><div class="build-parts">${partsHTML}${freebies}</div><div class="build-actions"><a href="/checkout.html?product=${encodeURIComponent(b.name)}&price=${b.price}" style="flex:1;padding:10px;text-align:center;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase">Order This Build</a></div></div>`;
     }).join('');
-
-    // ===== RECENTLY VIEWED (localStorage) =====
-    let recentViewed=JSON.parse(localStorage.getItem('dcte_recent')||'[]');
-    function addRecentlyViewed(idx){
-      recentViewed=recentViewed.filter(i=>i!==idx);
-      recentViewed.unshift(idx);
-      if(recentViewed.length>10)recentViewed.pop();
-      localStorage.setItem('dcte_recent',JSON.stringify(recentViewed));
-      renderRecent();
-    }
-    function renderRecent(){
-      const sec=document.getElementById('recentSection'),grid=document.getElementById('recentGrid');
-      if(!recentViewed.length){sec.style.display='none';return}
-      sec.style.display='block';
-      grid.innerHTML=recentViewed.slice(0,6).map(idx=>{const p=products[idx];return p?cardHTML(p,'shop'):''}).join('');
-    }
-    renderRecent();
-    // Hook into product detail to track views
-    const _origOpenPD=openProductDetail;
-    openProductDetail=function(idx){addRecentlyViewed(idx);_origOpenPD(idx)};
 
     // ===== LAZY LOADING with IntersectionObserver =====
     const lazyObs=new IntersectionObserver((entries)=>{
