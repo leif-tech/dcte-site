@@ -5,6 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DCTE - Davao Computer Trade-in Express | Trade to Upgrade</title>
   <meta name="description" content="1st in the Philippines to offer PC parts trade-ins. Trade your old computer parts for huge discounts on upgrades. Custom PC builds, repairs, and more in Davao City.">
+  <meta name="keywords" content="DCTE, Davao Computer Trade-in Express, PC trade-in Philippines, computer parts Davao, gaming PC build, trade to upgrade, custom PC Davao City">
+  <meta name="author" content="Davao Computer Trade-in Express">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DCTE - Davao Computer Trade-in Express | Trade to Upgrade">
+  <meta property="og:description" content="1st in the Philippines to offer PC parts trade-ins! Trade your old PC parts for huge discounts. Custom builds, repairs, GPU/CPU sales in Davao City.">
+  <meta property="og:image" content="/hero-1.jpg">
+  <meta property="og:url" content="https://dcte-site-production.up.railway.app">
+  <meta property="og:site_name" content="DCTE - Davao Computer Trade-in Express">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DCTE - Trade to Upgrade | PC Trade-In Davao">
+  <meta name="twitter:description" content="1st in the Philippines to offer PC parts trade-ins! Custom gaming PC builds & upgrades in Davao City.">
+  <meta name="twitter:image" content="/hero-1.jpg">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -563,7 +580,13 @@
     .compare-table img{width:80px;height:80px;object-fit:contain;margin:0 auto;display:block}
 
     /* ===== TRADE-IN ESTIMATOR ===== */
-    .estimator-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;max-width:600px;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+    .estimator-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;max-width:640px;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+    .est-types{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+    @media(max-width:480px){.est-types{grid-template-columns:repeat(2,1fr)}}
+    .est-type-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border:2px solid var(--border);border-radius:12px;background:#fff;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.3px}
+    .est-type-btn:hover{border-color:rgba(139,47,201,0.3);background:rgba(139,47,201,0.02)}
+    .est-type-btn.active{border-color:var(--purple);background:rgba(139,47,201,0.05);color:var(--purple)}
+    .est-type-icon{font-size:1.6rem;line-height:1}
     .estimator-card label{display:block;font-weight:600;color:var(--navy);margin-bottom:6px;font-size:0.88rem}
     .estimator-card select,.estimator-card input{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:0.88rem;font-family:'Open Sans',sans-serif;margin-bottom:16px;outline:none;color:var(--text)}
     .estimator-card select:focus,.estimator-card input:focus{border-color:var(--purple)}
@@ -1011,15 +1034,15 @@
       </div>
       <div class="estimator-card fade-in">
         <label for="estType">Component Type</label>
-        <select id="estType" onchange="updateEstModels()">
-          <option value="">Select type...</option>
-          <option value="gpu">GPU / Video Card</option>
-          <option value="cpu">CPU / Processor</option>
-          <option value="ram">RAM / Memory</option>
-          <option value="mobo">Motherboard</option>
-          <option value="psu">Power Supply</option>
-          <option value="monitor">Monitor</option>
-        </select>
+        <div class="est-types" id="estTypes">
+          <button class="est-type-btn" data-val="gpu" onclick="selectEstType(this)"><span class="est-type-icon">🎮</span>GPU / Video Card</button>
+          <button class="est-type-btn" data-val="cpu" onclick="selectEstType(this)"><span class="est-type-icon">⚡</span>CPU / Processor</button>
+          <button class="est-type-btn" data-val="ram" onclick="selectEstType(this)"><span class="est-type-icon">🧩</span>RAM / Memory</button>
+          <button class="est-type-btn" data-val="mobo" onclick="selectEstType(this)"><span class="est-type-icon">🔧</span>Motherboard</button>
+          <button class="est-type-btn" data-val="psu" onclick="selectEstType(this)"><span class="est-type-icon">🔌</span>Power Supply</button>
+          <button class="est-type-btn" data-val="monitor" onclick="selectEstType(this)"><span class="est-type-icon">🖥️</span>Monitor</button>
+        </div>
+        <input type="hidden" id="estType" value="">
         <label for="estModel">Model / Series</label>
         <select id="estModel" onchange="updateEstCondition()">
           <option value="">Select model...</option>
@@ -1368,10 +1391,10 @@
       {cat:"case",label:"Case",name:"Cuirass Black",price:2000,img:W+"2024/08/C246CBFF-F3CA-46CC-AE8C-887DFC608398-13764-000003E50B589E63-300x300.jpg"},
       {cat:"cooler",label:"Cooler",name:"DeepCool Mystique 360 LCD AIO Liquid Cooler",price:10000,img:W+"2024/08/IMG_0592-scaled-300x300.jpg"},
       {cat:"cooler",label:"Cooler",name:"DeepCool AG500 Digital WH Air Cooler",price:2450,img:W+"2024/08/6A0B95C4-CAF8-4711-8C69-1CB05EF8E58E-10562-000003472C630206-300x300.jpg"},
-      {cat:"bundle",label:"PC Bundle",name:"PC Set 1 — Entry Build (Ryzen 5 3400G + 24\" Monitor)",price:24995,img:"/bundle-1.png"},
-      {cat:"bundle",label:"PC Bundle",name:"PC Set 2 — Black Build (Ryzen 5 5600GT + 24\" Monitor)",price:29995,img:"/bundle-2.png"},
-      {cat:"bundle",label:"PC Bundle",name:"PC Set 3 — Dual Monitor (Ryzen 5 5500 + RX580 + 2x 24\" Monitor)",price:42995,img:"/bundle-3.png"},
-      {cat:"bundle",label:"PC Bundle",name:"PC Set 4 — Black Build (Ryzen 5 5600X + RTX 3050 + 27\" 240Hz)",price:49995,img:"/bundle-4.png"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 1 — Entry Build (Ryzen 5 3400G + 24\" Monitor)",price:24995,img:"/bundle-1.jpg"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 2 — Black Build (Ryzen 5 5600GT + 24\" Monitor)",price:29995,img:"/bundle-2.jpg"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 3 — Dual Monitor (Ryzen 5 5500 + RX580 + 2x 24\" Monitor)",price:42995,img:"/bundle-3.jpg"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 4 — Black Build (Ryzen 5 5600X + RTX 3050 + 27\" 240Hz)",price:49995,img:"/bundle-4.jpg"},
     ];
 
     // Product specs database
@@ -1875,6 +1898,12 @@
         {name:'24" 60-144Hz FHD',val:[1500,3000]},{name:'21-22" FHD',val:[800,1500]}
       ]
     };
+    function selectEstType(btn){
+      document.querySelectorAll('.est-type-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('estType').value=btn.dataset.val;
+      updateEstModels();
+    }
     function updateEstModels(){
       const type=document.getElementById('estType').value;
       const sel=document.getElementById('estModel');

@@ -18,6 +18,10 @@
     #wlai-header { padding: 16px; background: #0066cc; color: white; display: flex; align-items: center; gap: 10px; }
     #wlai-header-name { font-weight: 700; font-size: 15px; }
     #wlai-header-sub { font-size: 12px; opacity: 0.8; }
+    .wlai-loading { display: flex; align-items: center; gap: 8px; padding: 16px; color: #888; font-size: 13px; }
+    .wlai-loading-dot { display: inline-block; width: 6px; height: 6px; background: #888; border-radius: 50%; animation: wlai-bounce 1.2s infinite; }
+    .wlai-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .wlai-loading-dot:nth-child(3) { animation-delay: 0.4s; }
     #wlai-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
     .wlai-msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
     .wlai-msg.bot { background: #222; color: #eee; align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -117,7 +121,8 @@
     showChat();
   });
 
-  // Load bot info
+  // Load bot info with loading state
+  document.getElementById('wlai-header-name').innerHTML = '<span class="wlai-loading-dot"></span><span class="wlai-loading-dot"></span><span class="wlai-loading-dot"></span>';
   fetch(`${apiUrl}/api/chat/${botId}/info`)
     .then(r => r.json()).then(data => {
     botName = data.bot_name || 'Assistant';
@@ -129,7 +134,7 @@
     document.getElementById('wlai-lead-submit').style.background = primaryColor;
     if (data.greeting_message) addMessage(data.greeting_message, 'bot');
   }).catch(() => {
-    document.getElementById('wlai-header-name').textContent = 'Assistant';
+    document.getElementById('wlai-header-name').textContent = 'DCTE Assistant';
   });
 
   function addMessage(text, type) {
