@@ -1062,16 +1062,9 @@
     function formatPrice(p){return'\u20B1'+p.toLocaleString('en-PH')}
     function escName(s){return s.replace(/'/g,"\\'")}
 
-    // BUY NOW - PayMongo Checkout
-    async function buyNow(name,price,btn){
-      const orig=btn.textContent;
-      btn.textContent='Processing...';btn.style.pointerEvents='none';
-      try{
-        const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,price})});
-        const data=await res.json();
-        if(data.checkout_url){window.location.href=data.checkout_url}
-        else{alert(data.error||'Could not create checkout. Please try again.');btn.textContent=orig;btn.style.pointerEvents=''}
-      }catch(e){alert('Something went wrong. Please try again.');btn.textContent=orig;btn.style.pointerEvents=''}
+    // BUY NOW - redirect to checkout page
+    function buyNow(name,price,btn){
+      window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price,'_blank');
     }
 
     // FEATURED PRODUCTS (homepage - 8 hand-picked items across categories)
