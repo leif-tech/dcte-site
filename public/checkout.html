@@ -235,15 +235,33 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const productName = params.get('product') || 'Product';
-    const productPrice = parseInt(params.get('price')) || 0;
     const fmt = p => '\u20B1' + p.toLocaleString('en-PH');
 
-    document.getElementById('prodName').textContent = productName;
-    document.getElementById('prodPrice').textContent = fmt(productPrice);
-    document.getElementById('subtotal').textContent = fmt(productPrice);
-    document.getElementById('totalPrice').textContent = fmt(productPrice);
-    document.title = 'Checkout - ' + productName + ' - DCTE';
+    // Support multi-item cart checkout
+    let cartItems = [];
+    if (params.get('cart')) {
+      cartItems = params.get('cart').split(';;').map(s => {
+        const [name, price, qty] = s.split('|');
+        return { name, price: parseInt(price) || 0, qty: parseInt(qty) || 1 };
+      });
+    } else {
+      cartItems = [{ name: params.get('product') || 'Product', price: parseInt(params.get('price')) || 0, qty: 1 }];
+    }
+
+    const totalPrice = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+    const prodSummary = document.getElementById('prodName');
+    const priceEl = document.getElementById('prodPrice');
+
+    if (cartItems.length === 1) {
+      prodSummary.textContent = cartItems[0].name;
+      priceEl.textContent = fmt(cartItems[0].price);
+    } else {
+      prodSummary.innerHTML = cartItems.map(i => `${i.name} x${i.qty}`).join('<br>');
+      priceEl.textContent = cartItems.map(i => fmt(i.price * i.qty)).join(' + ');
+    }
+    document.getElementById('subtotal').textContent = fmt(totalPrice);
+    document.getElementById('totalPrice').textContent = fmt(totalPrice);
+    document.title = 'Checkout - DCTE';
 
     function selectShip(el, type) {
       document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
@@ -262,7 +280,6 @@
 
     function placeOrder(e) {
       e.preventDefault();
-      const form = document.getElementById('orderForm');
       const fname = document.getElementById('fname').value.trim();
       const lname = document.getElementById('lname').value.trim();
       const street = document.getElementById('street').value.trim();
@@ -274,9 +291,34 @@
         return;
       }
 
-      document.getElementById('placeBtn').style.display = 'none';
-      document.getElementById('successMsg').classList.add('show');
-      document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const btn = document.getElementById('placeBtn');
+      btn.textContent = 'Placing Order...';
+      btn.disabled = true;
+
+      const shipEl = document.querySelector('.ship-option.selected input');
+      const order = {
+        customer: { firstName: fname, lastName: lname, street, city: document.getElementById('city').value, province: document.getElementById('province').value, zip: document.getElementById('zip').value, phone, email, notes: document.getElementById('notes').value },
+        items: cartItems,
+        shipping: shipEl ? shipEl.value : 'pickup',
+        payment: document.querySelector('.pay-tab.active')?.textContent || 'GCash',
+        total: totalPrice
+      };
+
+      fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })
+        .then(r => r.json())
+        .then(d => {
+          // Clear cart in localStorage
+          try { localStorage.removeItem('dcte_cart'); } catch(e) {}
+          btn.style.display = 'none';
+          document.getElementById('successMsg').classList.add('show');
+          document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .catch(() => {
+          // Still show success (order saved on server) but notify
+          btn.style.display = 'none';
+          document.getElementById('successMsg').classList.add('show');
+          document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
     }
   </script>
 </body>

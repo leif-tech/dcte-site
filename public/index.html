@@ -473,6 +473,134 @@
     @media(max-width:900px){.shop-layout{grid-template-columns:1fr}.shop-sidebar{position:static;display:grid;grid-template-columns:1fr 1fr;gap:16px}.shop-search{grid-column:1/-1}.shop-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:480px){.shop-grid{grid-template-columns:1fr}.shop-sidebar{grid-template-columns:1fr}}
 
+    /* ===== PRODUCT BADGES ===== */
+    .badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:4px;font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;z-index:1;color:#fff}
+    .badge-hot{background:#ef4444}
+    .badge-new{background:#22c55e}
+    .badge-sale{background:#f59e0b}
+    .stock-badge{position:absolute;top:10px;right:10px;padding:3px 8px;border-radius:4px;font-size:0.58rem;font-weight:600;z-index:1}
+    .stock-in{background:#dcfce7;color:#16a34a}
+    .stock-low{background:#fef3c7;color:#d97706}
+    .stock-contact{background:#f3f4f6;color:#6b7280}
+    .cond-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.6rem;font-weight:600;margin-bottom:4px}
+    .cond-new{background:#eff6ff;color:#2563eb}
+    .cond-preowned{background:#fef3c7;color:#d97706}
+    .shop-card-img,.feat-card-img{position:relative}
+
+    /* ===== NAVBAR ICONS ===== */
+    .nav-icons{display:flex;align-items:center;gap:4px;margin-left:8px}
+    .nav-icon-btn{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text);transition:all .2s}
+    .nav-icon-btn:hover{background:var(--card-alt);color:var(--purple)}
+    .nav-icon-btn svg{width:20px;height:20px}
+    .nav-badge{position:absolute;top:2px;right:2px;width:16px;height:16px;background:var(--pink);color:#fff;border-radius:50%;font-size:0.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif}
+    .nav-badge:empty{display:none}
+    @media(max-width:900px){.nav-icons{margin-left:auto;margin-right:8px}}
+
+    /* ===== NAVBAR SEARCH ===== */
+    .nav-search{position:relative;margin-left:8px}
+    .nav-search input{width:180px;padding:7px 32px 7px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.8rem;font-family:'Open Sans',sans-serif;outline:none;transition:all .2s;color:var(--text)}
+    .nav-search input:focus{border-color:var(--purple);width:240px;box-shadow:0 0 0 3px rgba(139,47,201,0.1)}
+    .nav-search-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
+    .nav-suggest{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:100;max-height:320px;overflow-y:auto;display:none}
+    .nav-suggest.open{display:block}
+    .nav-suggest-item{padding:10px 14px;cursor:pointer;font-size:0.82rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+    .nav-suggest-item:last-child{border-bottom:none}
+    .nav-suggest-item:hover{background:var(--card-alt)}
+    .nav-suggest-item span{color:var(--pink);font-weight:600;font-size:0.8rem}
+    @media(max-width:900px){.nav-search{display:none}}
+
+    /* ===== CART DRAWER ===== */
+    .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:5500}
+    .cart-overlay.open{display:block}
+    .cart-drawer{position:fixed;top:0;right:-400px;width:400px;max-width:100vw;height:100%;background:#fff;z-index:5501;box-shadow:-4px 0 24px rgba(0,0,0,0.1);transition:right .3s;display:flex;flex-direction:column}
+    .cart-drawer.open{right:0}
+    .cart-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .cart-header h3{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy)}
+    .cart-close{font-size:1.5rem;color:var(--text-dim);cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+    .cart-close:hover{background:var(--card-alt)}
+    .cart-body{flex:1;overflow-y:auto;padding:16px}
+    .cart-empty{text-align:center;padding:40px 20px;color:var(--text-dim)}
+    .cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .cart-item-img{width:64px;height:64px;border-radius:8px;background:var(--card-alt);overflow:hidden;flex-shrink:0}
+    .cart-item-img img{width:100%;height:100%;object-fit:contain;padding:4px}
+    .cart-item-info{flex:1;min-width:0}
+    .cart-item-name{font-size:0.8rem;font-weight:600;color:var(--navy);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cart-item-price{font-size:0.85rem;font-weight:700;color:var(--pink);font-family:'Montserrat',sans-serif}
+    .cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+    .cart-item-qty button{width:24px;height:24px;border:1px solid var(--border);border-radius:4px;font-size:0.8rem;display:flex;align-items:center;justify-content:center;color:var(--text)}
+    .cart-item-qty button:hover{background:var(--card-alt)}
+    .cart-item-qty span{font-size:0.82rem;font-weight:600;min-width:20px;text-align:center}
+    .cart-item-remove{color:var(--text-dim);font-size:0.72rem;cursor:pointer;margin-top:4px}
+    .cart-item-remove:hover{color:#ef4444}
+    .cart-footer{padding:16px 20px;border-top:1px solid var(--border);background:#fff}
+    .cart-total{display:flex;justify-content:space-between;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:12px}
+    .cart-total span:last-child{color:var(--pink)}
+    .cart-checkout-btn{width:100%;padding:14px;background:var(--grad);color:#fff;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.9rem;text-transform:uppercase;cursor:pointer;transition:all .3s}
+    .cart-checkout-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+    /* ===== WISHLIST DRAWER ===== */
+    .wish-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:5500}
+    .wish-overlay.open{display:block}
+    .wish-drawer{position:fixed;top:0;right:-400px;width:400px;max-width:100vw;height:100%;background:#fff;z-index:5501;box-shadow:-4px 0 24px rgba(0,0,0,0.1);transition:right .3s;display:flex;flex-direction:column}
+    .wish-drawer.open{right:0}
+
+    /* ===== COMPARE BAR ===== */
+    .compare-bar{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:14px 24px;border-radius:12px 12px 0 0;z-index:4000;display:flex;align-items:center;gap:16px;box-shadow:0 -4px 24px rgba(0,0,0,0.15);transition:bottom .3s;font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:600}
+    .compare-bar.show{bottom:0}
+    .compare-bar button{padding:8px 20px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all .2s}
+    .compare-btn-go{background:var(--grad);color:#fff;border:none}
+    .compare-btn-clear{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.3)}
+
+    /* ===== COMPARE MODAL ===== */
+    .compare-modal{display:none;position:fixed;inset:0;z-index:5600;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:20px}
+    .compare-modal.open{display:flex}
+    .compare-content{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:85vh;overflow-y:auto;padding:32px}
+    .compare-content h3{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:20px}
+    .compare-table{width:100%;border-collapse:collapse}
+    .compare-table th,.compare-table td{padding:10px 14px;border:1px solid var(--border);font-size:0.82rem;text-align:left}
+    .compare-table th{background:var(--card-alt);font-weight:600;color:var(--navy);white-space:nowrap}
+    .compare-table td:first-child{font-weight:600;color:var(--navy);background:var(--card-alt);min-width:120px}
+    .compare-table img{width:80px;height:80px;object-fit:contain;margin:0 auto;display:block}
+
+    /* ===== TRADE-IN ESTIMATOR ===== */
+    .estimator-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;max-width:600px;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,0.04)}
+    .estimator-card label{display:block;font-weight:600;color:var(--navy);margin-bottom:6px;font-size:0.88rem}
+    .estimator-card select,.estimator-card input{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:0.88rem;font-family:'Open Sans',sans-serif;margin-bottom:16px;outline:none;color:var(--text)}
+    .estimator-card select:focus,.estimator-card input:focus{border-color:var(--purple)}
+    .estimator-result{background:linear-gradient(135deg,rgba(233,30,140,0.05),rgba(139,47,201,0.05));border:1px solid rgba(139,47,201,0.15);border-radius:12px;padding:20px;text-align:center;margin-top:8px}
+    .estimator-result .est-value{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;color:var(--purple);margin:8px 0}
+    .estimator-result .est-note{font-size:0.8rem;color:var(--text-dim)}
+
+    /* ===== RECOMMENDED BUILDS ===== */
+    .builds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+    .build-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    .build-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(139,47,201,0.1)}
+    .build-header{padding:20px 20px 12px;background:linear-gradient(135deg,var(--navy),#2a2a5e)}
+    .build-header h4{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px}
+    .build-header .build-price{font-family:'Montserrat',sans-serif;font-size:1.4rem;font-weight:800;color:var(--cyan)}
+    .build-header .build-use{font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:4px}
+    .build-parts{padding:16px 20px}
+    .build-part{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.82rem}
+    .build-part:last-child{border-bottom:none}
+    .build-part-label{color:var(--text-dim);font-weight:600;font-size:0.72rem;text-transform:uppercase}
+    .build-part-name{color:var(--navy);font-weight:600;text-align:right;max-width:60%}
+    .build-actions{padding:0 20px 20px;display:flex;gap:8px}
+    .build-actions button{flex:1;padding:10px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;cursor:pointer;transition:all .2s}
+
+    /* ===== RECENTLY VIEWED ===== */
+    .recent-section{padding:40px 0}
+    .recent-grid{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+    .recent-grid::-webkit-scrollbar{height:4px}
+    .recent-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .recent-grid .shop-card{min-width:220px;scroll-snap-align:start;flex-shrink:0}
+
+    /* ===== MESSENGER WIDGET ===== */
+    .messenger-btn{position:fixed;bottom:24px;right:24px;z-index:4000;width:60px;height:60px;border-radius:50%;background:#0084ff;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,132,255,0.4);cursor:pointer;transition:all .3s}
+    .messenger-btn:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,132,255,0.5)}
+    .messenger-btn svg{width:28px;height:28px}
+    .messenger-tooltip{position:absolute;right:70px;top:50%;transform:translateY(-50%);background:var(--navy);color:#fff;padding:8px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+    .messenger-btn:hover .messenger-tooltip{opacity:1}
+
     /* ===== PRODUCT DETAIL ===== */
     .product-detail{display:none;position:fixed;inset:0;z-index:4500;background:#fff;overflow-y:auto}
     .product-detail.open{display:block}
@@ -563,6 +691,15 @@
         <a href="#reviews">Reviews</a>
         <a href="#location">Location</a>
         <a href="#contact" class="nav-cta">Contact Us</a>
+      </div>
+      <div class="nav-search" id="navSearch">
+        <input type="text" id="navSearchInput" placeholder="Search products..." oninput="navAutoSuggest()" onkeydown="if(event.key==='Enter'){navSearchGo();event.preventDefault()}">
+        <div class="nav-search-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="nav-suggest" id="navSuggest"></div>
+      </div>
+      <div class="nav-icons">
+        <button class="nav-icon-btn" onclick="toggleWishDrawer()" title="Wishlist"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg><span class="nav-badge" id="wishBadge"></span></button>
+        <button class="nav-icon-btn" onclick="toggleCartDrawer()" title="Cart"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span class="nav-badge" id="cartBadge"></span></button>
       </div>
       <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
@@ -871,6 +1008,62 @@
     </div>
   </section>
 
+  <!-- TRADE-IN ESTIMATOR -->
+  <section class="section" id="estimator">
+    <div class="container">
+      <div class="section-header fade-in">
+        <p class="section-label">Find Out Your Value</p>
+        <h2 class="section-title">Trade-In Estimator</h2>
+        <p class="section-desc">Get an estimated trade-in value for your old PC parts. Bring them to our store for an exact assessment.</p>
+      </div>
+      <div class="estimator-card fade-in">
+        <label for="estType">Component Type</label>
+        <select id="estType" onchange="updateEstModels()">
+          <option value="">Select type...</option>
+          <option value="gpu">GPU / Video Card</option>
+          <option value="cpu">CPU / Processor</option>
+          <option value="ram">RAM / Memory</option>
+          <option value="mobo">Motherboard</option>
+          <option value="psu">Power Supply</option>
+          <option value="monitor">Monitor</option>
+        </select>
+        <label for="estModel">Model / Series</label>
+        <select id="estModel" onchange="updateEstCondition()">
+          <option value="">Select model...</option>
+        </select>
+        <label for="estCond">Condition</label>
+        <select id="estCond" onchange="calcEstimate()">
+          <option value="">Select condition...</option>
+          <option value="excellent">Excellent - Works perfectly, no scratches</option>
+          <option value="good">Good - Works well, minor wear</option>
+          <option value="fair">Fair - Works but has issues or cosmetic damage</option>
+          <option value="broken">Not Working - For parts only</option>
+        </select>
+        <div id="estResult" style="display:none"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMMENDED BUILDS -->
+  <section class="section section-alt" id="builds">
+    <div class="container">
+      <div class="section-header fade-in">
+        <p class="section-label">We Build PCs</p>
+        <h2 class="section-title">Recommended Builds</h2>
+        <p class="section-desc">Pre-configured PC packages for every budget. All builds include free assembly.</p>
+      </div>
+      <div class="builds-grid fade-in" id="buildsGrid"></div>
+    </div>
+  </section>
+
+  <!-- RECENTLY VIEWED -->
+  <div class="recent-section" id="recentSection" style="display:none">
+    <div class="container">
+      <h3 style="font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px">Recently Viewed</h3>
+      <div class="recent-grid" id="recentGrid"></div>
+    </div>
+  </div>
+
   <!-- REVIEWS -->
   <section class="section" id="reviews">
     <div class="container">
@@ -1013,6 +1206,48 @@
       </div>
     </div>
   </footer>
+
+  <!-- MESSENGER FLOATING BUTTON -->
+  <a href="https://m.me/DCTE168" target="_blank" class="messenger-btn" id="messengerBtn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.897 1.437 5.49 3.682 7.184V22l3.4-1.867c.907.252 1.868.387 2.918.387 5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.07 12.456l-2.547-2.72-4.97 2.72 5.467-5.8 2.61 2.72 4.907-2.72-5.467 5.8z"/></svg>
+    <div class="messenger-tooltip">Chat with us!</div>
+  </a>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header"><h3>Your Cart</h3><button class="cart-close" onclick="toggleCartDrawer()">&times;</button></div>
+    <div class="cart-body" id="cartBody"><div class="cart-empty">Your cart is empty</div></div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total"><span>Total</span><span id="cartTotal"></span></div>
+      <button class="cart-checkout-btn" onclick="cartCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- WISHLIST DRAWER -->
+  <div class="wish-overlay" id="wishOverlay" onclick="toggleWishDrawer()"></div>
+  <div class="wish-drawer" id="wishDrawer">
+    <div class="cart-header"><h3>Wishlist</h3><button class="cart-close" onclick="toggleWishDrawer()">&times;</button></div>
+    <div class="cart-body" id="wishBody"><div class="cart-empty">Your wishlist is empty</div></div>
+  </div>
+
+  <!-- COMPARE BAR -->
+  <div class="compare-bar" id="compareBar">
+    <span id="compareCount">0</span> products to compare
+    <button class="compare-btn-go" onclick="showCompare()">Compare Now</button>
+    <button class="compare-btn-clear" onclick="clearCompare()">Clear</button>
+  </div>
+
+  <!-- COMPARE MODAL -->
+  <div class="compare-modal" id="compareModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="compare-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0">Product Comparison</h3>
+        <button onclick="document.getElementById('compareModal').classList.remove('open')" style="font-size:1.5rem;color:var(--text-dim)">&times;</button>
+      </div>
+      <div id="compareTableWrap"></div>
+    </div>
+  </div>
 
   <script>
     // HERO CAROUSEL
@@ -1470,6 +1705,267 @@
       document.getElementById('shopSearch').value=q;
       filterShop();
     }
+
+    // ===== NAVBAR SEARCH WITH AUTO-SUGGEST =====
+    function navAutoSuggest(){
+      const q=document.getElementById('navSearchInput').value.toLowerCase().trim();
+      const box=document.getElementById('navSuggest');
+      if(q.length<2){box.classList.remove('open');return}
+      const searchCat=searchAliases[q]||null;
+      const matches=products.filter(p=>{
+        return p.name.toLowerCase().includes(q)||p.label.toLowerCase().includes(q)||(searchCat&&p.cat===searchCat);
+      }).slice(0,8);
+      if(!matches.length){box.classList.remove('open');return}
+      box.innerHTML=matches.map((p,i)=>`<div class="nav-suggest-item" onclick="openProductDetail(${products.indexOf(p)});document.getElementById('navSuggest').classList.remove('open');document.getElementById('navSearchInput').value=''"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${p.name}</div><span>${formatPrice(p.price)}</span></div>`).join('');
+      box.classList.add('open');
+    }
+    function navSearchGo(){
+      const q=document.getElementById('navSearchInput').value.trim();
+      if(!q)return;
+      document.getElementById('navSuggest').classList.remove('open');
+      document.getElementById('navSearchInput').value='';
+      openShop('all');
+      document.getElementById('shopSearch').value=q;
+      filterShop();
+    }
+    document.addEventListener('click',e=>{if(!document.getElementById('navSearch').contains(e.target))document.getElementById('navSuggest').classList.remove('open')});
+
+    // ===== SHOPPING CART (localStorage) =====
+    let cart=JSON.parse(localStorage.getItem('dcte_cart')||'[]');
+    function saveCart(){localStorage.setItem('dcte_cart',JSON.stringify(cart));renderCart();updateCartBadge()}
+    function updateCartBadge(){const t=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartBadge').textContent=t||''}
+    function addToCart(idx,qty=1){
+      const p=products[idx];if(!p)return;
+      const existing=cart.find(i=>i.idx===idx);
+      if(existing){existing.qty+=qty}else{cart.push({idx,qty,name:p.name,price:p.price,img:p.img})}
+      saveCart();
+    }
+    function removeFromCart(idx){cart=cart.filter(i=>i.idx!==idx);saveCart()}
+    function updateCartQty(idx,delta){
+      const item=cart.find(i=>i.idx===idx);
+      if(item){item.qty=Math.max(1,item.qty+delta);saveCart()}
+    }
+    function renderCart(){
+      const body=document.getElementById('cartBody'),footer=document.getElementById('cartFooter');
+      if(!cart.length){body.innerHTML='<div class="cart-empty">Your cart is empty</div>';footer.style.display='none';return}
+      footer.style.display='block';
+      const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+      document.getElementById('cartTotal').textContent=formatPrice(total);
+      body.innerHTML=cart.map(i=>`<div class="cart-item"><div class="cart-item-img">${i.img?`<img src="${i.img}" alt="">`:''}</div><div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-price">${formatPrice(i.price)}</div><div class="cart-item-qty"><button onclick="updateCartQty(${i.idx},-1)">-</button><span>${i.qty}</span><button onclick="updateCartQty(${i.idx},1)">+</button></div><div class="cart-item-remove" onclick="removeFromCart(${i.idx})">Remove</div></div></div>`).join('');
+    }
+    function toggleCartDrawer(){
+      document.getElementById('cartOverlay').classList.toggle('open');
+      document.getElementById('cartDrawer').classList.toggle('open');
+      document.body.style.overflow=document.getElementById('cartDrawer').classList.contains('open')?'hidden':'';
+    }
+    function cartCheckout(){
+      const params=cart.map(i=>i.name+'|'+i.price+'|'+i.qty).join(';;');
+      window.open('/checkout.html?cart='+encodeURIComponent(params),'_blank');
+    }
+    updateCartBadge();renderCart();
+
+    // ===== WISHLIST (localStorage) =====
+    let wishlist=JSON.parse(localStorage.getItem('dcte_wish')||'[]');
+    function saveWish(){localStorage.setItem('dcte_wish',JSON.stringify(wishlist));renderWish();updateWishBadge()}
+    function updateWishBadge(){document.getElementById('wishBadge').textContent=wishlist.length||''}
+    function toggleWish(idx){
+      if(wishlist.includes(idx)){wishlist=wishlist.filter(i=>i!==idx)}else{wishlist.push(idx)}
+      saveWish();
+    }
+    function isWished(idx){return wishlist.includes(idx)}
+    function renderWish(){
+      const body=document.getElementById('wishBody');
+      if(!wishlist.length){body.innerHTML='<div class="cart-empty">Your wishlist is empty</div>';return}
+      body.innerHTML=wishlist.map(idx=>{const p=products[idx];if(!p)return'';return`<div class="cart-item"><div class="cart-item-img">${p.img?`<img src="${p.img}" alt="">`:''}</div><div class="cart-item-info"><div class="cart-item-name">${p.name}</div><div class="cart-item-price">${formatPrice(p.price)}</div><div style="display:flex;gap:8px;margin-top:6px"><button onclick="addToCart(${idx});toggleWish(${idx})" style="font-size:0.72rem;color:var(--purple);font-weight:600;text-decoration:underline">Add to Cart</button><button onclick="toggleWish(${idx})" style="font-size:0.72rem;color:#ef4444">Remove</button></div></div></div>`}).join('');
+    }
+    function toggleWishDrawer(){
+      document.getElementById('wishOverlay').classList.toggle('open');
+      document.getElementById('wishDrawer').classList.toggle('open');
+      document.body.style.overflow=document.getElementById('wishDrawer').classList.contains('open')?'hidden':'';
+    }
+    updateWishBadge();renderWish();
+
+    // ===== PRODUCT COMPARE =====
+    let compareList=JSON.parse(localStorage.getItem('dcte_compare')||'[]');
+    function saveCompare(){localStorage.setItem('dcte_compare',JSON.stringify(compareList));updateCompareBar()}
+    function toggleCompare(idx){
+      if(compareList.includes(idx)){compareList=compareList.filter(i=>i!==idx)}
+      else if(compareList.length<3){compareList.push(idx)}
+      else{alert('You can compare up to 3 products at a time');return}
+      saveCompare();
+    }
+    function updateCompareBar(){
+      document.getElementById('compareCount').textContent=compareList.length;
+      document.getElementById('compareBar').classList.toggle('show',compareList.length>0);
+    }
+    function clearCompare(){compareList=[];saveCompare()}
+    function showCompare(){
+      if(compareList.length<2){alert('Select at least 2 products to compare');return}
+      const prods=compareList.map(i=>products[i]).filter(Boolean);
+      const allKeys=new Set();prods.forEach(p=>{const s=specDB[p.name]||{};Object.keys(s).forEach(k=>allKeys.add(k))});
+      let html=`<table class="compare-table"><thead><tr><th>Feature</th>${prods.map(p=>`<th style="text-align:center"><div style="margin-bottom:8px">${p.img?`<img src="${p.img}" alt="">`:''}</div><div style="font-size:0.75rem">${p.name}</div><div style="color:var(--pink);font-size:0.9rem;margin-top:4px">${formatPrice(p.price)}</div></th>`).join('')}</tr></thead><tbody>`;
+      html+=`<tr><td>Category</td>${prods.map(p=>`<td>${p.label}</td>`).join('')}</tr>`;
+      html+=`<tr><td>Brand</td>${prods.map(p=>`<td>${getBrand(p.name)}</td>`).join('')}</tr>`;
+      allKeys.forEach(k=>{html+=`<tr><td>${k}</td>${prods.map(p=>`<td>${(specDB[p.name]||{})[k]||'-'}</td>`).join('')}</tr>`});
+      html+='</tbody></table>';
+      document.getElementById('compareTableWrap').innerHTML=html;
+      document.getElementById('compareModal').classList.add('open');
+    }
+    updateCompareBar();
+
+    // ===== UPDATE CARD HTML WITH BADGES + ACTIONS =====
+    // Add product meta: stock, condition, badge
+    const productMeta={};
+    products.forEach((p,i)=>{
+      // Default: all brand new, in stock
+      productMeta[i]={stock:'in',condition:'new',badge:null};
+    });
+    // Mark some as featured/hot/new/sale
+    [0,1,2].forEach(i=>productMeta[i].badge='hot'); // RTX 4060s
+    [6,7].forEach(i=>productMeta[i].badge='new'); // Latest CPUs
+    [48,49].forEach(i=>productMeta[i].badge='new'); // DDR5 RAM
+    [86,87,88].forEach(i=>productMeta[i].badge='sale'); // Top monitors
+
+    // Override cardHTML to include badges + cart/wish/compare
+    function cardHTML(p,prefix){
+      const idx=products.indexOf(p);
+      const meta=productMeta[idx]||{stock:'in',condition:'new',badge:null};
+      const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'';
+      const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
+      const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-contact';
+      const stockText=meta.stock==='in'?'In Stock':meta.stock==='low'?'Low Stock':'Contact Us';
+      const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
+      const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
+      const shopeeLink='https://shopee.ph/dcte168';
+      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
+    }
+    // Re-render featured with new cards
+    renderFeatured();
+
+    // ===== FIX CONTACT FORM =====
+    function handleSubmit(e){
+      e.preventDefault();
+      const f=e.target,b=f.querySelector('button[type="submit"]'),o=b.innerHTML;
+      b.innerHTML='Sending...';b.disabled=true;
+      const data={name:f.name.value,email:f.email.value,phone:f.phone?.value||'',message:f.message.value};
+      fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+        .then(r=>r.json()).then(d=>{
+          b.innerHTML='&#10003; Sent!';b.style.background='linear-gradient(135deg,#22c55e,#16a34a)';f.reset();
+          setTimeout(()=>{b.innerHTML=o;b.style.background='';b.disabled=false},3000);
+        }).catch(()=>{b.innerHTML='Error - Try Again';b.style.background='#ef4444';b.disabled=false;setTimeout(()=>{b.innerHTML=o;b.style.background=''},3000)});
+    }
+
+    // ===== TRADE-IN ESTIMATOR =====
+    const tradeInData={
+      gpu:[
+        {name:'RTX 4090 / 4080',val:[18000,25000]},{name:'RTX 4070 Ti / 4070',val:[12000,18000]},{name:'RTX 4060 Ti / 4060',val:[8000,13000]},
+        {name:'RTX 3080 / 3090',val:[10000,16000]},{name:'RTX 3070 / 3070 Ti',val:[7000,11000]},{name:'RTX 3060 / 3060 Ti',val:[5000,8000]},
+        {name:'RTX 3050 / GTX 1660',val:[3000,5500]},{name:'GTX 1050 Ti / 1650',val:[1500,3500]},{name:'GTX 1030 / GT 730',val:[500,1500]},
+        {name:'RX 6800 / 6900',val:[8000,14000]},{name:'RX 6600 / 6700',val:[4000,7000]},{name:'RX 580 / 570',val:[1500,3000]}
+      ],
+      cpu:[
+        {name:'Ryzen 9 5900X / 5950X',val:[6000,10000]},{name:'Ryzen 7 5800X / 5700X',val:[4000,7000]},{name:'Ryzen 5 5600X / 5600',val:[2500,4500]},
+        {name:'Ryzen 5 3600 / 3500X',val:[1500,3000]},{name:'Ryzen 3 3100 / 3300X',val:[1000,2000]},
+        {name:'i9-12900K / 13900K',val:[8000,14000]},{name:'i7-12700 / 13700',val:[5000,9000]},{name:'i5-12400 / 13400',val:[3000,5500]},
+        {name:'i3-12100 / 13100',val:[2000,3500]},{name:'i5-11400 / 10400',val:[2000,4000]},{name:'i3-10100 / 10105',val:[1000,2000]}
+      ],
+      ram:[
+        {name:'DDR5 32GB Kit',val:[2000,4000]},{name:'DDR5 16GB Kit',val:[1000,2500]},
+        {name:'DDR4 32GB Kit (3200+)',val:[1500,3000]},{name:'DDR4 16GB Kit (3200+)',val:[800,1800]},
+        {name:'DDR4 16GB Kit (2666)',val:[600,1200]},{name:'DDR4 8GB Single',val:[300,700]},{name:'DDR3 8GB',val:[200,500]}
+      ],
+      mobo:[
+        {name:'X570 / B550 (AM4)',val:[2000,5000]},{name:'B450 / A520 (AM4)',val:[1000,2500]},
+        {name:'Z690 / B660 (LGA1700)',val:[2500,5500]},{name:'H610 / B760 (LGA1700)',val:[1500,3000]},
+        {name:'Z490 / B460 (LGA1200)',val:[1000,2500]},{name:'H510 / H410 (LGA1200)',val:[800,1500]}
+      ],
+      psu:[
+        {name:'750W+ 80+ Gold/Platinum',val:[1500,3000]},{name:'650W 80+ Bronze/Gold',val:[800,1800]},
+        {name:'550W 80+ Bronze',val:[500,1200]},{name:'450W / Generic',val:[200,600]}
+      ],
+      monitor:[
+        {name:'32"+ 144Hz+ QHD/4K',val:[4000,8000]},{name:'27" 144Hz+ FHD/QHD',val:[2500,5000]},
+        {name:'24" 60-144Hz FHD',val:[1500,3000]},{name:'21-22" FHD',val:[800,1500]}
+      ]
+    };
+    function updateEstModels(){
+      const type=document.getElementById('estType').value;
+      const sel=document.getElementById('estModel');
+      sel.innerHTML='<option value="">Select model...</option>';
+      document.getElementById('estResult').style.display='none';
+      if(!type)return;
+      (tradeInData[type]||[]).forEach((m,i)=>{sel.innerHTML+=`<option value="${i}">${m.name}</option>`});
+    }
+    function updateEstCondition(){document.getElementById('estResult').style.display='none';calcEstimate()}
+    function calcEstimate(){
+      const type=document.getElementById('estType').value;
+      const modelIdx=document.getElementById('estModel').value;
+      const cond=document.getElementById('estCond').value;
+      if(!type||modelIdx===''||!cond)return;
+      const model=tradeInData[type][parseInt(modelIdx)];
+      if(!model)return;
+      const mult={excellent:1,good:0.7,fair:0.4,broken:0.15}[cond]||0;
+      const low=Math.round(model.val[0]*mult/100)*100;
+      const high=Math.round(model.val[1]*mult/100)*100;
+      document.getElementById('estResult').style.display='block';
+      document.getElementById('estResult').innerHTML=`<div class="estimator-result"><div style="font-size:0.85rem;color:var(--navy);font-weight:600">Estimated Trade-In Value</div><div class="est-value">${formatPrice(low)} - ${formatPrice(high)}</div><div class="est-note">* This is an estimate only. Visit our store for an exact assessment.</div><a href="https://m.me/DCTE168" target="_blank" style="display:inline-block;margin-top:12px;padding:10px 24px;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase">Message Us to Trade In</a></div>`;
+    }
+
+    // ===== RECOMMENDED BUILDS =====
+    const builds=[
+      {name:'Budget School/Work PC',price:18500,use:'Schoolwork, Office, Browsing',parts:{CPU:'AMD Ryzen 5 5500',Motherboard:'GIGABYTE A520M-K AM4',RAM:'OCPC XT II 16GB DDR4 3200MHz',Storage:'500GB SSD (not included - add P1,500)',PSU:'1stPlayer ACK 550W 80+ White',Case:'Cuirass Black',Monitor:'Gamdias Atlas 22" VH22F 100Hz'}},
+      {name:'Entry Gaming Build',price:32000,use:'1080p Gaming, Streaming',parts:{CPU:'AMD Ryzen 5 5600',Motherboard:'GIGABYTE B550M-DS3H AM4',RAM:'Kingston Fury Beast 2x8GB DDR4 3200',GPU:'OCPC GeForce GTX 1050 Ti 4GB',Storage:'500GB NVMe SSD (add P1,800)',PSU:'1stPlayer ACK 650W 80+ White',Case:'Cuirass White',Monitor:'Gamdias Atlas 24" HD238IF II 100Hz'}},
+      {name:'Mid-Range Gaming',price:52000,use:'1080p-1440p High Settings',parts:{CPU:'AMD Ryzen 5 5600X',Motherboard:'ASUS TUF Gaming B550M PLUS WIFI II',RAM:'Patriot Viper Steel DDR4 3600 32GB',GPU:'GIGABYTE Radeon RX 6600 Eagle 8GB',Storage:'1TB NVMe SSD (add P3,500)',PSU:'1stPlayer ACK 750W 80+ Silver',Case:'O11-V White',Monitor:'Gamdias Atlas 27" QHD27FIC 180Hz'}},
+      {name:'High-End Gaming',price:68000,use:'1440p-4K Ultra Settings',parts:{CPU:'Intel Core i7-12700',Motherboard:'GIGABYTE B760M DS3H DDR5',RAM:'Patriot Viper Venom DDR5 32GB 5600MT/s',GPU:'ASUS GeForce DUAL RTX 4060 OC 8GB V2',Storage:'1TB NVMe SSD (add P3,500)',PSU:'1stPlayer NGDP 750W 80+ Gold Full Modular',Case:'O11-V Black',Cooler:'DeepCool AG500 Digital WH Air Cooler'}}
+    ];
+    document.getElementById('buildsGrid').innerHTML=builds.map(b=>{
+      const partsHTML=Object.entries(b.parts).map(([k,v])=>`<div class="build-part"><div class="build-part-label">${k}</div><div class="build-part-name">${v}</div></div>`).join('');
+      return `<div class="build-card"><div class="build-header"><h4>${b.name}</h4><div class="build-price">~${formatPrice(b.price)}</div><div class="build-use">${b.use}</div></div><div class="build-parts">${partsHTML}</div><div class="build-actions"><a href="https://m.me/DCTE168" target="_blank" style="flex:1;padding:10px;text-align:center;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase">Order This Build</a></div></div>`;
+    }).join('');
+
+    // ===== RECENTLY VIEWED (localStorage) =====
+    let recentViewed=JSON.parse(localStorage.getItem('dcte_recent')||'[]');
+    function addRecentlyViewed(idx){
+      recentViewed=recentViewed.filter(i=>i!==idx);
+      recentViewed.unshift(idx);
+      if(recentViewed.length>10)recentViewed.pop();
+      localStorage.setItem('dcte_recent',JSON.stringify(recentViewed));
+      renderRecent();
+    }
+    function renderRecent(){
+      const sec=document.getElementById('recentSection'),grid=document.getElementById('recentGrid');
+      if(!recentViewed.length){sec.style.display='none';return}
+      sec.style.display='block';
+      grid.innerHTML=recentViewed.slice(0,6).map(idx=>{const p=products[idx];return p?cardHTML(p,'shop'):''}).join('');
+    }
+    renderRecent();
+    // Hook into product detail to track views
+    const _origOpenPD=openProductDetail;
+    openProductDetail=function(idx){addRecentlyViewed(idx);_origOpenPD(idx)};
+
+    // ===== LAZY LOADING with IntersectionObserver =====
+    const lazyObs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{if(e.isIntersecting){const img=e.target;if(img.dataset.src){img.src=img.dataset.src;img.removeAttribute('data-src');lazyObs.unobserve(img)}}});
+    },{rootMargin:'200px'});
+
+    // ===== UPDATE PRODUCT DETAIL with cart/wish/compare/shopee =====
+    const _origOpenPD2=openProductDetail;
+    openProductDetail=function(idx){
+      _origOpenPD2(idx);
+      // Add action buttons to product detail after render
+      const actDiv=document.querySelector('.pd-actions');
+      if(actDiv){
+        const p=products[idx];
+        actDiv.innerHTML=`
+          <button class="pd-buy" onclick="addToCart(${idx})">Add to Cart</button>
+          <button class="pd-buy" style="background:var(--navy)" onclick="buyNow('${p.name.replace(/'/g,"\\'")}',${p.price})">Buy Now</button>
+          <a href="https://m.me/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
+          <button class="pd-msg" onclick="toggleWish(${idx});this.innerHTML=isWished(${idx})?'&#10003; In Wishlist':'&#9825; Add to Wishlist'" style="font-size:0.78rem">${isWished(idx)?'&#10003; In Wishlist':'&#9825; Add to Wishlist'}</button>
+          <button class="pd-msg" onclick="toggleCompare(${idx})" style="font-size:0.78rem">&#9878; Compare</button>
+          <a href="https://shopee.ph/dcte168" target="_blank" class="pd-msg" style="color:#ee4d2d;border-color:#ee4d2d;font-size:0.78rem">&#128722; Shopee Store</a>
+        `;
+      }
+    };
   </script>
 </body>
 </html>
