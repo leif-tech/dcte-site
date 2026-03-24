@@ -1376,6 +1376,10 @@
       {cat:"case",label:"Case",name:"Cuirass Black",price:2000,img:W+"2024/08/C246CBFF-F3CA-46CC-AE8C-887DFC608398-13764-000003E50B589E63-300x300.jpg"},
       {cat:"cooler",label:"Cooler",name:"DeepCool Mystique 360 LCD AIO Liquid Cooler",price:10000,img:W+"2024/08/IMG_0592-scaled-300x300.jpg"},
       {cat:"cooler",label:"Cooler",name:"DeepCool AG500 Digital WH Air Cooler",price:2450,img:W+"2024/08/6A0B95C4-CAF8-4711-8C69-1CB05EF8E58E-10562-000003472C630206-300x300.jpg"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 1 — Entry Build (Ryzen 5 3400G + 24\" Monitor)",price:24995,img:"/bundle-1.png"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 2 — Black Build (Ryzen 5 5600GT + 24\" Monitor)",price:29995,img:"/bundle-2.png"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 3 — Dual Monitor (Ryzen 5 5500 + RX580 + 2x 24\" Monitor)",price:42995,img:"/bundle-3.png"},
+      {cat:"bundle",label:"PC Bundle",name:"PC Set 4 — Black Build (Ryzen 5 5600X + RTX 3050 + 27\" 240Hz)",price:49995,img:"/bundle-4.png"},
     ];
 
     // Product specs database
@@ -1482,7 +1486,11 @@
       "O11-V White":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"10x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio, USB-C"},
       "Cuirass Black":{"Form Factor":"ATX Mid-Tower","Material":"Steel + Tempered Glass","Fans Included":"4x 120mm ARGB","Max Fan Slots":"7x 120mm","Side Panel":"Tempered Glass","Front I/O":"USB 3.0, USB 2.0, HD Audio"},
       "DeepCool Mystique 360 LCD AIO Liquid Cooler":{"Type":"360mm AIO Liquid","Socket":"LGA1700/1200/1151, AM5/AM4","Fans":"3x 120mm (500-2150 RPM)","Noise":"Up to 36.5 dB(A)","Special":"2.83\" TFT LCD Display, 5th Gen Pump"},
-      "DeepCool AG500 Digital WH Air Cooler":{"Type":"Single-Tower Air","Socket":"LGA1700/1200/1151, AM5/AM4","Fans":"1x 120mm (500-1850 RPM)","Noise":"29.4 dB(A)","Special":"CPU Temp LCD Display, 5 Heatpipes, 240W TDP"}
+      "DeepCool AG500 Digital WH Air Cooler":{"Type":"Single-Tower Air","Socket":"LGA1700/1200/1151, AM5/AM4","Fans":"1x 120mm (500-1850 RPM)","Noise":"29.4 dB(A)","Special":"CPU Temp LCD Display, 5 Heatpipes, 240W TDP"},
+      "PC Set 1 — Entry Build (Ryzen 5 3400G + 24\" Monitor)":{"Processor":"AMD Ryzen 5 3400G 4-Core/8-Thread","Motherboard":"Gigabyte A520M","RAM":"2x8GB DDR4 3200MHz (16GB)","Storage":"256GB SATA SSD","Power Supply":"800W CVS","Fans":"M05 RGB Fans","Monitor":"SuperVision 24\" IPS 100Hz 1080p Full HD","Freebies":"Keyboard, Mouse, Headset, & Mousepad","Warranty":"1 Year","Original Price":"₱27,995"},
+      "PC Set 2 — Black Build (Ryzen 5 5600GT + 24\" Monitor)":{"Processor":"AMD Ryzen 5 5600GT 6-Core/12-Thread","Motherboard":"A520M w/ M.2 Slot","RAM":"2x8GB DDR4 3200MHz (16GB)","Storage":"512GB SATA SSD","Power Supply":"750W CVS","Fans":"3x Rainbow Fans","Monitor":"SuperVision 24\" IPS 100Hz 1080p Full HD","Cooler":"AMD Stealth Wraith","Freebies":"Keyboard, Mouse, Headset, & Mousepad","Warranty":"1 Year","Original Price":"₱32,995"},
+      "PC Set 3 — Dual Monitor (Ryzen 5 5500 + RX580 + 2x 24\" Monitor)":{"Processor":"AMD Ryzen 5 5500 6-Core/12-Thread","Motherboard":"A520M w/ M.2 Slot","RAM":"2x8GB DDR4 3200MHz (16GB)","Storage":"512GB SATA SSD","Power Supply":"GS550W 80+ Rated","Fans":"3x Mirror RGB Fans","Graphics Card":"RX580 8GB 256-bit","Monitor":"2x SuperVision 24\" IPS 100Hz 1080p Full HD","Cooler":"AMD Stealth Wraith","Freebies":"Monitor Mount, Keyboard, Mouse, Headset, & Mousepad","Warranty":"1 Year","Original Price":"₱46,995"},
+      "PC Set 4 — Black Build (Ryzen 5 5600X + RTX 3050 + 27\" 240Hz)":{"Processor":"AMD Ryzen 5 5600X 6-Core/12-Thread","Motherboard":"AM4 B450M w/ M.2 Slot","RAM":"2x8GB DDR4 3200MHz w/ Heatsink (16GB)","Storage":"512GB SATA SSD","Power Supply":"750W 80+ Bronze","Fans":"3x Mirror RGB Fans","Graphics Card":"RTX 3050 Dual Fan","Monitor":"N-Vision 27\" IPS 240Hz","Cooler":"AMD Stealth Wraith","Freebies":"Keyboard, Mouse, Headset, & Mousepad","Warranty":"1 Year","Original Price":"₱54,995"}
     };
 
     function formatPrice(p){return'\u20B1'+p.toLocaleString('en-PH')}
@@ -1500,6 +1508,7 @@
     [6,7].forEach(i=>productMeta[i].badge='new');
     [48,49].forEach(i=>productMeta[i].badge='new');
     [86,87,88].forEach(i=>productMeta[i].badge='sale');
+    products.forEach((p,i)=>{if(p.cat==='bundle')productMeta[i].badge='hot'});
 
     // Card renderer with badges — whole card is clickable
     function cardHTML(p,prefix){
@@ -1555,8 +1564,9 @@
             <div class="pd-cat">${p.label}</div>
             <h1 class="pd-name">${p.name}</h1>
             <div class="pd-brand">Brand: <strong>${brand}</strong></div>
-            <div class="pd-price">${formatPrice(p.price)}</div>
-            <div class="pd-price-note">Cash price &bull; Contact us for installment options</div>
+            ${p.cat==='bundle'?`<div style="font-size:0.95rem;color:var(--text-dim);text-decoration:line-through;margin-bottom:2px">${formatPrice(p.price+3000)}</div>`:''}
+            <div class="pd-price">${formatPrice(p.price)}${p.cat==='bundle'?' <span style="font-size:0.7em;background:var(--pink);color:#fff;padding:2px 8px;border-radius:4px;vertical-align:middle">PROMO</span>':''}</div>
+            <div class="pd-price-note">${p.cat==='bundle'?'Brand New w/ 1 Year Warranty &bull; Home Credit installment available':'Cash price &bull; Contact us for installment options'}</div>
             <div class="pd-actions">
               <button class="pd-buy" onclick="buyNow('${p.name.replace(/'/g,"\\'")}',${p.price})">Buy Now</button>
               <a href="https://m.me/DCTE168" target="_blank" class="pd-msg">&#128172; Message Us</a>
@@ -1597,7 +1607,8 @@
 
     // Extract brand from product name
     function getBrand(name){
-      const brands=['ASUS','GIGABYTE','MSI','BIOSTAR','AMD','Intel','Patriot','Kingston','OCPC','TeamGroup','T-Force','Corsair','DeepCool','Gamdias','OMNIA','ACER','Jonsbo','1stPlayer','Secure','APC','AWP'];
+      if(name.startsWith('PC Set'))return 'DCTE';
+      const brands=['ASUS','GIGABYTE','MSI','BIOSTAR','AMD','Intel','Patriot','Kingston','OCPC','TeamGroup','T-Force','Corsair','DeepCool','Gamdias','OMNIA','ACER','Jonsbo','1stPlayer','Secure','APC','AWP','N-Vision','SuperVision'];
       for(const b of brands){if(name.toLowerCase().includes(b.toLowerCase()))return b}
       return 'Other';
     }
@@ -1611,10 +1622,11 @@
       'psu':'psu','power supply':'psu','ups':'psu','avr':'psu',
       'monitor':'monitor','monitors':'monitor','screen':'monitor','display':'monitor',
       'case':'case','cases':'case','casing':'case','chassis':'case','tower':'case',
-      'cooler':'cooler','coolers':'cooler','fan':'cooler','cooling':'cooler','aio':'cooler'
+      'cooler':'cooler','coolers':'cooler','fan':'cooler','cooling':'cooler','aio':'cooler',
+      'bundle':'bundle','bundles':'bundle','pc set':'bundle','pc build':'bundle','build':'bundle','package':'bundle','set':'bundle','complete pc':'bundle','full set':'bundle'
     };
 
-    const categories=[{key:'all',label:'All'},{key:'gpu',label:'Video Cards'},{key:'cpu',label:'Processors'},{key:'mobo',label:'Motherboards'},{key:'ram',label:'Memory'},{key:'psu',label:'PSU / UPS'},{key:'monitor',label:'Monitors'},{key:'case',label:'Cases'},{key:'cooler',label:'Coolers'}];
+    const categories=[{key:'all',label:'All'},{key:'bundle',label:'PC Bundles'},{key:'gpu',label:'Video Cards'},{key:'cpu',label:'Processors'},{key:'mobo',label:'Motherboards'},{key:'ram',label:'Memory'},{key:'psu',label:'PSU / UPS'},{key:'monitor',label:'Monitors'},{key:'case',label:'Cases'},{key:'cooler',label:'Coolers'}];
 
     let filtersBuilt=false;
     function buildFilters(){
@@ -1896,14 +1908,16 @@
 
     // ===== RECOMMENDED BUILDS =====
     const builds=[
-      {name:'Budget School/Work PC',price:18500,use:'Schoolwork, Office, Browsing',parts:{CPU:'AMD Ryzen 5 5500',Motherboard:'GIGABYTE A520M-K AM4',RAM:'OCPC XT II 16GB DDR4 3200MHz',Storage:'500GB SSD (not included - add P1,500)',PSU:'1stPlayer ACK 550W 80+ White',Case:'Cuirass Black',Monitor:'Gamdias Atlas 22" VH22F 100Hz'}},
-      {name:'Entry Gaming Build',price:32000,use:'1080p Gaming, Streaming',parts:{CPU:'AMD Ryzen 5 5600',Motherboard:'GIGABYTE B550M-DS3H AM4',RAM:'Kingston Fury Beast 2x8GB DDR4 3200',GPU:'OCPC GeForce GTX 1050 Ti 4GB',Storage:'500GB NVMe SSD (add P1,800)',PSU:'1stPlayer ACK 650W 80+ White',Case:'Cuirass White',Monitor:'Gamdias Atlas 24" HD238IF II 100Hz'}},
-      {name:'Mid-Range Gaming',price:52000,use:'1080p-1440p High Settings',parts:{CPU:'AMD Ryzen 5 5600X',Motherboard:'ASUS TUF Gaming B550M PLUS WIFI II',RAM:'Patriot Viper Steel DDR4 3600 32GB',GPU:'GIGABYTE Radeon RX 6600 Eagle 8GB',Storage:'1TB NVMe SSD (add P3,500)',PSU:'1stPlayer ACK 750W 80+ Silver',Case:'O11-V White',Monitor:'Gamdias Atlas 27" QHD27FIC 180Hz'}},
-      {name:'High-End Gaming',price:68000,use:'1440p-4K Ultra Settings',parts:{CPU:'Intel Core i7-12700',Motherboard:'GIGABYTE B760M DS3H DDR5',RAM:'Patriot Viper Venom DDR5 32GB 5600MT/s',GPU:'ASUS GeForce DUAL RTX 4060 OC 8GB V2',Storage:'1TB NVMe SSD (add P3,500)',PSU:'1stPlayer NGDP 750W 80+ Gold Full Modular',Case:'O11-V Black',Cooler:'DeepCool AG500 Digital WH Air Cooler'}}
+      {name:'PC Set 1 — Entry Build',price:24995,origPrice:27995,use:'Office, Browsing, Light Gaming',parts:{Processor:'AMD Ryzen 5 3400G (4-Core/8-Thread)',Motherboard:'Gigabyte A520M',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'256GB SATA SSD','Power Supply':'800W CVS',Fans:'M05 RGB Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 2 — Black Build',price:29995,origPrice:32995,use:'1080p Gaming, Multitasking',parts:{Processor:'AMD Ryzen 5 5600GT (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W CVS',Fans:'3x Rainbow Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 3 — Dual Monitor',price:42995,origPrice:46995,use:'Dual Monitor Gaming & Streaming',parts:{Processor:'AMD Ryzen 5 5500 (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'GS550W 80+ Rated','Graphics Card':'RX580 8GB 256-bit',Fans:'3x Mirror RGB Fans',Monitor:'2x SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Monitor Mount, Keyboard, Mouse, Headset, Mousepad'}},
+      {name:'PC Set 4 — Black Build',price:49995,origPrice:54995,use:'1080p-1440p High Settings Gaming',parts:{Processor:'AMD Ryzen 5 5600X (6-Core/12-Thread)',Motherboard:'AM4 B450M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz w/ Heatsink (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W 80+ Bronze','Graphics Card':'RTX 3050 Dual Fan',Fans:'3x Mirror RGB Fans',Monitor:'N-Vision 27" IPS 240Hz',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}}
     ];
     document.getElementById('buildsGrid').innerHTML=builds.map(b=>{
-      const partsHTML=Object.entries(b.parts).map(([k,v])=>`<div class="build-part"><div class="build-part-label">${k}</div><div class="build-part-name">${v}</div></div>`).join('');
-      return `<div class="build-card"><div class="build-header"><h4>${b.name}</h4><div class="build-price">~${formatPrice(b.price)}</div><div class="build-use">${b.use}</div></div><div class="build-parts">${partsHTML}</div><div class="build-actions"><a href="https://m.me/DCTE168" target="_blank" style="flex:1;padding:10px;text-align:center;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase">Order This Build</a></div></div>`;
+      const partsHTML=Object.entries(b.parts).filter(([k])=>k!=='Freebies').map(([k,v])=>`<div class="build-part"><div class="build-part-label">${k}</div><div class="build-part-name">${v}</div></div>`).join('');
+      const origHTML=b.origPrice?`<div style="font-size:0.82rem;color:var(--text-dim);text-decoration:line-through">${formatPrice(b.origPrice)}</div>`:'';
+      const freebies=b.parts.Freebies?`<div style="margin-top:8px;padding:8px 12px;background:rgba(233,30,140,0.08);border-radius:6px;font-size:0.75rem;color:var(--pink);font-weight:600">🎁 Freebies: ${b.parts.Freebies}</div>`:'';
+      return `<div class="build-card"><div class="build-header"><div style="display:inline-block;padding:3px 10px;background:var(--pink);color:#fff;border-radius:4px;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:6px">PROMO</div><h4>${b.name}</h4>${origHTML}<div class="build-price">${formatPrice(b.price)}</div><div class="build-use">${b.use}</div></div><div class="build-parts">${partsHTML}${freebies}</div><div class="build-actions"><a href="/checkout.html?product=${encodeURIComponent(b.name)}&price=${b.price}" target="_blank" style="flex:1;padding:10px;text-align:center;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase">Order This Build</a></div></div>`;
     }).join('');
 
     // ===== RECENTLY VIEWED (localStorage) =====
