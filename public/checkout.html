@@ -47,15 +47,18 @@
     .ship-price{font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;color:var(--pink);margin-top:2px}
 
     /* Order summary */
-    .order-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem}
+    .order-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;gap:16px}
     .order-row:last-child{border-bottom:none}
-    .order-row .label{color:#718096}
-    .order-row .val{font-weight:700;color:var(--navy)}
+    .order-row .label{color:#718096;white-space:nowrap}
+    .order-row .val{font-weight:700;color:var(--navy);text-align:right;white-space:nowrap;flex-shrink:0}
     .order-row.total{padding-top:14px;margin-top:4px;border-top:2px solid var(--border);border-bottom:none}
     .order-row.total .label{font-family:'Montserrat',sans-serif;font-weight:800;color:var(--navy);font-size:0.95rem}
     .order-row.total .val{font-family:'Montserrat',sans-serif;font-size:1.2rem;color:var(--pink);font-weight:800}
-    .product-name{font-size:0.85rem;color:var(--navy);font-weight:600;line-height:1.4;margin-bottom:2px}
-    .product-qty{font-size:0.75rem;color:#a0aec0}
+    .order-item{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);gap:16px}
+    .order-item .item-info{flex:1;min-width:0}
+    .order-item .item-name{font-size:0.84rem;color:var(--navy);font-weight:600;line-height:1.4}
+    .order-item .item-qty{font-size:0.73rem;color:#a0aec0;margin-top:2px}
+    .order-item .item-price{font-weight:700;color:var(--navy);font-size:0.85rem;white-space:nowrap;flex-shrink:0;text-align:right}
 
     /* Payment tabs */
     .payment-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
@@ -170,10 +173,7 @@
             <span class="label" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px">Product</span>
             <span class="label" style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px">Subtotal</span>
           </div>
-          <div class="order-row">
-            <div><div class="product-name" id="prodName">-</div><div class="product-qty">x 1</div></div>
-            <span class="val" id="prodPrice">-</span>
-          </div>
+          <div id="orderItems"></div>
           <div class="order-row">
             <span class="label">Subtotal</span>
             <span class="val" id="subtotal">-</span>
@@ -250,16 +250,13 @@
     }
 
     const totalPrice = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
-    const prodSummary = document.getElementById('prodName');
-    const priceEl = document.getElementById('prodPrice');
-
-    if (cartItems.length === 1) {
-      prodSummary.textContent = cartItems[0].name;
-      priceEl.textContent = fmt(cartItems[0].price);
-    } else {
-      prodSummary.innerHTML = cartItems.map(i => `${i.name} x${i.qty}`).join('<br>');
-      priceEl.textContent = cartItems.map(i => fmt(i.price * i.qty)).join(' + ');
-    }
+    const orderItemsEl = document.getElementById('orderItems');
+    cartItems.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'order-item';
+      row.innerHTML = `<div class="item-info"><div class="item-name">${item.name}</div><div class="item-qty">x ${item.qty}</div></div><span class="item-price">${fmt(item.price * item.qty)}</span>`;
+      orderItemsEl.appendChild(row);
+    });
     document.getElementById('subtotal').textContent = fmt(totalPrice);
     document.getElementById('totalPrice').textContent = fmt(totalPrice);
     document.title = 'Checkout - DCTE';
