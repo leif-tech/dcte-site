@@ -55,8 +55,8 @@
     /* ===== TOP BAR ===== */
     .top-bar{
       background:var(--navy);
-      padding:8px 0;
-      font-size:0.78rem;
+      padding:6px 0;
+      font-size:0.75rem;
       border-bottom:none;
     }
     .top-bar .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
@@ -79,29 +79,29 @@
       box-shadow:0 1px 8px rgba(0,0,0,0.06);
       padding:0;
     }
-    .navbar .container{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .navbar .container{display:flex;align-items:center;justify-content:space-between;height:58px;gap:8px}
     .nav-logo{
       font-family:'Montserrat',sans-serif;font-size:1.6rem;font-weight:900;
       background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
     }
-    .nav-links{display:flex;align-items:center;gap:0}
+    .nav-links{display:flex;align-items:center;gap:0;margin-left:auto;margin-right:auto}
     .nav-links a{
-      padding:20px 18px;font-size:0.85rem;font-weight:600;color:var(--text);
+      padding:18px 16px;font-size:0.82rem;font-weight:600;color:var(--text);
       text-transform:uppercase;letter-spacing:0.5px;transition:all .2s;
       font-family:'Montserrat',sans-serif;position:relative;
     }
     .nav-links a:hover{color:var(--navy)}
     .nav-links a::after{
-      content:'';position:absolute;bottom:0;left:18px;right:18px;height:2px;
+      content:'';position:absolute;bottom:0;left:16px;right:16px;height:2px;
       background:var(--grad);transform:scaleX(0);transition:transform .3s;
     }
     .nav-links a:hover::after{transform:scaleX(1)}
     .nav-links .shop-link{color:var(--purple)}
     .nav-links .shop-link:hover{color:var(--pink)}
     .nav-cta{
-      margin-left:12px;padding:10px 24px!important;
+      margin-left:8px;padding:9px 20px!important;
       background:var(--grad);color:#fff!important;border-radius:8px;
-      font-size:0.8rem!important;
+      font-size:0.78rem!important;
     }
     .nav-cta::after{display:none!important}
     .nav-cta:hover{opacity:0.9;transform:translateY(-1px)}
@@ -350,38 +350,28 @@
     @media(max-width:768px){.loc-grid{grid-template-columns:1fr}}
 
     /* ===== CONTACT ===== */
-    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
-    .contact-info{display:flex;flex-direction:column;gap:20px}
-    .contact-item{display:flex;align-items:center;gap:14px}
-    .contact-icon{
-      width:44px;height:44px;border-radius:10px;
-      background:linear-gradient(135deg,rgba(233,30,140,0.06),rgba(92,184,230,0.06));
-      display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+    .contact-simple{text-align:center;max-width:600px;margin:0 auto}
+    .contact-methods{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+    .contact-chip{
+      display:flex;align-items:center;gap:10px;padding:12px 20px;
+      background:#fff;border:1px solid var(--border);border-radius:12px;
+      font-size:0.88rem;font-weight:600;color:var(--navy);transition:all .3s;
     }
-    .contact-item .label{font-size:0.72rem;color:var(--text-dim);margin-bottom:1px}
-    .contact-item .value{font-weight:600;font-size:0.9rem;color:var(--navy)}
-    .contact-item .value a{color:var(--purple);transition:.2s}
-    .contact-item .value a:hover{color:var(--pink)}
-    .social-links{display:flex;gap:10px;margin-top:12px}
-    .social-link{
-      width:44px;height:44px;border-radius:10px;
+    .contact-chip:hover{border-color:var(--purple);box-shadow:0 4px 16px rgba(139,47,201,0.1);transform:translateY(-2px)}
+    .contact-chip a{color:var(--purple)}
+    .contact-chip a:hover{color:var(--pink)}
+    .contact-chip .icon{font-size:1.1rem}
+    .contact-branches{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:28px}
+    .contact-branch{text-align:center}
+    .contact-branch .branch-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--pink);margin-bottom:4px}
+    .contact-branch .branch-addr{font-size:0.85rem;color:var(--text)}
+    .contact-socials{display:flex;justify-content:center;gap:12px;margin-top:24px}
+    .contact-social{
+      width:42px;height:42px;border-radius:50%;
       background:#fff;border:1px solid var(--border);
       display:flex;align-items:center;justify-content:center;transition:.3s;color:var(--text-dim);
     }
-    .social-link:hover{border-color:var(--purple);color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,47,201,0.1)}
-    .contact-form{display:flex;flex-direction:column;gap:14px}
-    .form-group{display:flex;flex-direction:column;gap:5px}
-    .form-group label{font-size:0.78rem;font-weight:600;color:var(--text-dim);font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:.5px}
-    .form-group input,.form-group textarea{
-      padding:12px 14px;background:#fff;border:1px solid var(--border);
-      border-radius:10px;color:var(--navy);font-family:'Open Sans',sans-serif;font-size:0.9rem;
-      transition:.3s;outline:none;
-    }
-    .form-group input:focus,.form-group textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,47,201,0.08)}
-    .form-group textarea{resize:vertical;min-height:100px}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media(max-width:640px){.form-row{grid-template-columns:1fr}}
-    @media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+    .contact-social:hover{border-color:var(--purple);color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,47,201,0.1)}
 
     /* ===== FAQ ===== */
     .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
@@ -503,9 +493,9 @@
     @media(max-width:900px){.nav-icons{margin-left:auto;margin-right:8px}}
 
     /* ===== NAVBAR SEARCH ===== */
-    .nav-search{position:relative;margin-left:8px;width:240px;flex-shrink:0}
-    .nav-search input{width:180px;padding:7px 32px 7px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.8rem;font-family:'Open Sans',sans-serif;outline:none;transition:all .2s;color:var(--text)}
-    .nav-search input:focus{border-color:var(--purple);width:240px;box-shadow:0 0 0 3px rgba(139,47,201,0.1)}
+    .nav-search{position:relative;margin-left:4px;width:200px;flex-shrink:0}
+    .nav-search input{width:160px;padding:7px 32px 7px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.78rem;font-family:'Open Sans',sans-serif;outline:none;transition:all .2s;color:var(--text)}
+    .nav-search input:focus{border-color:var(--purple);width:200px;box-shadow:0 0 0 3px rgba(139,47,201,0.1)}
     .nav-search-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text-dim);pointer-events:none}
     .nav-suggest{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:100;max-height:320px;overflow-y:auto;display:none}
     .nav-suggest.open{display:block}
@@ -617,22 +607,6 @@
     .tradein-modal-close:hover{color:var(--navy)}
     .tradein-modal-body{padding:16px 28px 28px}
     .tradein-modal .estimator-card{box-shadow:none;border:1px solid var(--border);padding:24px}
-
-    /* ===== RECOMMENDED BUILDS ===== */
-    .builds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
-    .build-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-    .build-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(139,47,201,0.1)}
-    .build-header{padding:20px 20px 12px;background:linear-gradient(135deg,var(--navy),#2a2a5e)}
-    .build-header h4{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px}
-    .build-header .build-price{font-family:'Montserrat',sans-serif;font-size:1.4rem;font-weight:800;color:var(--cyan)}
-    .build-header .build-use{font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:4px}
-    .build-parts{padding:16px 20px}
-    .build-part{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.82rem}
-    .build-part:last-child{border-bottom:none}
-    .build-part-label{color:var(--text-dim);font-weight:600;font-size:0.72rem;text-transform:uppercase}
-    .build-part-name{color:var(--navy);font-weight:600;text-align:right;max-width:60%}
-    .build-actions{padding:0 20px 20px;display:flex;gap:8px}
-    .build-actions button{flex:1;padding:10px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;cursor:pointer;transition:all .2s}
 
     /* ===== MESSENGER WIDGET ===== */
 
@@ -792,14 +766,15 @@
 
     /* ===== SCROLL TO TOP ===== */
     .scroll-top-btn{
-      position:fixed;bottom:92px;right:30px;width:40px;height:40px;border-radius:50%;
-      background:var(--grad);color:#fff;border:none;cursor:pointer;z-index:100000;
-      display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-      box-shadow:0 4px 16px rgba(139,47,201,0.3);opacity:0;visibility:hidden;
+      position:fixed;bottom:96px;right:32px;width:36px;height:36px;border-radius:50%;
+      background:rgba(255,255,255,0.95);color:var(--navy);border:1px solid var(--border);
+      cursor:pointer;z-index:99996;
+      display:flex;align-items:center;justify-content:center;font-size:1rem;
+      box-shadow:0 2px 12px rgba(0,0,0,0.1);opacity:0;visibility:hidden;
       transform:translateY(12px);transition:all .3s;
     }
     .scroll-top-btn.show{opacity:1;visibility:visible;transform:translateY(0)}
-    .scroll-top-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,47,201,0.4)}
+    .scroll-top-btn:hover{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15);transform:translateY(-2px)}
   </style>
 </head>
 <body>
@@ -834,12 +809,10 @@
     <div class="container">
       <a href="#" class="nav-logo"><img src="/favicon.png" alt="DCTE" style="height:40px;width:auto"></a>
       <div class="nav-links">
-        <a href="#about">About</a>
+        <a href="#hero">Home</a>
         <a href="#" class="shop-link" onclick="event.preventDefault();openShop('all')">Shop</a>
         <a href="#services">Services</a>
         <a href="#trade-in">Trade-In</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#location">Location</a>
         <a href="#contact" class="nav-cta">Contact Us</a>
       </div>
       <div class="nav-search" id="navSearch">
@@ -856,12 +829,10 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about" onclick="closeMobile()">About</a>
+    <a href="#hero" onclick="closeMobile()">Home</a>
     <a href="#" onclick="closeMobile();openShop('all')">Shop</a>
     <a href="#services" onclick="closeMobile()">Services</a>
     <a href="#trade-in" onclick="closeMobile()">Trade-In</a>
-    <a href="#reviews" onclick="closeMobile()">Reviews</a>
-    <a href="#location" onclick="closeMobile()">Location</a>
     <a href="#contact" onclick="closeMobile()">Contact Us</a>
   </div>
 
@@ -1202,17 +1173,6 @@
     </div>
   </div>
 
-  <!-- RECOMMENDED BUILDS -->
-  <section class="section section-alt" id="builds">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">We Build PCs</p>
-        <h2 class="section-title">Recommended Builds</h2>
-        <p class="section-desc">Pre-configured PC packages for every budget. All builds include free assembly.</p>
-      </div>
-      <div class="builds-grid fade-in" id="buildsGrid"></div>
-    </div>
-  </section>
 
 
   <!-- REVIEWS -->
@@ -1230,6 +1190,8 @@
         <div class="review-card glass fade-in"><div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="review-text">"From the moment I inquired until I saw my new rig - everything was so smooth. The after-sales pud, even at 2 in the morning, I still got a quick reply. Talk about great customer service - kudos, team!"</p><div class="review-author"><div class="review-avatar">J</div><div><div class="review-name">Joel Requina Jr.</div><div class="review-source">Facebook Review</div></div></div></div>
         <div class="review-card glass fade-in"><div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="review-text">"Sobrang sulit at sobrang bait ng staff, technician at ng owner. Very responsive and worth the money!"</p><div class="review-author"><div class="review-avatar">M</div><div><div class="review-name">Melvin Mejos</div><div class="review-source">Facebook Review</div></div></div></div>
         <div class="review-card glass fade-in"><div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="review-text">"Salamat kaayo Sir Kenny and DCTE fam sa pina abtik nga Service! Tinuod jud nga express! Ug bisan sabado rest day gi cater gihapon!"</p><div class="review-author"><div class="review-avatar">A</div><div><div class="review-name">Alfredo Candido</div><div class="review-source">Facebook Review</div></div></div></div>
+        <div class="review-card glass fade-in"><div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="review-text">"Had a wonderful experience sa DCTE. Very welcoming staff, entertaining and napaka insightful nila. Super approachable ng owners at sobrang bait pa. Highly recommended for those who are on tight budget for upgrades. Will come back again for future upgrades!"</p><div class="review-author"><div class="review-avatar">D</div><div><div class="review-name">Danielle Danyele</div><div class="review-source">Facebook Review</div></div></div></div>
+        <div class="review-card glass fade-in"><div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="review-text">"They cleaned my gaming laptop and PC, offered fair-priced upgrades (RAM and storage for the laptop), and even installed them for free as part of the service. They also recommended fixes for my PC that solved its issues. Great service, fair prices, and a good deal overall!"</p><div class="review-author"><div class="review-avatar">S</div><div><div class="review-name">Sherwin John Tarquini</div><div class="review-source">Facebook Review</div></div></div></div>
       </div>
     </div>
   </section>
@@ -1289,30 +1251,33 @@
       <div class="section-header fade-in">
         <p class="section-label">Get In Touch</p>
         <h2 class="section-title">Contact Us</h2>
-        <p class="section-desc">Have questions about trade-ins, builds, or pricing? Reach out and we'll get back to you.</p>
+        <p class="section-desc">Have questions? Chat with us or reach out directly.</p>
       </div>
-      <div class="contact-grid fade-in">
-        <div class="contact-info">
-          <div class="contact-item"><div class="contact-icon">&#128222;</div><div><div class="label">Phone</div><div class="value"><a href="tel:09956533350">0995 653 3350</a></div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#128222;</div><div><div class="label">Phone (Alt)</div><div class="value"><a href="tel:09153502729">0915 350 2729</a></div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#9993;</div><div><div class="label">Email</div><div class="value"><a href="mailto:joannamasarieta1@gmail.com">joannamasarieta1@gmail.com</a></div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 1 | Agdao</div><div class="value">Sitio Coreas Leon Garcia (in front of Shell)</div></div></div>
-          <div class="contact-item"><div class="contact-icon">&#128205;</div><div><div class="label">Branch 2 | Ecoland</div><div class="value">Quimpo Blvd. (beside Motolite)</div></div></div>
-          <div class="social-links">
-            <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="social-link" title="Facebook"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-            <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="social-link" title="TikTok"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
-            <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="social-link" title="Shopee" style="color:#ee4d2d"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
+      <div class="contact-simple fade-in">
+        <div class="contact-methods">
+          <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09956533350">0995 653 3350</a></div>
+          <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09153502729">0915 350 2729</a></div>
+          <div class="contact-chip"><span class="icon">&#9993;</span><a href="mailto:joannamasarieta1@gmail.com">joannamasarieta1@gmail.com</a></div>
+        </div>
+        <div class="contact-branches">
+          <div class="contact-branch">
+            <div class="branch-name">Branch 1 | Agdao</div>
+            <div class="branch-addr">Sitio Coreas Leon Garcia (in front of Shell)</div>
+          </div>
+          <div class="contact-branch">
+            <div class="branch-name">Branch 2 | Ecoland</div>
+            <div class="branch-addr">Quimpo Blvd. (beside Motolite)</div>
           </div>
         </div>
-        <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
-          <div class="form-row">
-            <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your name" required></div>
-            <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="you@email.com" required></div>
-          </div>
-          <div class="form-group"><label for="phone">Phone (optional)</label><input type="tel" id="phone" name="phone" placeholder="09XX XXX XXXX"></div>
-          <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us about your trade-in, build, or any questions..." required></textarea></div>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send Message</button>
-        </form>
+        <button class="btn btn-primary" onclick="document.getElementById('wlai-bubble').click()" style="padding:14px 36px;font-size:0.88rem">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          Chat With Us
+        </button>
+        <div class="contact-socials">
+          <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="contact-social" title="Facebook"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="contact-social" title="TikTok"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
+          <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="contact-social" title="Shopee" style="color:#ee4d2d"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
+        </div>
       </div>
     </div>
   </section>
@@ -1341,7 +1306,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="logo"><img src="/favicon.png" alt="DCTE" style="height:36px;width:auto;margin-bottom:4px"></div>
-          <p>Davao Computer Trade-in Express - the first and only PC parts trade-in store in the Philippines. Trade to upgrade, save big.</p>
+          <p>Davao Computer Trade-in Express, the first and only PC parts trade-in store in the Philippines. Trade to upgrade, save big.</p>
         </div>
         <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="#about">About</a></li><li><a href="#shop">Shop</a></li><li><a href="#services">Services</a></li><li><a href="#trade-in">Trade-In</a></li><li><a href="#reviews">Reviews</a></li></ul></div>
         <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Trade-In Program</a></li><li><a href="#services">Custom PC Builds</a></li><li><a href="#services">PC Repair</a></li><li><a href="#services">Parts Sales</a></li></ul></div>
@@ -1863,40 +1828,58 @@
         .then(r=>r.json()).then(d=>{
           b.innerHTML='&#10003; Sent!';b.style.background='linear-gradient(135deg,#22c55e,#16a34a)';f.reset();
           setTimeout(()=>{b.innerHTML=o;b.style.background='';b.disabled=false},3000);
-        }).catch(()=>{b.innerHTML='Error - Try Again';b.style.background='#ef4444';b.disabled=false;setTimeout(()=>{b.innerHTML=o;b.style.background=''},3000)});
+        }).catch(()=>{b.innerHTML='Error, Try Again';b.style.background='#ef4444';b.disabled=false;setTimeout(()=>{b.innerHTML=o;b.style.background=''},3000)});
     }
 
     // ===== TRADE-IN ESTIMATOR =====
+    // Trade-in values = ~35-50% of PH secondhand market prices (store resells at profit)
+    // Secondhand prices sourced from TipidPC, FB Marketplace, Carousell, Shopee PH (2025-2026)
     const tradeInData={
       gpu:[
-        {name:'RTX 4090 / 4080',val:[18000,25000]},{name:'RTX 4070 Ti / 4070',val:[12000,18000]},{name:'RTX 4060 Ti / 4060',val:[8000,13000]},
-        {name:'RTX 3080 / 3090',val:[10000,16000]},{name:'RTX 3070 / 3070 Ti',val:[7000,11000]},{name:'RTX 3060 / 3060 Ti',val:[5000,8000]},
-        {name:'RTX 3050 / GTX 1660',val:[3000,5500]},{name:'GTX 1050 Ti / 1650',val:[1500,3500]},{name:'GTX 1030 / GT 730',val:[500,1500]},
-        {name:'RX 6800 / 6900',val:[8000,14000]},{name:'RX 6600 / 6700',val:[4000,7000]},{name:'RX 580 / 570',val:[1500,3000]}
+        {name:'RTX 4090',val:[22000,28000]},{name:'RTX 4080 / 4080 Super',val:[16000,20000]},
+        {name:'RTX 4070 Ti / 4070',val:[11000,14000]},{name:'RTX 4060 Ti',val:[8000,10000]},
+        {name:'RTX 4060',val:[6500,8500]},{name:'RTX 3080 / 3090',val:[8000,12000]},
+        {name:'RTX 3070 / 3070 Ti',val:[5500,7500]},{name:'RTX 3060 Ti',val:[4500,6000]},
+        {name:'RTX 3060 12GB',val:[3500,5000]},{name:'RTX 3050',val:[2500,3500]},
+        {name:'GTX 1660 Super / Ti',val:[2500,3500]},{name:'GTX 1650',val:[1500,2200]},
+        {name:'GTX 1050 Ti',val:[1000,1600]},{name:'GTX 1030 / GT 730',val:[300,700]},
+        {name:'RX 6700 XT',val:[4500,6000]},{name:'RX 6600 / 6600 XT',val:[3000,4200]},
+        {name:'RX 580 8GB',val:[1200,2000]},{name:'RX 570 4GB',val:[800,1400]}
       ],
       cpu:[
-        {name:'Ryzen 9 5900X / 5950X',val:[6000,10000]},{name:'Ryzen 7 5800X / 5700X',val:[4000,7000]},{name:'Ryzen 5 5600X / 5600',val:[2500,4500]},
-        {name:'Ryzen 5 3600 / 3500X',val:[1500,3000]},{name:'Ryzen 3 3100 / 3300X',val:[1000,2000]},
-        {name:'i9-12900K / 13900K',val:[8000,14000]},{name:'i7-12700 / 13700',val:[5000,9000]},{name:'i5-12400 / 13400',val:[3000,5500]},
-        {name:'i3-12100 / 13100',val:[2000,3500]},{name:'i5-11400 / 10400',val:[2000,4000]},{name:'i3-10100 / 10105',val:[1000,2000]}
+        {name:'Ryzen 9 5900X / 5950X',val:[4500,6500]},{name:'Ryzen 7 5800X / 5700X',val:[2500,3800]},
+        {name:'Ryzen 7 5700G',val:[2200,3200]},{name:'Ryzen 5 5600X',val:[1800,2600]},
+        {name:'Ryzen 5 5600 / 5500',val:[1400,2200]},{name:'Ryzen 5 3600',val:[1000,1600]},
+        {name:'Ryzen 5 3400G / 3200G',val:[800,1400]},{name:'Ryzen 3 3100',val:[600,1000]},
+        {name:'i7-12700 / 13700',val:[4000,6000]},{name:'i5-12400 / 13400',val:[2200,3500]},
+        {name:'i5-11400 / 10400',val:[1400,2200]},{name:'i3-12100 / 13100',val:[1500,2200]},
+        {name:'i3-10100 / 10105',val:[800,1300]}
       ],
       ram:[
-        {name:'DDR5 32GB Kit',val:[2000,4000]},{name:'DDR5 16GB Kit',val:[1000,2500]},
-        {name:'DDR4 32GB Kit (3200+)',val:[1500,3000]},{name:'DDR4 16GB Kit (3200+)',val:[800,1800]},
-        {name:'DDR4 16GB Kit (2666)',val:[600,1200]},{name:'DDR4 8GB Single',val:[300,700]},{name:'DDR3 8GB',val:[200,500]}
+        {name:'DDR5 32GB Kit (5600+)',val:[1800,2800]},{name:'DDR5 16GB Kit (5200+)',val:[1000,1700]},
+        {name:'DDR4 32GB Kit (3200+)',val:[1200,1800]},{name:'DDR4 16GB Kit (3200+)',val:[700,1100]},
+        {name:'DDR4 16GB Kit (2666)',val:[500,800]},{name:'DDR4 8GB Single (3200)',val:[300,500]},
+        {name:'DDR4 8GB Single (2666)',val:[200,400]},{name:'DDR3 8GB',val:[150,300]},
+        {name:'DDR3 4GB',val:[80,150]}
       ],
       mobo:[
-        {name:'X570 / B550 (AM4)',val:[2000,5000]},{name:'B450 / A520 (AM4)',val:[1000,2500]},
-        {name:'Z690 / B660 (LGA1700)',val:[2500,5500]},{name:'H610 / B760 (LGA1700)',val:[1500,3000]},
-        {name:'Z490 / B460 (LGA1200)',val:[1000,2500]},{name:'H510 / H410 (LGA1200)',val:[800,1500]}
+        {name:'X570 (AM4)',val:[1800,3000]},{name:'B550 (AM4)',val:[1200,2200]},
+        {name:'B450 (AM4)',val:[700,1400]},{name:'A520 (AM4)',val:[600,1000]},
+        {name:'Z690 / Z790 (LGA1700)',val:[2500,4000]},{name:'B660 / B760 (LGA1700)',val:[1500,2500]},
+        {name:'H610 (LGA1700)',val:[800,1400]},{name:'B460 / Z490 (LGA1200)',val:[800,1600]},
+        {name:'H510 / H410 (LGA1200)',val:[500,900]}
       ],
       psu:[
-        {name:'750W+ 80+ Gold/Platinum',val:[1500,3000]},{name:'650W 80+ Bronze/Gold',val:[800,1800]},
-        {name:'550W 80+ Bronze',val:[500,1200]},{name:'450W / Generic',val:[200,600]}
+        {name:'850W+ 80+ Gold (Modular)',val:[1500,2500]},{name:'750W 80+ Gold',val:[1200,1800]},
+        {name:'650W 80+ Bronze/Gold',val:[700,1200]},{name:'550W 80+ Bronze',val:[400,800]},
+        {name:'500W Generic / Non-rated',val:[150,400]},
+        {name:'UPS 1500VA+',val:[800,1500]},{name:'UPS 650-1000VA',val:[400,800]}
       ],
       monitor:[
-        {name:'32"+ 144Hz+ QHD/4K',val:[4000,8000]},{name:'27" 144Hz+ FHD/QHD',val:[2500,5000]},
-        {name:'24" 60-144Hz FHD',val:[1500,3000]},{name:'21-22" FHD',val:[800,1500]}
+        {name:'32"+ 144Hz+ QHD/4K',val:[3500,5500]},{name:'27" 240Hz IPS',val:[3000,4500]},
+        {name:'27" 144-165Hz IPS/VA',val:[2000,3200]},{name:'27" 75-100Hz IPS',val:[1200,2000]},
+        {name:'24" 144Hz+ IPS/VA',val:[1400,2200]},{name:'24" 75-100Hz IPS',val:[800,1400]},
+        {name:'22" FHD',val:[500,900]}
       ]
     };
     function selectEstType(btn){
@@ -1932,20 +1915,6 @@
     document.getElementById('tradeinModal').addEventListener('click',function(e){
       if(e.target===this)this.classList.remove('open');
     });
-
-    // ===== RECOMMENDED BUILDS =====
-    const builds=[
-      {name:'PC Set 1  - Entry Build',price:24995,origPrice:27995,use:'Office, Browsing, Light Gaming',parts:{Processor:'AMD Ryzen 5 3400G (4-Core/8-Thread)',Motherboard:'Gigabyte A520M',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'256GB SATA SSD','Power Supply':'800W CVS',Fans:'M05 RGB Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 2  - Black Build',price:29995,origPrice:32995,use:'1080p Gaming, Multitasking',parts:{Processor:'AMD Ryzen 5 5600GT (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W CVS',Fans:'3x Rainbow Fans',Monitor:'SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 3  - Dual Monitor',price:42995,origPrice:46995,use:'Dual Monitor Gaming & Streaming',parts:{Processor:'AMD Ryzen 5 5500 (6-Core/12-Thread)',Motherboard:'A520M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz (16GB)',Storage:'512GB SATA SSD','Power Supply':'GS550W 80+ Rated','Graphics Card':'RX580 8GB 256-bit',Fans:'3x Mirror RGB Fans',Monitor:'2x SuperVision 24" IPS 100Hz 1080p',Cooler:'AMD Stealth Wraith',Freebies:'Monitor Mount, Keyboard, Mouse, Headset, Mousepad'}},
-      {name:'PC Set 4  - Black Build',price:49995,origPrice:54995,use:'1080p-1440p High Settings Gaming',parts:{Processor:'AMD Ryzen 5 5600X (6-Core/12-Thread)',Motherboard:'AM4 B450M w/ M.2 Slot',RAM:'2x8GB DDR4 3200MHz w/ Heatsink (16GB)',Storage:'512GB SATA SSD','Power Supply':'750W 80+ Bronze','Graphics Card':'RTX 3050 Dual Fan',Fans:'3x Mirror RGB Fans',Monitor:'N-Vision 27" IPS 240Hz',Cooler:'AMD Stealth Wraith',Freebies:'Keyboard, Mouse, Headset, Mousepad'}}
-    ];
-    document.getElementById('buildsGrid').innerHTML=builds.map(b=>{
-      const partsHTML=Object.entries(b.parts).filter(([k])=>k!=='Freebies').map(([k,v])=>`<div class="build-part"><div class="build-part-label">${k}</div><div class="build-part-name">${v}</div></div>`).join('');
-      const origHTML=b.origPrice?`<div style="font-size:0.82rem;color:var(--text-dim);text-decoration:line-through">${formatPrice(b.origPrice)}</div>`:'';
-      const freebies=b.parts.Freebies?`<div style="margin-top:8px;padding:8px 12px;background:rgba(233,30,140,0.08);border-radius:6px;font-size:0.75rem;color:var(--pink);font-weight:600">🎁 Freebies: ${b.parts.Freebies}</div>`:'';
-      return `<div class="build-card"><div class="build-header"><div style="display:inline-block;padding:3px 10px;background:var(--pink);color:#fff;border-radius:4px;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:6px">PROMO</div><h4>${b.name}</h4>${origHTML}<div class="build-price">${formatPrice(b.price)}</div><div class="build-use">${b.use}</div></div><div class="build-parts">${partsHTML}${freebies}</div><div class="build-actions"><a href="/checkout.html?product=${encodeURIComponent(b.name)}&price=${b.price}" style="flex:1;padding:10px;text-align:center;background:var(--grad);color:#fff;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase">Order This Build</a></div></div>`;
-    }).join('');
 
     // ===== LAZY LOADING with IntersectionObserver =====
     const lazyObs=new IntersectionObserver((entries)=>{
