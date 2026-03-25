@@ -371,24 +371,24 @@
       </div>
       <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
         <div class="stat-card" style="flex:1;min-width:140px">
-          <div class="stat-value" id="custTotal">0</div>
-          <div class="stat-label">Total Customers</div>
+          <div class="value purple" id="custTotal">0</div>
+          <div class="label">Total Customers</div>
         </div>
         <div class="stat-card" style="flex:1;min-width:140px">
-          <div class="stat-value" id="custWithEmail">0</div>
-          <div class="stat-label">With Email</div>
+          <div class="value cyan" id="custWithEmail">0</div>
+          <div class="label">With Email</div>
         </div>
         <div class="stat-card" style="flex:1;min-width:140px">
-          <div class="stat-value" id="custGoogle">0</div>
-          <div class="stat-label">Google Sign-In</div>
+          <div class="value" id="custGoogle" style="color:#4285f4">0</div>
+          <div class="label">Google Sign-In</div>
         </div>
         <div class="stat-card" style="flex:1;min-width:140px">
-          <div class="stat-value" id="custFacebook">0</div>
-          <div class="stat-label">Facebook Sign-In</div>
+          <div class="value" id="custFacebook" style="color:#1877f2">0</div>
+          <div class="label">Facebook Sign-In</div>
         </div>
         <div class="stat-card" style="flex:1;min-width:140px">
-          <div class="stat-value" id="custManual">0</div>
-          <div class="stat-label">Manual</div>
+          <div class="value pink" id="custManual">0</div>
+          <div class="label">Manual</div>
         </div>
       </div>
       <div class="table-wrap">
@@ -502,13 +502,7 @@
           <option value="sale">Sale</option>
         </select>
       </div>
-      <div class="form-group">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0">
-          <input type="checkbox" id="fShopee" style="width:18px;height:18px;accent-color:var(--purple);cursor:pointer">
-          <span style="font-size:0.82rem;font-weight:600;color:var(--text)">This product is listed on Shopee</span>
-        </label>
-        <p style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;margin-left:26px">Only enable if this exact product is already posted on your Shopee store. A Shopee button will appear on the product page.</p>
-      </div>
+      <input type="hidden" id="fShopee">
       <div class="form-group">
         <label>Specifications</label>
         <div class="spec-rows" id="specRows"></div>
@@ -1214,9 +1208,11 @@
       const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
       closeProductModal();
+      showAdminToast(id ? 'Product updated' : 'Product added', 'success');
       await loadProducts();
-    } catch (err) { alert(err.message); }
-    btn.textContent = 'Save Product'; btn.disabled = false;
+    } catch (err) { alert(err.message); } finally {
+      btn.textContent = 'Save Product'; btn.disabled = false;
+    }
   }
 
   function editProduct(id) {
@@ -1229,6 +1225,7 @@
     try {
       const res = await fetch(`${API}/api/admin/products/${id}`, { method: 'DELETE', headers: authHeaders() });
       if (!res.ok) throw new Error('Failed to delete');
+      showAdminToast('Product deleted', 'success');
       await loadProducts();
     } catch (err) { alert(err.message); }
   }
@@ -1444,7 +1441,6 @@
       const avatar = c.photoURL
         ? '<img src="' + escapeHTML(c.photoURL) + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover">'
         : '<div style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
-      const cJson = JSON.stringify(c).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
       return `<tr>
         <td>${avatar}</td>
         <td style="font-weight:500">${escapeHTML(c.name)}${c.notes ? '<div style="font-size:0.7rem;color:var(--text-dim);margin-top:2px">' + escapeHTML(c.notes) + '</div>' : ''}</td>

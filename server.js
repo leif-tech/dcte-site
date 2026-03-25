@@ -335,8 +335,8 @@ app.get('/api/admin/products', authMiddleware, (req, res) => {
 app.post('/api/admin/products', authMiddleware, (req, res) => {
   const products = readJSON('products.json');
   const { cat, label, name, price, img, stock, condition, badge, specs, shopee } = req.body;
-  if (!cat || !name || !price) {
-    return res.status(400).json({ error: 'Category, name, and price are required' });
+  if (!cat || !name || !price || isNaN(Number(price)) || Number(price) <= 0) {
+    return res.status(400).json({ error: 'Category, name, and valid price are required' });
   }
   // Generate next ID
   const maxNum = products.reduce((max, p) => {
@@ -475,6 +475,7 @@ Return ONLY valid JSON, no markdown, no code fences.`
         }]
       });
 
+      if (!response.content || !response.content[0] || !response.content[0].text) throw new Error('Empty AI response');
       let text = response.content[0].text.trim();
       // Strip markdown code fences if present
       text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/,'');
