@@ -797,8 +797,10 @@
       if (!res.ok) { if (res.status === 401) return doLogout(); return; }
       allProducts = await res.json();
       const sel = document.getElementById('prodCatFilter');
+      const prevFilter = sel.value;
       const cats = [...new Set(allProducts.map(p => p.cat))];
       sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('');
+      if (prevFilter && cats.includes(prevFilter)) sel.value = prevFilter;
       selectedProducts.clear();
       updateBulkBar();
       renderProducts();
