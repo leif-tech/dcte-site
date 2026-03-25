@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -5,6 +6,11 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const Anthropic = require('@anthropic-ai/sdk');
+
+const anthropic = process.env.ANTHROPIC_API_KEY
+  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  : null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -373,6 +379,73 @@ app.post('/api/admin/upload', authMiddleware, (req, res, next) => {
     const url = '/uploads/' + req.file.filename;
     console.log(`[ADMIN] Image uploaded: ${url}`);
     res.json({ success: true, url });
+  });
+});
+
+// ── Admin: Analyze Image (Upload + AI Detection) ─────────────────
+
+app.post('/api/admin/analyze-image', authMiddleware, (req, res, next) => {
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'File too large (max 5MB)' : err.message });
+      }
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const url = '/uploads/' + req.file.filename;
+    console.log(`[ADMIN] Image uploaded: ${url}`);
+
+    // If no API key, behave like plain upload
+    if (!anthropic) {
+      return res.json({ success: true, url, detected: null });
+    }
+
+    try {
+      const imgPath = path.join(UPLOADS_DIR, req.file.filename);
+      const imgBuffer = fs.readFileSync(imgPath);
+      const base64 = imgBuffer.toString('base64');
+      const ext = path.extname(req.file.filename).toLowerCase();
+      const mediaType = ext === '.png' ? 'image/png'
+        : ext === '.gif' ? 'image/gif'
+        : ext === '.webp' ? 'image/webp'
+        : 'image/jpeg';
+
+      const response = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: mediaType, data: base64 }
+            },
+            {
+              type: 'text',
+              text: `You are analyzing a product promotional image for a PC parts store called DCTE (Davao Computer Trade-in Express). Extract the following from the image:
+- product_name: The full product name (brand + model + key specs)
+- category: One of: gpu, cpu, mobo, ram, psu, monitor, case, cooler, bundle
+- label: Human-readable category (e.g., "Video Card", "Processor", "Monitor")
+- price: Price in PHP if visible (number only, no currency symbol), or null
+- specs: Object of key-value spec pairs visible in the image (e.g., {"Panel": "IPS", "Size": "27\\"", "Refresh Rate": "100Hz"})
+
+Return ONLY valid JSON, no markdown, no code fences.`
+            }
+          ]
+        }]
+      });
+
+      const text = response.content[0].text.trim();
+      const detected = JSON.parse(text);
+      console.log(`[ADMIN] AI detected: ${detected.product_name || 'unknown'}`);
+      res.json({ success: true, url, detected });
+    } catch (aiErr) {
+      console.error('[ADMIN] AI detection failed:', aiErr.message);
+      // Still return the uploaded image — don't waste the upload
+      res.json({ success: true, url, detected: null });
+    }
   });
 });
 

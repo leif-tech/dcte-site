@@ -953,24 +953,79 @@
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
     const status = document.getElementById('uploadStatus');
-    status.textContent = 'Uploading...';
+    status.textContent = 'Uploading & detecting specs...';
     status.style.color = 'var(--text-dim)';
 
     const formData = new FormData();
     formData.append('image', file);
 
     try {
-      const res = await fetch(API + '/api/admin/upload', {
+      const res = await fetch(API + '/api/admin/analyze-image', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + token },
         body: formData
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Upload failed');
+
       document.getElementById('fImg').value = data.url;
       previewImg();
-      status.textContent = 'Uploaded!';
-      status.style.color = 'var(--success)';
+
+      if (data.detected) {
+        const d = data.detected;
+        const filled = [];
+
+        // Only fill empty fields
+        if (d.product_name && !document.getElementById('fName').value.trim()) {
+          document.getElementById('fName').value = d.product_name;
+          filled.push('Name');
+        }
+        if (d.category && !document.getElementById('fCat').value !== d.category) {
+          // Only auto-set category if user hasn't changed it from default
+          const catEl = document.getElementById('fCat');
+          if (catEl.value === 'gpu' && d.category !== 'gpu' || !document.getElementById('fName').dataset.userEdited) {
+            catEl.value = d.category;
+            autoLabel();
+            filled.push('Category');
+          }
+        }
+        if (d.label && !document.getElementById('fLabel').dataset.userEdited) {
+          document.getElementById('fLabel').value = d.label;
+        }
+        if (d.price && !document.getElementById('fPrice').value) {
+          document.getElementById('fPrice').value = d.price;
+          filled.push('Price');
+        }
+        if (d.specs && typeof d.specs === 'object') {
+          const entries = Object.entries(d.specs);
+          if (entries.length > 0) {
+            // Clear empty default spec rows, keep user-filled ones
+            const specDiv = document.getElementById('specRows');
+            const existingRows = specDiv.querySelectorAll('.spec-row');
+            let hasUserSpecs = false;
+            existingRows.forEach(row => {
+              const inputs = row.querySelectorAll('input');
+              if (inputs[0].value.trim() || inputs[1].value.trim()) hasUserSpecs = true;
+            });
+            if (!hasUserSpecs) {
+              specDiv.innerHTML = '';
+              entries.forEach(([k, v]) => addSpecRow(k, v));
+              filled.push(entries.length + ' specs');
+            }
+          }
+        }
+
+        if (filled.length > 0) {
+          status.textContent = 'Auto-detected: ' + filled.join(', ');
+          status.style.color = 'var(--success)';
+        } else {
+          status.textContent = 'Uploaded! (no new fields to fill)';
+          status.style.color = 'var(--success)';
+        }
+      } else {
+        status.textContent = 'Uploaded! (auto-detect unavailable)';
+        status.style.color = 'var(--success)';
+      }
     } catch (err) {
       status.textContent = err.message;
       status.style.color = 'var(--danger)';

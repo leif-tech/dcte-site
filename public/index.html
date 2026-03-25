@@ -1725,7 +1725,7 @@
       const p=products[idx];if(!p)return;
       const meta=productMeta[idx]||{};
       const specs=specDB[p.name]||{};
-      const fullImg=p.img?p.img.replace(/-300x300/,''):null;
+      const fullImg=p.img||null;
       const brand=getBrand(p.name);
       // Related: same category, excluding current, max 4
       const related=products.filter((r,i)=>r.cat===p.cat&&i!==idx).slice(0,4);
