@@ -22,13 +22,25 @@ try {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
-const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
+const DATA_DIR = process.env.DATA_PATH || path.join(__dirname, 'data');
+const SEED_DIR = path.join(__dirname, 'data');
+const UPLOADS_DIR = process.env.UPLOADS_PATH || path.join(__dirname, 'public', 'uploads');
 const JWT_SECRET = process.env.JWT_SECRET || 'dcte-fallback-secret-change-me';
 
 // Ensure directories exist
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+// Seed persistent volume from git data on first deploy (if volume is empty)
+if (DATA_DIR !== SEED_DIR && fs.existsSync(SEED_DIR)) {
+  for (const file of fs.readdirSync(SEED_DIR)) {
+    const dest = path.join(DATA_DIR, file);
+    if (!fs.existsSync(dest)) {
+      fs.copyFileSync(path.join(SEED_DIR, file), dest);
+      console.log(`[INIT] Seeded ${file} to persistent storage`);
+    }
+  }
+}
 
 // Multer config for image uploads
 const storage = multer.diskStorage({
@@ -51,6 +63,10 @@ const upload = multer({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Serve uploads from persistent volume if configured
+if (process.env.UPLOADS_PATH) {
+  app.use('/uploads', express.static(UPLOADS_DIR));
+}
 
 // ── Helpers ──────────────────────────────────────────────────────
 
