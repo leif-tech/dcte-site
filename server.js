@@ -6,11 +6,19 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const Anthropic = require('@anthropic-ai/sdk');
 
-const anthropic = process.env.ANTHROPIC_API_KEY
-  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  : null;
+let Anthropic, anthropic;
+try {
+  Anthropic = require('@anthropic-ai/sdk');
+  if (process.env.ANTHROPIC_API_KEY) {
+    anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    console.log('[INIT] Anthropic SDK loaded, API key set');
+  } else {
+    console.log('[INIT] Anthropic SDK loaded, but no ANTHROPIC_API_KEY env var');
+  }
+} catch (e) {
+  console.log('[INIT] Anthropic SDK not available:', e.message);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -397,8 +405,15 @@ app.post('/api/admin/analyze-image', authMiddleware, (req, res, next) => {
     const url = '/uploads/' + req.file.filename;
     console.log(`[ADMIN] Image uploaded: ${url}`);
 
-    // If no API key, behave like plain upload
+    // Try lazy-init if key was added after startup
+    if (!anthropic && Anthropic && process.env.ANTHROPIC_API_KEY) {
+      anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      console.log('[ADMIN] Anthropic client lazy-initialized');
+    }
+
+    // If still no client, behave like plain upload
     if (!anthropic) {
+      console.log('[ADMIN] No Anthropic client — skipping detection. KEY set:', !!process.env.ANTHROPIC_API_KEY, 'SDK:', !!Anthropic);
       return res.json({ success: true, url, detected: null });
     }
 
