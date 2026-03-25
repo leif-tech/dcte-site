@@ -429,7 +429,7 @@ app.post('/api/admin/analyze-image', authMiddleware, (req, res, next) => {
 
       const response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages: [{
           role: 'user',
           content: [
@@ -439,12 +439,20 @@ app.post('/api/admin/analyze-image', authMiddleware, (req, res, next) => {
             },
             {
               type: 'text',
-              text: `You are analyzing a product promotional image for a PC parts store called DCTE (Davao Computer Trade-in Express). Extract the following from the image:
-- product_name: The full product name (brand + model + key specs)
-- category: One of: gpu, cpu, mobo, ram, psu, monitor, case, cooler, bundle
-- label: Human-readable category (e.g., "Video Card", "Processor", "Monitor")
-- price: Price in PHP if visible (number only, no currency symbol), or null
-- specs: Object of key-value spec pairs visible in the image (e.g., {"Panel": "IPS", "Size": "27\\"", "Refresh Rate": "100Hz"})
+              text: `You are analyzing a product promotional image for a PC parts store called DCTE (Davao Computer Trade-in Express).
+
+1. First, extract any info visible in the image.
+2. Then, based on the product you identified, use your knowledge to provide additional technical specs that a buyer would want to know (e.g. resolution, response time, ports, TDP, core count, etc. depending on the product type). Do NOT repeat specs already found in the image.
+
+Return this JSON structure:
+{
+  "product_name": "Full product name (brand + model + key variant info)",
+  "category": "one of: gpu, cpu, mobo, ram, psu, monitor, case, cooler, bundle",
+  "label": "Human-readable category (e.g. Video Card, Processor, Monitor)",
+  "price": null or number in PHP (no currency symbol),
+  "image_specs": { "key": "value" pairs found IN the image },
+  "researched_specs": { "key": "value" pairs from your knowledge about this product }
+}
 
 Return ONLY valid JSON, no markdown, no code fences.`
             }

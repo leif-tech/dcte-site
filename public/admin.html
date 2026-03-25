@@ -497,6 +497,16 @@
         <label>Specifications</label>
         <div class="spec-rows" id="specRows"></div>
         <button class="btn btn-secondary" onclick="addSpecRow()" style="margin-top:8px;font-size:0.72rem">+ Add Spec</button>
+        <div id="foundSpecsPanel" style="display:none;margin-top:12px;padding:12px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label style="font-size:0.78rem;font-weight:700;color:#4f46e5;margin:0">AI-Researched Specs</label>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary" onclick="toggleAllFoundSpecs()" style="font-size:0.68rem;padding:4px 10px">Select All</button>
+              <button class="btn btn-primary" onclick="addSelectedFoundSpecs()" style="font-size:0.68rem;padding:4px 10px">Add Selected</button>
+            </div>
+          </div>
+          <div id="foundSpecsList" style="display:flex;flex-direction:column;gap:4px"></div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -908,6 +918,7 @@
     document.getElementById('fBadge').value = product ? (product.badge || '') : '';
     document.getElementById('fShopee').checked = product ? !!product.shopee : false;
     document.getElementById('uploadStatus').textContent = '';
+    document.getElementById('foundSpecsPanel').style.display = 'none';
     previewImg();
     updateStockHint();
     // Specs
@@ -955,6 +966,7 @@
     const status = document.getElementById('uploadStatus');
     status.textContent = 'Uploading & detecting specs...';
     status.style.color = 'var(--text-dim)';
+    document.getElementById('foundSpecsPanel').style.display = 'none';
 
     const formData = new FormData();
     formData.append('image', file);
@@ -975,48 +987,60 @@
         const d = data.detected;
         const filled = [];
 
-        // Only fill empty fields
         if (d.product_name && !document.getElementById('fName').value.trim()) {
           document.getElementById('fName').value = d.product_name;
           filled.push('Name');
         }
-        if (d.category && !document.getElementById('fCat').value !== d.category) {
-          // Only auto-set category if user hasn't changed it from default
+        if (d.category) {
           const catEl = document.getElementById('fCat');
-          if (catEl.value === 'gpu' && d.category !== 'gpu' || !document.getElementById('fName').dataset.userEdited) {
-            catEl.value = d.category;
-            autoLabel();
-            filled.push('Category');
-          }
+          catEl.value = d.category;
+          autoLabel();
+          filled.push('Category');
         }
-        if (d.label && !document.getElementById('fLabel').dataset.userEdited) {
+        if (d.label) {
           document.getElementById('fLabel').value = d.label;
         }
         if (d.price && !document.getElementById('fPrice').value) {
           document.getElementById('fPrice').value = d.price;
           filled.push('Price');
         }
-        if (d.specs && typeof d.specs === 'object') {
-          const entries = Object.entries(d.specs);
-          if (entries.length > 0) {
-            // Clear empty default spec rows, keep user-filled ones
-            const specDiv = document.getElementById('specRows');
-            const existingRows = specDiv.querySelectorAll('.spec-row');
-            let hasUserSpecs = false;
-            existingRows.forEach(row => {
-              const inputs = row.querySelectorAll('input');
-              if (inputs[0].value.trim() || inputs[1].value.trim()) hasUserSpecs = true;
-            });
-            if (!hasUserSpecs) {
-              specDiv.innerHTML = '';
-              entries.forEach(([k, v]) => addSpecRow(k, v));
-              filled.push(entries.length + ' specs');
-            }
+
+        // Auto-add image specs directly
+        const imageSpecs = d.image_specs || d.specs || {};
+        const imageEntries = Object.entries(imageSpecs);
+        if (imageEntries.length > 0) {
+          const specDiv = document.getElementById('specRows');
+          const existingRows = specDiv.querySelectorAll('.spec-row');
+          let hasUserSpecs = false;
+          existingRows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs[0].value.trim() || inputs[1].value.trim()) hasUserSpecs = true;
+          });
+          if (!hasUserSpecs) {
+            specDiv.innerHTML = '';
+            imageEntries.forEach(([k, v]) => addSpecRow(k, v));
+            filled.push(imageEntries.length + ' image specs');
           }
         }
 
+        // Show researched specs as selectable options
+        const researchedSpecs = d.researched_specs || {};
+        const researchedEntries = Object.entries(researchedSpecs);
+        if (researchedEntries.length > 0) {
+          const panel = document.getElementById('foundSpecsPanel');
+          const list = document.getElementById('foundSpecsList');
+          list.innerHTML = researchedEntries.map(([k, v]) =>
+            `<label style="display:flex;align-items:center;gap:8px;font-size:0.78rem;cursor:pointer;padding:4px 0">
+              <input type="checkbox" checked data-spec-key="${k.replace(/"/g,'&quot;')}" data-spec-val="${String(v).replace(/"/g,'&quot;')}" style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
+              <strong>${k}</strong>: ${v}
+            </label>`
+          ).join('');
+          panel.style.display = 'block';
+          filled.push(researchedEntries.length + ' researched specs found');
+        }
+
         if (filled.length > 0) {
-          status.textContent = 'Auto-detected: ' + filled.join(', ');
+          status.textContent = 'AI detected: ' + filled.join(', ');
           status.style.color = 'var(--success)';
         } else {
           status.textContent = 'Uploaded! (no new fields to fill)';
@@ -1031,6 +1055,20 @@
       status.style.color = 'var(--danger)';
     }
     input.value = '';
+  }
+
+  function toggleAllFoundSpecs() {
+    const boxes = document.querySelectorAll('#foundSpecsList input[type="checkbox"]');
+    const allChecked = Array.from(boxes).every(b => b.checked);
+    boxes.forEach(b => b.checked = !allChecked);
+  }
+
+  function addSelectedFoundSpecs() {
+    const boxes = document.querySelectorAll('#foundSpecsList input[type="checkbox"]:checked');
+    boxes.forEach(b => {
+      addSpecRow(b.dataset.specKey, b.dataset.specVal);
+    });
+    document.getElementById('foundSpecsPanel').style.display = 'none';
   }
 
   function addSpecRow(key, val) {
