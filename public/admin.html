@@ -448,14 +448,11 @@
           <input type="text" id="fLabel" placeholder="e.g. Video Card">
         </div>
       </div>
-      <div class="form-row" id="customCatRow" style="display:none">
+      <div id="customCatRow" style="display:none">
         <div class="form-group">
-          <label>Category Key <span style="font-weight:400;color:#94a3b8;font-size:0.75rem">(lowercase, no spaces)</span></label>
-          <input type="text" id="fCatCustomKey" placeholder="e.g. keyboard" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
-        </div>
-        <div class="form-group">
-          <label>Category Display Name</label>
-          <input type="text" id="fCatCustomLabel" placeholder="e.g. Keyboards & Mice" oninput="document.getElementById('fLabel').value=this.value">
+          <label>New Category Name</label>
+          <input type="text" id="fCatCustomLabel" placeholder="e.g. Keyboards & Mice, SSD & Storage, Peripherals..." oninput="document.getElementById('fLabel').value=this.value;document.getElementById('fCatCustomKey').value=this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')">
+          <input type="hidden" id="fCatCustomKey">
         </div>
       </div>
       <div class="form-group">
@@ -1034,7 +1031,7 @@
       document.getElementById('fLabel').value = '';
       document.getElementById('fCatCustomKey').value = '';
       document.getElementById('fCatCustomLabel').value = '';
-      document.getElementById('fCatCustomKey').focus();
+      document.getElementById('fCatCustomLabel').focus();
     } else {
       customRow.style.display = 'none';
       document.getElementById('fLabel').value = catLabels[cat] || cat;
