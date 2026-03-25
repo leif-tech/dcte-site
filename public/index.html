@@ -1665,23 +1665,29 @@
     }
 
     // ===== CATEGORY TILES (homepage) =====
-    const catTileConfig=[
-      {key:'gpu',label:'Video Cards',icon:'🎮'},
-      {key:'cpu',label:'Processors',icon:'⚡'},
-      {key:'mobo',label:'Motherboards',icon:'🔧'},
-      {key:'ram',label:'Memory',icon:'🧩'},
-      {key:'psu',label:'PSU / UPS',icon:'🔌'},
-      {key:'monitor',label:'Monitors',icon:'🖥️'},
-      {key:'case',label:'Cases',icon:'🗄️'},
-      {key:'cooler',label:'Coolers',icon:'❄️'},
-      {key:'bundle',label:'PC Bundles',icon:'💻'}
-    ];
+    const defaultCatTiles={gpu:'Video Cards',cpu:'Processors',mobo:'Motherboards',ram:'Memory',psu:'PSU / UPS',monitor:'Monitors',case:'Cases',cooler:'Coolers',bundle:'PC Bundles'};
+    function buildCatTileConfig(){
+      const seen=new Set();
+      const tiles=[];
+      // Add default categories first (preserving order)
+      Object.entries(defaultCatTiles).forEach(([key,label])=>{
+        if(products.some(p=>p.cat===key)){tiles.push({key,label});seen.add(key)}
+      });
+      // Discover any custom categories from products
+      products.forEach(p=>{
+        if(p.cat&&!seen.has(p.cat)){tiles.push({key:p.cat,label:p.label||p.cat});seen.add(p.cat)}
+      });
+      return tiles;
+    }
     function renderCategoryTiles(){
       const grid=document.getElementById('catTilesGrid');
-      const tiles=catTileConfig.map(c=>{
+      const config=buildCatTileConfig();
+      const tiles=config.map(c=>{
         const catProducts=products.filter(p=>p.cat===c.key);
         if(!catProducts.length)return '';
-        const imgHTML=`<img src="/cat-images/${c.key}.jpg" alt="${c.label}" loading="lazy">`;
+        // Use category image if available, otherwise use first product image as fallback
+        const fallbackImg=catProducts.find(p=>p.img)?.img||'';
+        const imgHTML=`<img src="/cat-images/${c.key}.jpg" alt="${c.label}" loading="lazy" onerror="this.src='${fallbackImg}';this.onerror=null">`;
         return `<div class="cat-tile" onclick="navigateTo('/shop?cat=${c.key}')">
           <div class="cat-tile-img">${imgHTML}</div>
           <div class="cat-tile-overlay">
@@ -1932,7 +1938,10 @@
       'bundle':'bundle','bundles':'bundle','pc set':'bundle','pc build':'bundle','build':'bundle','package':'bundle','set':'bundle','complete pc':'bundle','full set':'bundle'
     };
 
-    const categories=[{key:'all',label:'All'},{key:'bundle',label:'PC Bundles'},{key:'gpu',label:'Video Cards'},{key:'cpu',label:'Processors'},{key:'mobo',label:'Motherboards'},{key:'ram',label:'Memory'},{key:'psu',label:'PSU / UPS'},{key:'monitor',label:'Monitors'},{key:'case',label:'Cases'},{key:'cooler',label:'Coolers'}];
+    function buildCategories(){
+      const config=buildCatTileConfig();
+      return [{key:'all',label:'All'},...config];
+    }
 
     let filtersBuilt=false;
     let brandsInitialized=false;
@@ -1941,6 +1950,7 @@
       brandsInitialized=false;
       // Categories
       const catDiv=document.getElementById('filterCats');
+      const categories=buildCategories();
       catDiv.innerHTML=categories.map(c=>`<label><input type="checkbox" value="${c.key}" ${c.key==='all'?'checked':''} onchange="handleCatFilter(this)">${c.label}<span style="margin-left:auto;font-size:0.72rem;color:var(--text-dim)">${c.key==='all'?products.length:products.filter(p=>p.cat===c.key).length}</span></label>`).join('');
       // Brands - initial full list (all checked)
       updateBrands(products,true);
@@ -1986,8 +1996,9 @@
         if(search){
           const nameMatch=p.name.toLowerCase().includes(search);
           const labelMatch=p.label.toLowerCase().includes(search);
+          const catKeyMatch=p.cat.toLowerCase().includes(search);
           const catMatch=searchCat&&p.cat===searchCat;
-          if(!nameMatch&&!labelMatch&&!catMatch)return false;
+          if(!nameMatch&&!labelMatch&&!catKeyMatch&&!catMatch)return false;
         }
         if(!catChecks.includes('all')&&!catChecks.includes(p.cat))return false;
         if(brandChecks.length&&!brandChecks.includes(getBrand(p.name)))return false;

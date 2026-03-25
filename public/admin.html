@@ -432,11 +432,22 @@
             <option value="case">Case</option>
             <option value="cooler">Cooler</option>
             <option value="bundle">PC Bundle</option>
+            <option value="__custom__">+ Add New Category...</option>
           </select>
         </div>
         <div class="form-group">
           <label>Label</label>
           <input type="text" id="fLabel" placeholder="e.g. Video Card">
+        </div>
+      </div>
+      <div class="form-row" id="customCatRow" style="display:none">
+        <div class="form-group">
+          <label>Category Key <span style="font-weight:400;color:#94a3b8;font-size:0.75rem">(lowercase, no spaces)</span></label>
+          <input type="text" id="fCatCustomKey" placeholder="e.g. keyboard" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+        </div>
+        <div class="form-group">
+          <label>Category Display Name</label>
+          <input type="text" id="fCatCustomLabel" placeholder="e.g. Keyboards & Mice" oninput="document.getElementById('fLabel').value=this.value">
         </div>
       </div>
       <div class="form-group">
@@ -528,6 +539,23 @@
   let revenuePeriod = 7;
 
   const catLabels = {gpu:'Video Card',cpu:'Processor',mobo:'Motherboard',ram:'Memory',psu:'PSU / UPS',monitor:'Monitor',case:'Case',cooler:'Cooler',bundle:'PC Bundle'};
+  const defaultCats = Object.keys(catLabels);
+
+  // Sync the fCat dropdown to include any custom categories discovered from products
+  function syncCatDropdown() {
+    const sel = document.getElementById('fCat');
+    const existing = new Set([...sel.options].map(o => o.value));
+    Object.keys(catLabels).forEach(key => {
+      if (!existing.has(key)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = catLabels[key];
+        // Insert before the "__custom__" option
+        const customOpt = sel.querySelector('option[value="__custom__"]');
+        sel.insertBefore(opt, customOpt);
+      }
+    });
+  }
 
   // XSS prevention helper
   function escapeHTML(str) {
@@ -796,6 +824,11 @@
       const res = await fetch(API + '/api/admin/products', { headers: authHeaders() });
       if (!res.ok) { if (res.status === 401) return doLogout(); return; }
       allProducts = await res.json();
+      // Discover custom categories from products and register them
+      allProducts.forEach(p => {
+        if (p.cat && !catLabels[p.cat]) catLabels[p.cat] = p.label || p.cat;
+      });
+      syncCatDropdown();
       const sel = document.getElementById('prodCatFilter');
       const prevFilter = sel.value;
       const cats = [...new Set(allProducts.map(p => p.cat))];
@@ -910,7 +943,18 @@
   function openProductModal(product) {
     document.getElementById('editProductId').value = product ? product.id : '';
     document.getElementById('modalTitle').textContent = product ? 'Edit Product' : 'Add Product';
-    document.getElementById('fCat').value = product ? product.cat : 'gpu';
+    // Reset custom category row
+    document.getElementById('customCatRow').style.display = 'none';
+    document.getElementById('fCatCustomKey').value = '';
+    document.getElementById('fCatCustomLabel').value = '';
+    // Set category — if product has a category not in the dropdown, select it (syncCatDropdown already added it)
+    const catSel = document.getElementById('fCat');
+    const catVal = product ? product.cat : 'gpu';
+    if ([...catSel.options].some(o => o.value === catVal)) {
+      catSel.value = catVal;
+    } else {
+      catSel.value = catVal;
+    }
     document.getElementById('fLabel').value = product ? product.label : 'Video Card';
     document.getElementById('fName').value = product ? product.name : '';
     document.getElementById('fPrice').value = product ? product.price : '';
@@ -941,7 +985,17 @@
 
   function autoLabel() {
     const cat = document.getElementById('fCat').value;
-    document.getElementById('fLabel').value = catLabels[cat] || cat;
+    const customRow = document.getElementById('customCatRow');
+    if (cat === '__custom__') {
+      customRow.style.display = '';
+      document.getElementById('fLabel').value = '';
+      document.getElementById('fCatCustomKey').value = '';
+      document.getElementById('fCatCustomLabel').value = '';
+      document.getElementById('fCatCustomKey').focus();
+    } else {
+      customRow.style.display = 'none';
+      document.getElementById('fLabel').value = catLabels[cat] || cat;
+    }
   }
 
   function previewImg() {
@@ -995,6 +1049,11 @@
         }
         if (d.category) {
           const catEl = document.getElementById('fCat');
+          // If AI detected a category not in our list, register it
+          if (![...catEl.options].some(o => o.value === d.category) && d.category !== '__custom__') {
+            catLabels[d.category] = d.label || d.category;
+            syncCatDropdown();
+          }
           catEl.value = d.category;
           autoLabel();
           filled.push('Category');
@@ -1089,8 +1148,13 @@
       const k = inputs[0].value.trim(), v = inputs[1].value.trim();
       if (k && v) specs[k] = v;
     });
+    let catVal = document.getElementById('fCat').value;
+    if (catVal === '__custom__') {
+      catVal = document.getElementById('fCatCustomKey').value.trim();
+      if (!catVal) return alert('Please enter a category key');
+    }
     const body = {
-      cat: document.getElementById('fCat').value,
+      cat: catVal,
       label: document.getElementById('fLabel').value,
       name: document.getElementById('fName').value,
       price: parseFloat(document.getElementById('fPrice').value),
