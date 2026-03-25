@@ -568,6 +568,50 @@ app.get('/api/admin/customers', authMiddleware, (req, res) => {
   res.json(customers.reverse());
 });
 
+app.post('/api/admin/customers', authMiddleware, (req, res) => {
+  const { name, email, phone, provider, notes } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  const customers = readJSON('customers.json');
+  const customer = {
+    uid: 'manual-' + Date.now(),
+    name,
+    email: email || null,
+    phone: phone || null,
+    provider: provider || 'Manual',
+    photoURL: null,
+    notes: notes || null,
+    loginCount: 0,
+    firstLogin: new Date().toISOString(),
+    lastLogin: new Date().toISOString()
+  };
+  customers.push(customer);
+  writeJSON('customers.json', customers);
+  console.log(`[CUSTOMER] Manual add: ${name} (${email || 'no email'})`);
+  res.json({ success: true, customer });
+});
+
+app.put('/api/admin/customers/:uid', authMiddleware, (req, res) => {
+  const customers = readJSON('customers.json');
+  const idx = customers.findIndex(c => c.uid === req.params.uid);
+  if (idx === -1) return res.status(404).json({ error: 'Customer not found' });
+  const { name, email, phone, notes } = req.body;
+  if (name) customers[idx].name = name;
+  if (email !== undefined) customers[idx].email = email || null;
+  if (phone !== undefined) customers[idx].phone = phone || null;
+  if (notes !== undefined) customers[idx].notes = notes || null;
+  writeJSON('customers.json', customers);
+  res.json({ success: true });
+});
+
+app.delete('/api/admin/customers/:uid', authMiddleware, (req, res) => {
+  let customers = readJSON('customers.json');
+  const before = customers.length;
+  customers = customers.filter(c => c.uid !== req.params.uid);
+  if (customers.length === before) return res.status(404).json({ error: 'Customer not found' });
+  writeJSON('customers.json', customers);
+  res.json({ success: true });
+});
+
 // ── Admin: Export ────────────────────────────────────────────────
 
 app.get('/api/admin/export/products', authMiddleware, (req, res) => {

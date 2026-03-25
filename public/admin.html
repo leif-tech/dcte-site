@@ -72,6 +72,9 @@
     .btn-primary{background:var(--grad);color:#fff}
     .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
     .btn-danger{background:var(--danger);color:#fff}
+    .btn-icon{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;font-size:0.85rem;opacity:0.6;transition:all .2s}
+    .btn-icon:hover{opacity:1;background:rgba(0,0,0,0.05)}
+    .btn-icon.danger:hover{background:rgba(239,68,68,0.1);opacity:1}
     .btn-success{background:var(--success);color:#fff}
 
     /* Toolbar */
@@ -364,6 +367,7 @@
         <input type="text" id="customerSearch" placeholder="Search customers..." oninput="renderCustomers()">
         <span class="spacer"></span>
         <button class="btn btn-secondary" onclick="exportCustomerEmails()">Export Emails (CSV)</button>
+        <button class="btn btn-primary" onclick="openCustomerModal()">+ Add Customer</button>
       </div>
       <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
         <div class="stat-card" style="flex:1;min-width:140px">
@@ -382,9 +386,13 @@
           <div class="stat-value" id="custFacebook">0</div>
           <div class="stat-label">Facebook Sign-In</div>
         </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-value" id="custManual">0</div>
+          <div class="stat-label">Manual</div>
+        </div>
       </div>
       <div class="table-wrap">
-        <table><thead><tr><th></th><th>Name</th><th>Email</th><th>Provider</th><th>Logins</th><th>First Login</th><th>Last Login</th></tr></thead>
+        <table><thead><tr><th></th><th>Name</th><th>Email</th><th>Phone</th><th>Provider</th><th>Logins</th><th>First Login</th><th>Last Login</th><th>Actions</th></tr></thead>
         <tbody id="customersBody"></tbody></table>
       </div>
     </div>
@@ -523,6 +531,41 @@
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
       <button class="btn btn-primary" id="saveProductBtn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Modal -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h2 id="custModalTitle">Add Customer</h2>
+      <button class="close" onclick="closeCustomerModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editCustUid">
+      <div class="form-group">
+        <label>Name <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="fcName" placeholder="Full name" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="fcEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="fcPhone" placeholder="09XX XXX XXXX">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="fcNotes" rows="3" placeholder="Optional notes about this customer..." style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;resize:vertical"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeCustomerModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveCustBtn" onclick="saveCustomer()">Save Customer</button>
     </div>
   </div>
 </div>
@@ -1380,7 +1423,7 @@
   function renderCustomers() {
     const search = (document.getElementById('customerSearch').value || '').toLowerCase();
     let list = allCustomers;
-    if (search) list = list.filter(c => (c.name || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search) || (c.provider || '').toLowerCase().includes(search));
+    if (search) list = list.filter(c => (c.name || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search) || (c.phone || '').toLowerCase().includes(search) || (c.provider || '').toLowerCase().includes(search) || (c.notes || '').toLowerCase().includes(search));
 
     // Stats
     document.getElementById('custTotal').textContent = allCustomers.length;
@@ -1388,26 +1431,87 @@
     document.getElementById('custGoogle').textContent = allCustomers.filter(c => (c.provider || '').includes('google')).length;
     document.getElementById('custFacebook').textContent = allCustomers.filter(c => (c.provider || '').includes('facebook')).length;
 
+    // Also count manual entries
+    document.getElementById('custManual') && (document.getElementById('custManual').textContent = allCustomers.filter(c => (c.provider || '').toLowerCase() === 'manual').length);
+
     const tbody = document.getElementById('customersBody');
     tbody.innerHTML = list.map(c => {
-      const providerBadge = (c.provider || '').includes('google')
+      const prov = (c.provider || '').toLowerCase();
+      const providerBadge = prov.includes('google')
         ? '<span style="background:rgba(66,133,244,0.1);color:#4285f4;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600">Google</span>'
-        : (c.provider || '').includes('facebook')
+        : prov.includes('facebook')
         ? '<span style="background:rgba(24,119,242,0.1);color:#1877f2;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600">Facebook</span>'
+        : prov === 'manual'
+        ? '<span style="background:rgba(139,47,201,0.1);color:#8b2fc9;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600">Manual</span>'
         : '<span style="color:var(--text-dim);font-size:0.75rem">' + escapeHTML(c.provider || '-') + '</span>';
       const avatar = c.photoURL
         ? '<img src="' + escapeHTML(c.photoURL) + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover">'
         : '<div style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
+      const cJson = JSON.stringify(c).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
       return `<tr>
         <td>${avatar}</td>
-        <td style="font-weight:500">${escapeHTML(c.name)}</td>
-        <td>${c.email ? '<a href="mailto:' + escapeHTML(c.email) + '">' + escapeHTML(c.email) + '</a>' : '<span style="color:#a0aec0;font-style:italic">Not available</span>'}</td>
+        <td style="font-weight:500">${escapeHTML(c.name)}${c.notes ? '<div style="font-size:0.7rem;color:var(--text-dim);margin-top:2px">' + escapeHTML(c.notes) + '</div>' : ''}</td>
+        <td>${c.email ? '<a href="mailto:' + escapeHTML(c.email) + '">' + escapeHTML(c.email) + '</a>' : '<span style="color:#a0aec0;font-style:italic">—</span>'}</td>
+        <td>${c.phone ? escapeHTML(c.phone) : '<span style="color:#a0aec0">—</span>'}</td>
         <td>${providerBadge}</td>
-        <td style="text-align:center">${c.loginCount || 1}</td>
+        <td style="text-align:center">${c.loginCount || 0}</td>
         <td>${formatDate(c.firstLogin || c.timestamp)}</td>
         <td>${formatDate(c.lastLogin)}</td>
+        <td>
+          <button class="btn-icon" onclick='openCustomerModal(JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(c))}")))'  title="Edit">&#9998;</button>
+          <button class="btn-icon danger" onclick="deleteCustomer('${escapeHTML(c.uid)}','${escapeHTML(c.name).replace(/'/g, "\\'")}')" title="Delete">&#128465;</button>
+        </td>
       </tr>`;
-    }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:40px">No customers yet</td></tr>';
+    }).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:40px">No customers yet</td></tr>';
+  }
+
+  function openCustomerModal(customer) {
+    document.getElementById('editCustUid').value = customer ? customer.uid : '';
+    document.getElementById('custModalTitle').textContent = customer ? 'Edit Customer' : 'Add Customer';
+    document.getElementById('fcName').value = customer ? (customer.name || '') : '';
+    document.getElementById('fcEmail').value = customer ? (customer.email || '') : '';
+    document.getElementById('fcPhone').value = customer ? (customer.phone || '') : '';
+    document.getElementById('fcNotes').value = customer ? (customer.notes || '') : '';
+    document.getElementById('saveCustBtn').textContent = customer ? 'Save Changes' : 'Save Customer';
+    document.getElementById('customerModal').classList.add('open');
+  }
+
+  function closeCustomerModal() {
+    document.getElementById('customerModal').classList.remove('open');
+  }
+
+  async function saveCustomer() {
+    const uid = document.getElementById('editCustUid').value;
+    const body = {
+      name: document.getElementById('fcName').value.trim(),
+      email: document.getElementById('fcEmail').value.trim(),
+      phone: document.getElementById('fcPhone').value.trim(),
+      notes: document.getElementById('fcNotes').value.trim()
+    };
+    if (!body.name) return alert('Name is required');
+    const btn = document.getElementById('saveCustBtn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    try {
+      const url = uid ? `${API}/api/admin/customers/${uid}` : `${API}/api/admin/customers`;
+      const method = uid ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
+      closeCustomerModal();
+      showAdminToast(uid ? 'Customer updated' : 'Customer added', 'success');
+      await loadCustomers();
+    } catch (err) { alert(err.message); } finally {
+      btn.textContent = uid ? 'Save Changes' : 'Save Customer'; btn.disabled = false;
+    }
+  }
+
+  async function deleteCustomer(uid, name) {
+    if (!confirm(`Delete customer "${name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${API}/api/admin/customers/${uid}`, { method: 'DELETE', headers: authHeaders() });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
+      showAdminToast('Customer deleted', 'success');
+      await loadCustomers();
+    } catch (err) { alert(err.message); }
   }
 
   function exportCustomerEmails() {
