@@ -460,7 +460,9 @@ Return ONLY valid JSON, no markdown, no code fences.`
         }]
       });
 
-      const text = response.content[0].text.trim();
+      let text = response.content[0].text.trim();
+      // Strip markdown code fences if present
+      text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/,'');
       const detected = JSON.parse(text);
       console.log(`[ADMIN] AI detected: ${detected.product_name || 'unknown'}`);
       res.json({ success: true, url, detected });
