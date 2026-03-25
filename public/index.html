@@ -416,6 +416,13 @@
     .shop-topbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;box-shadow:0 1px 6px rgba(0,0,0,0.04)}
     .shop-back{font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:6px;transition:.2s}
     .shop-back:hover{color:var(--pink)}
+    .topbar-cart{position:relative;display:flex;align-items:center;gap:10px;padding:9px 18px;border-radius:50px;background:linear-gradient(135deg,rgba(233,30,140,0.08),rgba(139,47,201,0.08));color:var(--navy);font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .25s ease;border:1.5px solid rgba(139,47,201,0.18);backdrop-filter:blur(8px)}
+    .topbar-cart:hover{background:linear-gradient(135deg,rgba(233,30,140,0.15),rgba(139,47,201,0.15));border-color:rgba(139,47,201,0.35);transform:translateY(-1px);box-shadow:0 4px 16px rgba(139,47,201,0.15)}
+    .topbar-cart svg{flex-shrink:0;color:var(--purple);stroke-width:2.2}
+    .topbar-cart-count{background:var(--grad);color:#fff;padding:2px 8px;border-radius:50px;font-size:0.68rem;min-width:22px;text-align:center;font-weight:800;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(233,30,140,0.3)}
+    .topbar-cart-count:empty{display:none}
+    .topbar-cart-total{font-size:0.8rem;font-weight:700;color:var(--navy);letter-spacing:-0.2px}
+    .topbar-cart-total:empty{display:none}
     .shop-body{padding:32px 0 60px}
     .shop-layout{display:grid;grid-template-columns:260px 1fr;gap:32px}
     .shop-sidebar{position:sticky;top:88px;height:fit-content}
@@ -613,7 +620,11 @@
     .pd-info{display:flex;flex-direction:column;justify-content:flex-start}
     .pd-cat{font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--purple);margin-bottom:8px}
     .pd-name{font-family:'Montserrat',sans-serif;font-size:1.5rem;font-weight:800;color:var(--navy);line-height:1.3;margin-bottom:8px}
-    .pd-brand{font-size:0.85rem;color:var(--text-dim);margin-bottom:20px}
+    .pd-brand{font-size:0.85rem;color:var(--text-dim);margin-bottom:12px}
+    .pd-stock-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;font-family:'Montserrat',sans-serif;margin-bottom:16px}
+    .pd-stock-pill.in{background:#dcfce7;color:#16a34a}
+    .pd-stock-pill.low{background:#fef3c7;color:#d97706}
+    .pd-stock-pill.out{background:#ede9fe;color:#7c3aed}
     .pd-price{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;color:var(--pink);margin-bottom:6px}
     .pd-price-note{font-size:0.78rem;color:var(--text-dim);margin-bottom:24px}
     .pd-actions{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
@@ -629,14 +640,18 @@
     .pd-action svg{flex-shrink:0}
     @media(max-width:480px){.pd-actions-primary{grid-template-columns:1fr}.pd-actions-secondary{grid-template-columns:1fr 1fr}}
     .pd-specs{margin-bottom:32px}
-    .pd-specs h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--border)}
-    .pd-specs-table{width:100%;border-collapse:collapse}
+    .pd-specs h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .pd-specs h3::before{content:'';display:inline-block;width:4px;height:20px;background:var(--grad);border-radius:2px}
+    .pd-specs-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
     .pd-specs-table tr{border-bottom:1px solid var(--border)}
     .pd-specs-table tr:last-child{border-bottom:none}
-    .pd-specs-table td{padding:10px 12px;font-size:0.85rem}
-    .pd-specs-table td:first-child{font-weight:600;color:var(--navy);width:35%;white-space:nowrap}
+    .pd-specs-table td{padding:12px 16px;font-size:0.84rem}
+    .pd-specs-table td:first-child{font-weight:600;color:var(--navy);width:35%;white-space:nowrap;text-transform:capitalize}
     .pd-specs-table td:last-child{color:var(--text)}
-    .pd-specs-table tr:nth-child(even){background:var(--card-alt)}
+    .pd-specs-table tr:nth-child(even){background:#f8fafc}
+    .pd-specs-table tr:hover{background:#f1f5f9}
+    .pd-avail{display:flex;flex-direction:column;gap:8px;padding:16px 20px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:12px;margin-bottom:16px}
+    .pd-avail span{font-size:0.82rem;color:#15803d;font-weight:500;display:flex;align-items:center;gap:8px}
     .pd-related h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px}
     .pd-related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
     @media(max-width:768px){
@@ -760,9 +775,10 @@
       .shop-grid{grid-template-columns:1fr!important}
     }
 
+    /* ===== FLOATING CART FAB ===== */
     /* ===== SCROLL TO TOP ===== */
     .scroll-top-btn{
-      position:fixed;bottom:96px;right:32px;width:36px;height:36px;border-radius:50%;
+      position:fixed;bottom:92px;right:30px;width:36px;height:36px;border-radius:50%;
       background:rgba(255,255,255,0.95);color:var(--navy);border:1px solid var(--border);
       cursor:pointer;z-index:99996;
       display:flex;align-items:center;justify-content:center;font-size:1rem;
@@ -854,13 +870,13 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="container">
-      <a href="#" class="nav-logo"><img src="/favicon.png" alt="DCTE" style="height:40px;width:auto"></a>
+      <a href="/" class="nav-logo" onclick="event.preventDefault();navigateTo('/home')"><img src="/favicon.png" alt="DCTE" style="height:40px;width:auto"></a>
       <div class="nav-links">
-        <a href="#hero">Home</a>
-        <a href="#" class="shop-link" onclick="event.preventDefault();openShop('all')">Shop</a>
-        <a href="#services">Services</a>
-        <a href="#trade-in">Trade-In</a>
-        <a href="#contact" class="nav-cta">Contact Us</a>
+        <a href="/home" onclick="event.preventDefault();navigateTo('/home')">Home</a>
+        <a href="/shop" class="shop-link" onclick="event.preventDefault();navigateTo('/shop')">Shop</a>
+        <a href="/services" onclick="event.preventDefault();navigateTo('/services')">Services</a>
+        <a href="/trade-in" onclick="event.preventDefault();navigateTo('/trade-in')">Trade-In</a>
+        <a href="/contact" class="nav-cta" onclick="event.preventDefault();navigateTo('/contact')">Contact Us</a>
       </div>
       <div class="nav-search" id="navSearch">
         <input type="text" id="navSearchInput" placeholder="Search products..." oninput="navAutoSuggest()" onkeydown="if(event.key==='Enter'){navSearchGo();event.preventDefault()}">
@@ -891,11 +907,11 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#hero" onclick="closeMobile()">Home</a>
-    <a href="#" onclick="closeMobile();openShop('all')">Shop</a>
-    <a href="#services" onclick="closeMobile()">Services</a>
-    <a href="#trade-in" onclick="closeMobile()">Trade-In</a>
-    <a href="#contact" onclick="closeMobile()">Contact Us</a>
+    <a href="/home" onclick="event.preventDefault();closeMobile();navigateTo('/home')">Home</a>
+    <a href="/shop" onclick="event.preventDefault();closeMobile();navigateTo('/shop')">Shop</a>
+    <a href="/services" onclick="event.preventDefault();closeMobile();navigateTo('/services')">Services</a>
+    <a href="/trade-in" onclick="event.preventDefault();closeMobile();navigateTo('/trade-in')">Trade-In</a>
+    <a href="/contact" onclick="event.preventDefault();closeMobile();navigateTo('/contact')">Contact Us</a>
     <a href="#" id="mobileAuthLink" onclick="closeMobile();openAuthModal()">Sign In</a>
   </div>
 
@@ -927,8 +943,8 @@
             <h1><span class="grad">TRADE</span> to <span class="grad">UPGRADE</span></h1>
             <p class="hero-desc">Your one-stop shop for affordable, quality PC parts and services. Trade in your old components and get huge discounts on upgrades.</p>
             <div class="hero-buttons">
-              <a href="#" class="btn btn-cyan" onclick="event.preventDefault();openShop('all')">Shop Now</a>
-              <a href="#trade-in" class="btn btn-outline">Learn More</a>
+              <a href="/shop" class="btn btn-cyan" onclick="event.preventDefault();navigateTo('/shop')">Shop Now</a>
+              <a href="/trade-in" class="btn btn-outline" onclick="event.preventDefault();navigateTo('/trade-in')">Learn More</a>
             </div>
           </div>
         </div>
@@ -940,8 +956,8 @@
             <h1>Build Your <span class="grad">Dream PC</span></h1>
             <p class="hero-desc">From budget school rigs to high-end gaming monsters. Our team builds PCs tailored to your needs and budget.</p>
             <div class="hero-buttons">
-              <a href="#services" class="btn btn-pink">Our Services</a>
-              <a href="#contact" class="btn btn-outline">Get a Quote</a>
+              <a href="/services" class="btn btn-pink" onclick="event.preventDefault();navigateTo('/services')">Our Services</a>
+              <a href="/contact" class="btn btn-outline" onclick="event.preventDefault();navigateTo('/contact')">Contact Us</a>
             </div>
           </div>
         </div>
@@ -953,7 +969,7 @@
             <h1>Visit Us in <span class="grad">Davao City</span></h1>
             <p class="hero-desc">Agdao and Ecoland branches ready to serve you. Delivery available to Panabo, Digos, and across Davao City.</p>
             <div class="hero-buttons">
-              <a href="#contact" class="btn btn-primary">See Our Locations</a>
+              <a href="/contact" class="btn btn-primary" onclick="event.preventDefault();navigateTo('/contact')">See Our Locations</a>
               <a href="tel:09956533350" class="btn btn-outline">Call Now</a>
             </div>
           </div>
@@ -1071,9 +1087,13 @@
   <div class="shop-page" id="shopPage">
     <div class="shop-topbar">
       <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px">
-        <button class="shop-back" onclick="closeShop()">&#10094; Back to Home</button>
+        <button class="shop-back" onclick="navigateTo('/home')">&#10094; Back to Home</button>
         <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:var(--navy)">DCTE Shop</span>
-        <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" style="font-size:0.8rem;font-weight:600;color:var(--purple)">Shopee Store &#10132;</a>
+        <button class="topbar-cart" id="topbarCart" onclick="toggleCartDrawer()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          <span class="topbar-cart-count" id="topbarCartCount"></span>
+          <span class="topbar-cart-total" id="topbarCartTotal"></span>
+        </button>
       </div>
     </div>
     <div class="shop-body">
@@ -1133,8 +1153,13 @@
   <!-- PRODUCT DETAIL OVERLAY -->
   <div class="product-detail" id="productDetail">
     <div class="pd-topbar">
-      <button class="pd-back" onclick="closeProductDetail()">&#8249; Back to Shop</button>
-      <a href="/" style="text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;color:var(--navy)">DCTE</a>
+      <button class="pd-back" onclick="navigateTo('/shop')">&#8249; Back to Shop</button>
+      <a href="/" style="text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;color:var(--navy)" onclick="event.preventDefault();navigateTo('/home')">DCTE</a>
+      <button class="topbar-cart" onclick="toggleCartDrawer()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        <span class="topbar-cart-count topbar-cart-count-pd"></span>
+        <span class="topbar-cart-total topbar-cart-total-pd"></span>
+      </button>
     </div>
     <div class="pd-content" id="pdContent"></div>
   </div>
@@ -1283,7 +1308,7 @@
       <div class="cta-banner fade-in">
         <h2>Ready to Upgrade Your Setup?</h2>
         <p>Bring in your old parts today and find out how much you can save on your next build.</p>
-        <a href="#contact" class="btn">Get In Touch</a>
+        <a href="/contact" class="btn" onclick="event.preventDefault();navigateTo('/contact')">Get In Touch</a>
       </div>
     </div>
   </section>
@@ -1337,7 +1362,6 @@
               <div class="contact-socials">
                 <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="contact-social" title="Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
                 <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="contact-social" title="TikTok"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
-                <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="contact-social" title="Shopee" style="color:#ee4d2d"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
               </div>
             </div>
           </div>
@@ -1376,16 +1400,15 @@
           <div class="logo"><img src="/favicon.png" alt="DCTE" style="height:36px;width:auto;margin-bottom:4px"></div>
           <p>Davao Computer Trade-in Express, the first and only PC parts trade-in store in the Philippines. Trade to upgrade, save big.</p>
         </div>
-        <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="#about">About</a></li><li><a href="#shop">Shop</a></li><li><a href="#services">Services</a></li><li><a href="#trade-in">Trade-In</a></li><li><a href="#reviews">Reviews</a></li></ul></div>
-        <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Trade-In Program</a></li><li><a href="#services">Custom PC Builds</a></li><li><a href="#services">PC Repair</a></li><li><a href="#services">Parts Sales</a></li></ul></div>
-        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:09956533350">0995 653 3350</a></li><li><a href="tel:09153502729">0915 350 2729</a></li><li><a href="mailto:joannamasarieta1@gmail.com">Email Us</a></li><li><a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://shopee.ph/dcte168" target="_blank" rel="noopener">Shopee Store</a></li></ul></div>
+        <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="/about" onclick="event.preventDefault();navigateTo('/about')">About</a></li><li><a href="/shop" onclick="event.preventDefault();navigateTo('/shop')">Shop</a></li><li><a href="/services" onclick="event.preventDefault();navigateTo('/services')">Services</a></li><li><a href="/trade-in" onclick="event.preventDefault();navigateTo('/trade-in')">Trade-In</a></li><li><a href="/reviews" onclick="event.preventDefault();navigateTo('/reviews')">Reviews</a></li></ul></div>
+        <div class="footer-col"><h4>Services</h4><ul><li><a href="/services" onclick="event.preventDefault();navigateTo('/services')">Trade-In Program</a></li><li><a href="/services" onclick="event.preventDefault();navigateTo('/services')">Custom PC Builds</a></li><li><a href="/services" onclick="event.preventDefault();navigateTo('/services')">PC Repair</a></li><li><a href="/services" onclick="event.preventDefault();navigateTo('/services')">Parts Sales</a></li></ul></div>
+        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:09956533350">0995 653 3350</a></li><li><a href="tel:09153502729">0915 350 2729</a></li><li><a href="mailto:joannamasarieta1@gmail.com">Email Us</a></li><li><a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener">Facebook</a></li></ul></div>
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 Davao Computer Trade-in Express (DCTE). All rights reserved.</p>
         <div class="footer-social">
           <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" title="Facebook"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
           <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" title="TikTok"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
-          <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" title="Shopee"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
         </div>
       </div>
     </div>
@@ -1395,7 +1418,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCROLL TO TOP -->
-  <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8593;</button>
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="var sp=document.getElementById('shopPage');if(sp.classList.contains('open')){sp.scrollTo({top:0,behavior:'smooth'})}else if(document.getElementById('productDetail').classList.contains('open')){document.getElementById('productDetail').scrollTo({top:0,behavior:'smooth'})}else{window.scrollTo({top:0,behavior:'smooth'})}" title="Back to top">&#8593;</button>
 
   <!-- AI CHATBOT -->
   <script src="/widget.js" data-bot-id="35842a66-4c04-4421-a326-8f98e65edfce" data-api-url="https://whitelabel-ai-production.up.railway.app"></script>
@@ -1601,6 +1624,8 @@
         if(typeof updateWishBadge==='function')updateWishBadge();
         // Rebuild filters if shop is already open
         if(typeof filtersBuilt!=='undefined'){filtersBuilt=false;}
+        // Handle initial URL route after products are loaded
+        handleInitialRoute();
       }catch(e){
         console.error('Failed to load products:',e);
         const catGrid=document.getElementById('catTilesGrid');
@@ -1635,7 +1660,8 @@
       const wishIcon=isWished(idx)?'&#9829;':'&#9825;';
       const wishClass=isWished(idx)?' wishlisted':'';
       const quickActions=`<div class="card-quick-actions"><button class="card-quick-btn${wishClass}" onclick="event.stopPropagation();toggleWish(${idx})" title="Wishlist">${wishIcon}</button><button class="card-quick-btn" onclick="event.stopPropagation();toggleCompare(${idx});showToast('Compare Updated','${p.name.replace(/'/g,"\\'")}','&#9878;')" title="Compare">&#9878;</button></div>`;
-      return `<div class="${prefix}-card" onclick="openProductDetail(${idx})">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
+      const slug=toSlug(p.name);
+      return `<div class="${prefix}-card" onclick="navigateTo('/shop/${slug}')">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
     }
 
     // ===== CATEGORY TILES (homepage) =====
@@ -1656,7 +1682,7 @@
         const catProducts=products.filter(p=>p.cat===c.key);
         if(!catProducts.length)return '';
         const imgHTML=`<img src="/cat-images/${c.key}.jpg" alt="${c.label}" loading="lazy">`;
-        return `<div class="cat-tile" onclick="openShop('${c.key}')">
+        return `<div class="cat-tile" onclick="navigateTo('/shop?cat=${c.key}')">
           <div class="cat-tile-img">${imgHTML}</div>
           <div class="cat-tile-overlay">
             <div><div class="cat-tile-name">${c.label}</div><div class="cat-tile-count">${catProducts.length} product${catProducts.length!==1?'s':''}</div></div>
@@ -1720,8 +1746,76 @@
       }
     });
 
+    // ===== URL ROUTING (History API) =====
+    function toSlug(name){return encodeURIComponent(name.replace(/\s+/g,'-').toLowerCase())}
+    function fromSlug(slug){
+      const decoded=decodeURIComponent(slug).replace(/-/g,' ').toLowerCase();
+      return products.findIndex(p=>p.name.toLowerCase()===decoded);
+    }
+
+    // Map clean paths to section IDs on the home page
+    const sectionMap={'/home':'hero','/services':'services','/trade-in':'trade-in','/about':'about','/contact':'contact','/reviews':'reviews'};
+
+    function navigateTo(path,replace){
+      if(replace)history.replaceState({path},'',path);
+      else history.pushState({path},'',path);
+      handleRoute(path);
+    }
+
+    function handleRoute(path){
+      const url=new URL(path,location.origin);
+      const p=url.pathname;
+      const params=url.searchParams;
+
+      // Product detail: /shop/some-product-slug
+      if(p.startsWith('/shop/')&&p.length>6){
+        const slug=p.slice(6);
+        const idx=fromSlug(slug);
+        if(idx>=0){
+          if(!document.getElementById('shopPage').classList.contains('open'))openShop('all',true);
+          openProductDetail(idx,true);
+          return;
+        }
+      }
+
+      // Shop page: /shop or /shop?cat=gpu
+      if(p==='/shop'){
+        closeProductDetail(true);
+        const cat=params.get('cat')||'all';
+        const q=params.get('q')||'';
+        openShop(cat,true);
+        if(q){document.getElementById('shopSearch').value=q;filterShop()}
+        return;
+      }
+
+      // Home page sections
+      const titleMap={'/home':'Home','/services':'Services','/trade-in':'Trade-In','/about':'About','/contact':'Contact','/reviews':'Reviews'};
+      if(sectionMap[p]){
+        closeProductDetail(true);
+        closeShop(true);
+        const el=document.getElementById(sectionMap[p]);
+        if(el)el.scrollIntoView({behavior:'smooth'});
+        document.title=(titleMap[p]||'Home')+' | DCTE';
+        return;
+      }
+
+      // Default: home
+      if(p==='/'||p===''){
+        closeProductDetail(true);
+        closeShop(true);
+        window.scrollTo({top:0,behavior:'smooth'});
+        document.title='DCTE | Davao Computer Trade-in Express | Trade to Upgrade';
+        return;
+      }
+    }
+
+    window.addEventListener('popstate',function(e){
+      const path=e.state&&e.state.path?e.state.path:location.pathname+location.search;
+      handleRoute(path);
+    });
+
     // PRODUCT DETAIL PAGE
-    function openProductDetail(idx){
+    function openProductDetail(idx,skipPush){
       const p=products[idx];if(!p)return;
       const meta=productMeta[idx]||{};
       const specs=specDB[p.name]||{};
@@ -1729,8 +1823,9 @@
       const brand=getBrand(p.name);
       // Related: same category, excluding current, max 4
       const related=products.filter((r,i)=>r.cat===p.cat&&i!==idx).slice(0,4);
-      const specRows=Object.entries(specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
-      const shopeeHTML=meta.shopee?`<div style="margin-top:16px;padding:10px 16px;background:rgba(238,77,45,0.05);border:1px solid rgba(238,77,45,0.12);border-radius:8px;display:inline-flex;align-items:center;gap:8px"><span style="font-size:0.78rem;color:#64748b">Also available on</span><a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" style="font-size:0.78rem;font-weight:700;color:#ee4d2d;font-family:'Montserrat',sans-serif">Shopee &#8594;</a></div>`:'';
+      const formatSpecKey=(k)=>k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      const specRows=Object.entries(specs).map(([k,v])=>`<tr><td>${formatSpecKey(k)}</td><td>${v}</td></tr>`).join('');
+      const shopeeHTML='';
 
       document.getElementById('pdContent').innerHTML=`
         <div class="pd-grid">
@@ -1739,6 +1834,7 @@
             <div class="pd-cat">${p.label}</div>
             <h1 class="pd-name">${p.name}</h1>
             <div class="pd-brand">Brand: <strong>${brand}</strong></div>
+            <div class="pd-stock-pill ${meta.stock==='in'?'in':meta.stock==='low'?'low':'out'}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' On-Hand':'On-Hand'):meta.stock==='low'?(meta.stockQty!==null?'Only '+meta.stockQty+' left':'Low Stock'):'Pre-Order'}</div>
             ${p.cat==='bundle'?`<div style="font-size:0.95rem;color:var(--text-dim);text-decoration:line-through;margin-bottom:2px">${formatPrice(p.price+3000)}</div>`:''}
             <div class="pd-price">${formatPrice(p.price)}${p.cat==='bundle'?' <span style="font-size:0.7em;background:var(--pink);color:#fff;padding:2px 8px;border-radius:4px;vertical-align:middle">PROMO</span>':''}</div>
             <div class="pd-price-note">${p.cat==='bundle'?'Brand New w/ 1 Year Warranty &bull; Home Credit installment available':'Cash price &bull; Contact us for installment options'}</div>
@@ -1754,7 +1850,7 @@
               </div>
             </div>
             ${specRows?`<div class="pd-specs"><h3>Specifications</h3><table class="pd-specs-table"><tbody>${specRows}</tbody></table></div>`:''}
-            <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.8rem;color:var(--text-dim)">
+            <div class="pd-avail">
               <span>&#9989; Available at DCTE Ecoland & Agdao branches</span>
               <span>&#128666; Delivery available in Davao City</span>
             </div>
@@ -1766,26 +1862,53 @@
       document.getElementById('productDetail').classList.add('open');
       document.getElementById('productDetail').scrollTop=0;
       document.body.style.overflow='hidden';
+      setHomeWidgets(false);
+      if(!skipPush){const slug=toSlug(p.name);history.pushState({path:'/shop/'+slug},'','/shop/'+slug)}
+      document.title=p.name+' | DCTE Shop';
     }
-    function closeProductDetail(){
+    function closeProductDetail(skipPush){
       document.getElementById('productDetail').classList.remove('open');
       document.body.style.overflow='';
+      if(!document.getElementById('shopPage').classList.contains('open'))setHomeWidgets(true);
+      if(!skipPush&&document.getElementById('shopPage').classList.contains('open')){
+        history.pushState({path:'/shop'},'','/shop');
+        document.title='Shop | DCTE';
+      }
+    }
+
+    function setHomeWidgets(visible){
+      const d=visible?'':'none';
+      ['tradeinBubble','wlai-bubble','wlai-window'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.style.display=d;
+      });
     }
 
     // SHOP PAGE
-    function openShop(cat){
+    function openShop(cat,skipPush){
       document.getElementById('shopPage').classList.add('open');
       document.body.style.overflow='hidden';
+      setHomeWidgets(false);
       buildFilters();
       if(cat&&cat!=='all'){
         document.querySelectorAll('#filterCats input').forEach(cb=>{cb.checked=cb.value===cat});
       }
       filterShop();
       document.getElementById('shopPage').scrollTop=0;
+      if(!skipPush){
+        const url=cat&&cat!=='all'?'/shop?cat='+cat:'/shop';
+        history.pushState({path:url},'',url);
+      }
+      document.title='Shop | DCTE';
     }
-    function closeShop(){
+    function closeShop(skipPush){
       document.getElementById('shopPage').classList.remove('open');
       document.body.style.overflow='';
+      if(!document.getElementById('productDetail').classList.contains('open'))setHomeWidgets(true);
+      if(!skipPush){
+        history.pushState({path:'/home'},'','/home');
+        document.title='DCTE | Davao Computer Trade-in Express | Trade to Upgrade';
+      }
     }
 
     // Extract brand from product name
@@ -1916,7 +2039,7 @@
         return p.name.toLowerCase().includes(q)||p.label.toLowerCase().includes(q)||(searchCat&&p.cat===searchCat);
       }).slice(0,8);
       if(!matches.length){box.classList.remove('open');return}
-      box.innerHTML=matches.map((p,i)=>`<div class="nav-suggest-item" onclick="openProductDetail(${products.indexOf(p)});document.getElementById('navSuggest').classList.remove('open');document.getElementById('navSearchInput').value=''"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${p.name}</div><span>${formatPrice(p.price)}</span></div>`).join('');
+      box.innerHTML=matches.map((p,i)=>{const pi=products.indexOf(p);return `<div class="nav-suggest-item" onclick="document.getElementById('navSuggest').classList.remove('open');document.getElementById('navSearchInput').value='';navigateTo('/shop/'+toSlug(products[${pi}].name))"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${p.name}</div><span>${formatPrice(p.price)}</span></div>`}).join('');
       box.classList.add('open');
     }
     function navSearchGo(){
@@ -1924,16 +2047,20 @@
       if(!q)return;
       document.getElementById('navSuggest').classList.remove('open');
       document.getElementById('navSearchInput').value='';
-      openShop('all');
-      document.getElementById('shopSearch').value=q;
-      filterShop();
+      navigateTo('/shop?q='+encodeURIComponent(q));
     }
     document.addEventListener('click',e=>{if(!document.getElementById('navSearch').contains(e.target))document.getElementById('navSuggest').classList.remove('open')});
 
     // ===== SHOPPING CART (localStorage) =====
     let cart=JSON.parse(localStorage.getItem('dcte_cart')||'[]');
     function saveCart(){localStorage.setItem('dcte_cart',JSON.stringify(cart));renderCart();updateCartBadge()}
-    function updateCartBadge(){const t=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartBadge').textContent=t||''}
+    function updateCartBadge(){
+      const t=cart.reduce((s,i)=>s+i.qty,0);
+      const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+      document.getElementById('cartBadge').textContent=t||'';
+      document.querySelectorAll('.topbar-cart-count').forEach(el=>el.textContent=t||'');
+      document.querySelectorAll('.topbar-cart-total').forEach(el=>el.textContent=t?formatPrice(total):'');
+    }
     function addToCart(idx,qty=1,silent=false){
       if(!currentUser){requireAuth(()=>addToCart(idx,qty,silent));return}
       const p=products[idx];if(!p)return;
@@ -2212,8 +2339,8 @@
 
     // ===== UPDATE PRODUCT DETAIL with cart/wish/compare/shopee =====
     const _origOpenPD2=openProductDetail;
-    openProductDetail=function(idx){
-      _origOpenPD2(idx);
+    openProductDetail=function(idx,skipPush){
+      _origOpenPD2(idx,skipPush);
       // Add action buttons to product detail after render
       const actDiv=document.querySelector('.pd-actions');
       if(actDiv){
@@ -2233,6 +2360,17 @@
         `;
       }
     };
+
+    // Handle initial URL on page load (after products are fetched)
+    function handleInitialRoute(){
+      const path=location.pathname+location.search;
+      // Replace current state so popstate works correctly
+      history.replaceState({path},'',path);
+      // Only route if not on root/home (avoid unnecessary scroll)
+      if(path!=='/'&&path!=='/home'){
+        handleRoute(path);
+      }
+    }
 
     // Load products from API on page load
     loadProducts();
