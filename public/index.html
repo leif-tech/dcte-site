@@ -22,6 +22,9 @@
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+  <!-- Firebase Auth SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -316,44 +319,42 @@
     .cta-banner .btn{position:relative;background:#fff;color:var(--navy)}
     .cta-banner .btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.2)}
 
-    /* ===== LOCATION ===== */
-    .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
-    .loc-cards{display:flex;flex-direction:column;gap:16px}
-    .loc-card{padding:24px}
-    .loc-card h3{font-family:'Montserrat',sans-serif;font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:10px}
-    .loc-card .addr{color:var(--text);font-size:0.85rem;margin-bottom:8px}
-    .loc-link{display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:600;color:var(--purple);margin-top:8px;transition:.2s}
+    /* ===== STORE LOCATIONS & CONTACT (Combined) ===== */
+    .findus-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-bottom:36px;align-items:start}
+    .loc-card{padding:20px 24px;margin-bottom:12px}
+    .loc-card h3{font-family:'Montserrat',sans-serif;font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+    .loc-card .addr{color:var(--text);font-size:0.84rem;margin-bottom:6px;line-height:1.5}
+    .loc-link{display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:600;color:var(--purple);transition:.2s}
     .loc-link:hover{color:var(--pink)}
-    .loc-map{border-radius:14px;overflow:hidden;border:1px solid var(--border);min-height:380px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
-    .loc-map iframe{width:100%;height:100%;min-height:380px;border:none}
-    .area-tags,.svc-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .area-tag{padding:5px 12px;background:rgba(233,30,140,0.06);border:1px solid rgba(233,30,140,0.15);border-radius:100px;font-size:0.72rem;color:var(--pink);font-weight:600}
-    .svc-tag{padding:5px 12px;background:rgba(92,184,230,0.06);border:1px solid rgba(92,184,230,0.15);border-radius:100px;font-size:0.72rem;color:var(--purple);font-weight:600}
-    @media(max-width:768px){.loc-grid{grid-template-columns:1fr}}
-
-    /* ===== CONTACT ===== */
-    .contact-simple{text-align:center;max-width:600px;margin:0 auto}
-    .contact-methods{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+    .loc-tags{padding:0 4px;margin-top:4px}
+    .loc-tags-label{font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .area-tags,.svc-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .area-tag{padding:4px 12px;background:rgba(233,30,140,0.06);border:1px solid rgba(233,30,140,0.15);border-radius:100px;font-size:0.72rem;color:var(--pink);font-weight:600}
+    .svc-tag{padding:4px 12px;background:rgba(92,184,230,0.06);border:1px solid rgba(92,184,230,0.15);border-radius:100px;font-size:0.72rem;color:var(--purple);font-weight:600}
+    .contact-block{}
+    .contact-block-title{font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
+    .contact-methods{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
     .contact-chip{
-      display:flex;align-items:center;gap:10px;padding:12px 20px;
+      display:flex;align-items:center;gap:10px;padding:11px 18px;
       background:#fff;border:1px solid var(--border);border-radius:12px;
-      font-size:0.88rem;font-weight:600;color:var(--navy);transition:all .3s;
+      font-size:0.85rem;font-weight:600;color:var(--navy);transition:all .3s;flex:1;min-width:160px;
     }
     .contact-chip:hover{border-color:var(--purple);box-shadow:0 4px 16px rgba(139,47,201,0.1);transform:translateY(-2px)}
     .contact-chip a{color:var(--purple)}
     .contact-chip a:hover{color:var(--pink)}
-    .contact-chip .icon{font-size:1.1rem}
-    .contact-branches{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:28px}
-    .contact-branch{text-align:center}
-    .contact-branch .branch-name{font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--pink);margin-bottom:4px}
-    .contact-branch .branch-addr{font-size:0.85rem;color:var(--text)}
-    .contact-socials{display:flex;justify-content:center;gap:12px;margin-top:24px}
+    .contact-chip .icon{font-size:1rem}
+    .contact-chip-email{flex:1 1 100%}
+    .contact-actions{display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap}
+    .contact-socials{display:flex;gap:10px}
     .contact-social{
-      width:42px;height:42px;border-radius:50%;
+      width:38px;height:38px;border-radius:50%;
       background:#fff;border:1px solid var(--border);
       display:flex;align-items:center;justify-content:center;transition:.3s;color:var(--text-dim);
     }
     .contact-social:hover{border-color:var(--purple);color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,47,201,0.1)}
+    .findus-map{border-radius:14px;overflow:hidden;border:1px solid var(--border);height:300px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+    .findus-map iframe{width:100%;height:100%;border:none}
+    @media(max-width:768px){.findus-grid{grid-template-columns:1fr;gap:24px}.contact-methods{flex-direction:column}.contact-chip{min-width:auto}}
 
     /* ===== FAQ ===== */
     .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
@@ -770,6 +771,80 @@
     }
     .scroll-top-btn.show{opacity:1;visibility:visible;transform:translateY(0)}
     .scroll-top-btn:hover{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15);transform:translateY(-2px)}
+
+    /* ===== AUTH MODAL ===== */
+    .auth-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100001;
+      align-items:center;justify-content:center;padding:20px;
+    }
+    .auth-overlay.open{display:flex}
+    .auth-modal{
+      background:#fff;border-radius:20px;max-width:400px;width:100%;padding:36px 32px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;position:relative;
+    }
+    .auth-modal-close{
+      position:absolute;top:14px;right:18px;font-size:1.8rem;color:var(--text-dim);
+      background:none;border:none;cursor:pointer;line-height:1;
+    }
+    .auth-modal-close:hover{color:var(--navy)}
+    .auth-modal h2{
+      font-family:'Montserrat',sans-serif;font-size:1.25rem;font-weight:800;
+      color:var(--navy);margin-bottom:6px;
+    }
+    .auth-modal .auth-sub{font-size:0.85rem;color:var(--text-dim);margin-bottom:28px}
+    .auth-btn{
+      display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+      padding:13px 20px;border-radius:10px;font-family:'Montserrat',sans-serif;
+      font-size:0.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;
+    }
+    .auth-btn-google{
+      background:#fff;color:#333;border:2px solid var(--border);margin-bottom:12px;
+    }
+    .auth-btn-google:hover{border-color:#4285f4;box-shadow:0 2px 12px rgba(66,133,244,0.15)}
+    .auth-btn-facebook{
+      background:#1877f2;color:#fff;
+    }
+    .auth-btn-facebook:hover{background:#1565c0;box-shadow:0 2px 12px rgba(24,119,242,0.3)}
+    .auth-divider{
+      display:flex;align-items:center;gap:12px;margin:20px 0;font-size:0.75rem;
+      color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;
+    }
+    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+    /* ===== NAVBAR USER AREA ===== */
+    .nav-user-area{display:flex;align-items:center;gap:6px;margin-left:6px;position:relative}
+    .nav-login-btn{
+      display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;
+      font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;
+      color:var(--purple);border:2px solid var(--purple);background:transparent;
+      cursor:pointer;transition:all .2s;white-space:nowrap;
+    }
+    .nav-login-btn:hover{background:var(--purple);color:#fff}
+    .nav-user-avatar{
+      width:34px;height:34px;border-radius:50%;cursor:pointer;
+      border:2px solid var(--border);object-fit:cover;transition:border-color .2s;
+    }
+    .nav-user-avatar:hover{border-color:var(--purple)}
+    .nav-user-name{
+      font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;
+      color:var(--navy);cursor:pointer;max-width:100px;overflow:hidden;
+      text-overflow:ellipsis;white-space:nowrap;
+    }
+    .nav-user-dropdown{
+      display:none;position:absolute;top:calc(100% + 8px);right:0;
+      background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.12);
+      border:1px solid var(--border);min-width:200px;padding:12px 0;z-index:1001;
+    }
+    .nav-user-dropdown.open{display:block}
+    .nav-user-dropdown .ud-header{padding:10px 16px;border-bottom:1px solid var(--border)}
+    .nav-user-dropdown .ud-name{font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;color:var(--navy)}
+    .nav-user-dropdown .ud-email{font-size:0.72rem;color:var(--text-dim);word-break:break-all}
+    .nav-user-dropdown .ud-signout{
+      display:block;width:100%;text-align:left;padding:10px 16px;font-family:'Montserrat',sans-serif;
+      font-size:0.8rem;font-weight:600;color:#ef4444;background:none;border:none;cursor:pointer;
+    }
+    .nav-user-dropdown .ud-signout:hover{background:#fef2f2}
+    @media(max-width:900px){.nav-user-name{display:none}}
   </style>
 </head>
 <body>
@@ -796,6 +871,21 @@
         <button class="nav-icon-btn" onclick="toggleWishDrawer()" title="Wishlist"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg><span class="nav-badge" id="wishBadge"></span></button>
         <button class="nav-icon-btn" onclick="toggleCartDrawer()" title="Cart"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span class="nav-badge" id="cartBadge"></span></button>
       </div>
+      <div class="nav-user-area" id="navUserArea">
+        <button class="nav-login-btn" id="navLoginBtn" onclick="openAuthModal()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Sign In
+        </button>
+        <img class="nav-user-avatar" id="navUserAvatar" alt="User avatar" style="display:none" onclick="toggleUserDropdown()">
+        <span class="nav-user-name" id="navUserName" style="display:none" onclick="toggleUserDropdown()"></span>
+        <div class="nav-user-dropdown" id="navUserDropdown">
+          <div class="ud-header">
+            <div class="ud-name" id="udName"></div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
+          <button class="ud-signout" onclick="signOutUser()">Sign Out</button>
+        </div>
+      </div>
       <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
@@ -806,6 +896,25 @@
     <a href="#services" onclick="closeMobile()">Services</a>
     <a href="#trade-in" onclick="closeMobile()">Trade-In</a>
     <a href="#contact" onclick="closeMobile()">Contact Us</a>
+    <a href="#" id="mobileAuthLink" onclick="closeMobile();openAuthModal()">Sign In</a>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authOverlay" onclick="if(event.target===this)closeAuthModal()">
+    <div class="auth-modal">
+      <button class="auth-modal-close" onclick="closeAuthModal()">&times;</button>
+      <h2>Sign In to Continue</h2>
+      <p class="auth-sub">Sign in to add items to your cart and wishlist</p>
+      <button class="auth-btn auth-btn-google" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider">or</div>
+      <button class="auth-btn auth-btn-facebook" onclick="signInWithFacebook()">
+        <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Continue with Facebook
+      </button>
+    </div>
   </div>
 
   <!-- HERO CAROUSEL -->
@@ -844,7 +953,7 @@
             <h1>Visit Us in <span class="grad">Davao City</span></h1>
             <p class="hero-desc">Agdao and Ecoland branches ready to serve you. Delivery available to Panabo, Digos, and across Davao City.</p>
             <div class="hero-buttons">
-              <a href="#location" class="btn btn-primary">See Our Locations</a>
+              <a href="#contact" class="btn btn-primary">See Our Locations</a>
               <a href="tel:09956533350" class="btn btn-outline">Call Now</a>
             </div>
           </div>
@@ -1179,16 +1288,17 @@
     </div>
   </section>
 
-  <!-- LOCATION -->
-  <section class="section section-alt" id="location">
+  <!-- FIND US & CONTACT (Combined) -->
+  <section class="section section-alt" id="contact">
     <div class="container">
       <div class="section-header fade-in">
-        <p class="section-label">Find Us</p>
-        <h2 class="section-title">Store Locations</h2>
-        <p class="section-desc">Visit us at either of our two Davao City branches.</p>
+        <p class="section-label">Get In Touch</p>
+        <h2 class="section-title">Store Locations & Contact</h2>
+        <p class="section-desc">Visit our Davao City branches or reach out directly.</p>
       </div>
-      <div class="loc-grid fade-in">
-        <div class="loc-cards">
+      <div class="findus-grid fade-in">
+        <!-- Left: Branches -->
+        <div>
           <div class="loc-card glass">
             <h3>&#128205; Branch 1 | Agdao</h3>
             <p class="addr">Agdao Sitio Coreas Leon Garcia, Davao City (in front of Shell)</p>
@@ -1199,57 +1309,43 @@
             <p class="addr">Ecoland Quimpo Blvd., Davao City (beside Motolite)</p>
             <a href="https://maps.app.goo.gl/eiJf1PiikvJ7RPbf6" target="_blank" rel="noopener" class="loc-link">&#10132; Open in Google Maps</a>
           </div>
-          <div style="padding:0 4px">
-            <h4 style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Areas Served</h4>
+          <div class="loc-tags">
+            <div class="loc-tags-label">Areas Served</div>
             <div class="area-tags">
               <span class="area-tag">Davao City</span><span class="area-tag">Panabo</span><span class="area-tag">Digos</span>
             </div>
-            <h4 style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px">Available Services</h4>
+            <div class="loc-tags-label" style="margin-top:14px">Available Services</div>
             <div class="svc-tags">
               <span class="svc-tag">Delivery</span><span class="svc-tag">In-Store Shopping</span><span class="svc-tag">Reservations</span><span class="svc-tag">In-Store Pickup</span>
             </div>
           </div>
         </div>
-        <div class="loc-map">
-          <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=DCTE+Davao+Computer+Trade-in+Express,Davao+City,Philippines&zoom=14" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="container">
-      <div class="section-header fade-in">
-        <p class="section-label">Get In Touch</p>
-        <h2 class="section-title">Contact Us</h2>
-        <p class="section-desc">Have questions? Chat with us or reach out directly.</p>
-      </div>
-      <div class="contact-simple fade-in">
-        <div class="contact-methods">
-          <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09956533350">0995 653 3350</a></div>
-          <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09153502729">0915 350 2729</a></div>
-          <div class="contact-chip"><span class="icon">&#9993;</span><a href="mailto:joannamasarieta1@gmail.com">joannamasarieta1@gmail.com</a></div>
-        </div>
-        <div class="contact-branches">
-          <div class="contact-branch">
-            <div class="branch-name">Branch 1 | Agdao</div>
-            <div class="branch-addr">Sitio Coreas Leon Garcia (in front of Shell)</div>
-          </div>
-          <div class="contact-branch">
-            <div class="branch-name">Branch 2 | Ecoland</div>
-            <div class="branch-addr">Quimpo Blvd. (beside Motolite)</div>
+        <!-- Right: Contact Info -->
+        <div>
+          <div class="contact-block">
+            <div class="contact-block-title">Contact Us</div>
+            <div class="contact-methods">
+              <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09956533350">0995 653 3350</a></div>
+              <div class="contact-chip"><span class="icon">&#128222;</span><a href="tel:09153502729">0915 350 2729</a></div>
+              <div class="contact-chip contact-chip-email"><span class="icon">&#9993;</span><a href="mailto:joannamasarieta1@gmail.com">joannamasarieta1@gmail.com</a></div>
+            </div>
+            <div class="contact-actions">
+              <button class="btn btn-primary" onclick="document.getElementById('wlai-bubble').click()" style="padding:11px 28px;font-size:0.82rem">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                Chat With Us
+              </button>
+              <div class="contact-socials">
+                <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="contact-social" title="Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="contact-social" title="TikTok"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
+                <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="contact-social" title="Shopee" style="color:#ee4d2d"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
+              </div>
+            </div>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="document.getElementById('wlai-bubble').click()" style="padding:14px 36px;font-size:0.88rem">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          Chat With Us
-        </button>
-        <div class="contact-socials">
-          <a href="https://www.facebook.com/DCTE168" target="_blank" rel="noopener" class="contact-social" title="Facebook"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-          <a href="https://www.tiktok.com/@bosskenny08" target="_blank" rel="noopener" class="contact-social" title="TikTok"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13a8.28 8.28 0 005.58 2.17V11.7a4.85 4.85 0 01-3.77-1.82V6.69h3.77z"/></svg></a>
-          <a href="https://shopee.ph/dcte168" target="_blank" rel="noopener" class="contact-social" title="Shopee" style="color:#ee4d2d"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></a>
-        </div>
+      </div>
+      <!-- Map spans full width below -->
+      <div class="findus-map fade-in">
+        <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=DCTE+Davao+Computer+Trade-in+Express,Davao+City,Philippines&zoom=14" allowfullscreen="" loading="lazy"></iframe>
       </div>
     </div>
   </section>
@@ -1341,6 +1437,123 @@
   </div>
 
   <script>
+    // ===== FIREBASE AUTH =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKG_g7vHLiH4811WH0AJBDE23jAh1jHSw",
+      authDomain: "dctestore.firebaseapp.com",
+      projectId: "dctestore",
+      storageBucket: "dctestore.firebasestorage.app",
+      messagingSenderId: "318464562975",
+      appId: "1:318464562975:web:21bfd98e2a481e91f9822a"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    let currentUser = null;
+    let pendingAuthAction = null;
+
+    // Auth state listener
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      const loginBtn = document.getElementById('navLoginBtn');
+      const avatar = document.getElementById('navUserAvatar');
+      const userName = document.getElementById('navUserName');
+      const mobileLink = document.getElementById('mobileAuthLink');
+      if (user) {
+        const firstName = (user.displayName || '').split(' ')[0] || 'User';
+        loginBtn.style.display = 'none';
+        avatar.src = user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238b2fc9"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 00-8 0v2"/></svg>';
+        avatar.style.display = 'block';
+        userName.textContent = firstName;
+        userName.style.display = 'block';
+        document.getElementById('udName').textContent = user.displayName || 'User';
+        document.getElementById('udEmail').textContent = user.email || '';
+        mobileLink.textContent = 'Sign Out (' + firstName + ')';
+        mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); signOutUser(); };
+        // Save for checkout pre-fill
+        localStorage.setItem('dcte_user', JSON.stringify({ name: user.displayName, email: user.email, uid: user.uid, photo: user.photoURL }));
+        // Register customer in backend for marketing
+        registerCustomer(user);
+        // Execute pending action
+        if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; closeAuthModal(); setTimeout(action, 100); }
+      } else {
+        loginBtn.style.display = 'flex';
+        avatar.style.display = 'none';
+        userName.style.display = 'none';
+        document.getElementById('navUserDropdown').classList.remove('open');
+        mobileLink.textContent = 'Sign In';
+        mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); openAuthModal(); };
+        localStorage.removeItem('dcte_user');
+      }
+    });
+
+    function openAuthModal() {
+      document.getElementById('authOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAuthModal() {
+      document.getElementById('authOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+      pendingAuthAction = null;
+    }
+    function requireAuth(action) {
+      pendingAuthAction = action;
+      openAuthModal();
+    }
+
+    function registerCustomer(user) {
+      const provider = user.providerData && user.providerData[0] ? user.providerData[0].providerId : 'unknown';
+      fetch('/api/customers', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: user.uid, name: user.displayName || 'User',
+          email: user.email || (user.providerData && user.providerData[0] ? user.providerData[0].email : null),
+          provider: provider, photoURL: user.photoURL || null
+        })
+      }).catch(() => {});
+    }
+
+    function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => {
+        if (err.code === 'auth/popup-blocked') {
+          auth.signInWithRedirect(provider);
+        } else if (err.code === 'auth/account-exists-with-different-credential') {
+          showToast('Account Exists', 'Try signing in with the other provider linked to this email.', '&#9888;');
+        } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+          showToast('Sign-In Error', err.message, '&#9888;');
+        }
+      });
+    }
+    function signInWithFacebook() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      provider.addScope('email');
+      provider.addScope('public_profile');
+      auth.signInWithPopup(provider).catch(err => {
+        if (err.code === 'auth/popup-blocked') {
+          auth.signInWithRedirect(provider);
+        } else if (err.code === 'auth/account-exists-with-different-credential') {
+          showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
+        } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+          showToast('Sign-In Error', err.message, '&#9888;');
+        }
+      });
+    }
+    function signOutUser() {
+      auth.signOut();
+      document.getElementById('navUserDropdown').classList.remove('open');
+      showToast('Signed Out', 'You have been signed out.', '&#128274;');
+    }
+    function toggleUserDropdown() {
+      document.getElementById('navUserDropdown').classList.toggle('open');
+    }
+    // Close dropdown on outside click
+    document.addEventListener('click', e => {
+      const area = document.getElementById('navUserArea');
+      if (area && !area.contains(e.target)) {
+        document.getElementById('navUserDropdown').classList.remove('open');
+      }
+    });
+
     // HERO CAROUSEL
     let currentSlide=0;const slides=document.querySelectorAll('.hero-slide'),dotsC=document.getElementById('heroDots');
     slides.forEach((_,i)=>{const d=document.createElement('div');d.className='hero-dot'+(i===0?' active':'');d.onclick=()=>goSlide(i);dotsC.appendChild(d)});
@@ -1401,7 +1614,9 @@
     // BUY NOW - redirect to checkout page
     function buyNow(name,price,btn){
       if(btn)btn.stopPropagation&&btn.stopPropagation();
-      window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price,'_blank');
+      if(!currentUser){requireAuth(()=>buyNow(name,price));return}
+      const u=currentUser;
+      window.open('/checkout.html?product='+encodeURIComponent(name)+'&price='+price+'&uname='+encodeURIComponent(u.displayName||'')+'&uemail='+encodeURIComponent(u.email||'')+'&uid='+encodeURIComponent(u.uid),'_blank');
     }
 
     // Product meta now loaded from API via loadProducts()
@@ -1496,6 +1711,7 @@
     }
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape'){
+        if(document.getElementById('authOverlay').classList.contains('open')){closeAuthModal();return}
         if(document.getElementById('cartDrawer').classList.contains('open')){toggleCartDrawer();return}
         if(document.getElementById('wishDrawer').classList.contains('open')){toggleWishDrawer();return}
         if(document.getElementById('productDetail').classList.contains('open')){closeProductDetail();return}
@@ -1718,6 +1934,7 @@
     function saveCart(){localStorage.setItem('dcte_cart',JSON.stringify(cart));renderCart();updateCartBadge()}
     function updateCartBadge(){const t=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartBadge').textContent=t||''}
     function addToCart(idx,qty=1,silent=false){
+      if(!currentUser){requireAuth(()=>addToCart(idx,qty,silent));return}
       const p=products[idx];if(!p)return;
       const existing=cart.find(i=>i.idx===idx);
       if(existing){existing.qty+=qty}else{cart.push({idx,qty,name:p.name,price:p.price,img:p.img})}
@@ -1749,8 +1966,10 @@
     }
     function cartCheckout(){
       if(!cart.length){showToast('Cart Empty','Add items before checking out','&#9888;');return}
+      if(!currentUser){requireAuth(()=>cartCheckout());return}
       const params=cart.map(i=>i.name+'|'+i.price+'|'+i.qty).join(';;');
-      window.open('/checkout.html?cart='+encodeURIComponent(params),'_blank');
+      const u=currentUser;
+      window.open('/checkout.html?cart='+encodeURIComponent(params)+'&uname='+encodeURIComponent(u.displayName||'')+'&uemail='+encodeURIComponent(u.email||'')+'&uid='+encodeURIComponent(u.uid),'_blank');
     }
     updateCartBadge();renderCart();
 
@@ -1759,6 +1978,7 @@
     function saveWish(){localStorage.setItem('dcte_wish',JSON.stringify(wishlist));renderWish();updateWishBadge()}
     function updateWishBadge(){document.getElementById('wishBadge').textContent=wishlist.length||''}
     function toggleWish(idx){
+      if(!currentUser){requireAuth(()=>toggleWish(idx));return}
       const wasWished=wishlist.includes(idx);
       if(wasWished){wishlist=wishlist.filter(i=>i!==idx)}else{wishlist.push(idx)}
       saveWish();

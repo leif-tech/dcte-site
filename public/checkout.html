@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout - DCTE</title>
+  <!-- Firebase Auth SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -267,6 +270,23 @@
     const params = new URLSearchParams(window.location.search);
     const fmt = p => '\u20B1' + p.toLocaleString('en-PH');
 
+    // Pre-fill from URL params (passed from storefront) or localStorage
+    const storedUser = JSON.parse(localStorage.getItem('dcte_user') || 'null');
+    const uname = params.get('uname') || (storedUser && storedUser.name) || '';
+    const uemail = params.get('uemail') || (storedUser && storedUser.email) || '';
+    const customerUid = params.get('uid') || (storedUser && storedUser.uid) || '';
+    if (uname) {
+      const parts = uname.trim().split(' ');
+      const fnameEl = document.getElementById('fname');
+      const lnameEl = document.getElementById('lname');
+      if (fnameEl && parts[0]) fnameEl.value = parts[0];
+      if (lnameEl && parts.length > 1) lnameEl.value = parts.slice(1).join(' ');
+    }
+    if (uemail) {
+      const emailEl = document.getElementById('email');
+      if (emailEl) emailEl.value = uemail;
+    }
+
     // One-time checkout guide
     if (!localStorage.getItem('dcte_guide_checkout_seen')) {
       document.getElementById('checkoutGuide').classList.add('show');
@@ -391,7 +411,8 @@
         items: cartItems,
         shipping: shipEl ? shipEl.value : 'pickup',
         payment: document.querySelector('.pay-tab.active')?.textContent || 'GCash',
-        total: orderTotal
+        total: orderTotal,
+        customerUid: customerUid || null
       };
 
       fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })

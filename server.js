@@ -113,6 +113,35 @@ app.post('/api/contact', (req, res) => {
   res.json({ success: true });
 });
 
+// Customer registration (from Firebase Auth logins)
+app.post('/api/customers', (req, res) => {
+  const { uid, name, email, provider, photoURL } = req.body;
+  if (!uid || !name) {
+    return res.status(400).json({ error: 'uid and name are required' });
+  }
+  const customers = readJSON('customers.json');
+  const existing = customers.find(c => c.uid === uid);
+  if (existing) {
+    // Update last login and any new info
+    existing.lastLogin = new Date().toISOString();
+    if (email && !existing.email) existing.email = email;
+    if (name) existing.name = name;
+    if (photoURL) existing.photoURL = photoURL;
+    existing.loginCount = (existing.loginCount || 1) + 1;
+    writeJSON('customers.json', customers);
+    return res.json({ success: true, updated: true });
+  }
+  const customer = {
+    uid, name, email: email || null, provider: provider || 'unknown',
+    photoURL: photoURL || null, loginCount: 1,
+    firstLogin: new Date().toISOString(), lastLogin: new Date().toISOString()
+  };
+  customers.push(customer);
+  writeJSON('customers.json', customers);
+  console.log(`[CUSTOMER] New: ${name} (${email || 'no email'}) via ${provider}`);
+  res.json({ success: true, new: true });
+});
+
 // Duplicate order prevention
 const recentOrderHashes = new Map();
 setInterval(() => {
@@ -177,7 +206,7 @@ app.post('/api/order', (req, res) => {
 
   // Generate unique order ID
   const orderId = 'DCTE-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex');
-  const order = { id: orderId, customer, items, shipping, payment, total, status: 'Pending' };
+  const order = { id: orderId, customer, items, shipping, payment, total, customerUid: req.body.customerUid || null, status: 'Pending' };
   appendToFile('orders.json', order);
   console.log(`[ORDER] ${order.id} - ${firstName} ${lastName} - ${items.length} item(s) - Total: ${total}`);
   res.json({ success: true, orderId: order.id });
@@ -213,6 +242,7 @@ app.get('/api/admin/stats', authMiddleware, ownerOnly, (req, res) => {
   const products = readJSON('products.json');
   const orders = readJSON('orders.json');
   const contacts = readJSON('contacts.json');
+  const customers = readJSON('customers.json');
 
   const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
   const lowStock = products.filter(p => deriveStockStatus(p.stock) === 'low').length;
@@ -256,6 +286,7 @@ app.get('/api/admin/stats', authMiddleware, ownerOnly, (req, res) => {
     totalProducts: products.length,
     totalOrders: orders.length,
     totalContacts: contacts.length,
+    totalCustomers: customers.length,
     totalRevenue,
     lowStock,
     outOfStock,
@@ -415,6 +446,13 @@ app.put('/api/admin/orders/:id/status', authMiddleware, (req, res) => {
 app.get('/api/admin/contacts', authMiddleware, (req, res) => {
   const contacts = readJSON('contacts.json');
   res.json(contacts.reverse());
+});
+
+// ── Admin: Customers ─────────────────────────────────────────────
+
+app.get('/api/admin/customers', authMiddleware, (req, res) => {
+  const customers = readJSON('customers.json');
+  res.json(customers.reverse());
 });
 
 // ── Admin: Export ────────────────────────────────────────────────

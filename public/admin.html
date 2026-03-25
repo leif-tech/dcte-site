@@ -248,6 +248,7 @@
     <button class="tab-btn" id="tabBtn-products" onclick="switchTab('products',this)">Products</button>
     <button class="tab-btn" id="tabBtn-orders" onclick="switchTab('orders',this)">Orders</button>
     <button class="tab-btn" id="tabBtn-contacts" onclick="switchTab('contacts',this)">Contacts</button>
+    <button class="tab-btn" id="tabBtn-customers" onclick="switchTab('customers',this)">Customers</button>
   </div>
 
   <div class="content">
@@ -354,6 +355,37 @@
       <div class="table-wrap">
         <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th></tr></thead>
         <tbody id="contactsBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Customers (Firebase Auth Logins) -->
+    <div class="tab-content" id="tab-customers">
+      <div class="toolbar">
+        <input type="text" id="customerSearch" placeholder="Search customers..." oninput="renderCustomers()">
+        <span class="spacer"></span>
+        <button class="btn btn-secondary" onclick="exportCustomerEmails()">Export Emails (CSV)</button>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-value" id="custTotal">0</div>
+          <div class="stat-label">Total Customers</div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-value" id="custWithEmail">0</div>
+          <div class="stat-label">With Email</div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-value" id="custGoogle">0</div>
+          <div class="stat-label">Google Sign-In</div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:140px">
+          <div class="stat-value" id="custFacebook">0</div>
+          <div class="stat-label">Facebook Sign-In</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th></th><th>Name</th><th>Email</th><th>Provider</th><th>Logins</th><th>First Login</th><th>Last Login</th></tr></thead>
+        <tbody id="customersBody"></tbody></table>
       </div>
     </div>
   </div>
@@ -479,7 +511,7 @@
   let token = sessionStorage.getItem('dcte_admin_token') || '';
   let adminUsername = sessionStorage.getItem('dcte_admin_user') || '';
   let adminRole = sessionStorage.getItem('dcte_admin_role') || '';
-  let allProducts = [], allOrders = [], allContacts = [];
+  let allProducts = [], allOrders = [], allContacts = [], allCustomers = [];
   let selectedProducts = new Set();
   let revenueChart = null, statusChart = null;
   let dashStats = null;
@@ -592,6 +624,7 @@
     if (name === 'products') loadProducts();
     if (name === 'orders') { loadOrders(); showAdminGuideOnce('orders'); }
     if (name === 'contacts') loadContacts();
+    if (name === 'customers') loadCustomers();
   }
 
   function showAdminGuideOnce(tab) {
@@ -620,6 +653,7 @@
         <div class="stat-card"><div class="label">Total Orders</div><div class="value cyan">${s.totalOrders}</div></div>
         <div class="stat-card"><div class="label">Total Revenue</div><div class="value green">${formatPrice(s.totalRevenue)}</div></div>
         <div class="stat-card"><div class="label">Contacts</div><div class="value pink">${s.totalContacts}</div></div>
+        <div class="stat-card"><div class="label">Customers</div><div class="value purple">${s.totalCustomers || 0}</div></div>
       `;
 
       // Low stock + out of stock alerts
@@ -1171,6 +1205,64 @@
         <td>${formatDate(c.timestamp)}</td>
       </tr>
     `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:40px">No contacts yet</td></tr>';
+  }
+
+  // ── Customers ──────────────────────────────────────────────
+
+  async function loadCustomers() {
+    try {
+      const res = await fetch(API + '/api/admin/customers', { headers: authHeaders() });
+      if (!res.ok) return;
+      allCustomers = await res.json();
+      renderCustomers();
+    } catch (err) { console.error(err); }
+  }
+
+  function renderCustomers() {
+    const search = (document.getElementById('customerSearch').value || '').toLowerCase();
+    let list = allCustomers;
+    if (search) list = list.filter(c => (c.name || '').toLowerCase().includes(search) || (c.email || '').toLowerCase().includes(search) || (c.provider || '').toLowerCase().includes(search));
+
+    // Stats
+    document.getElementById('custTotal').textContent = allCustomers.length;
+    document.getElementById('custWithEmail').textContent = allCustomers.filter(c => c.email).length;
+    document.getElementById('custGoogle').textContent = allCustomers.filter(c => (c.provider || '').includes('google')).length;
+    document.getElementById('custFacebook').textContent = allCustomers.filter(c => (c.provider || '').includes('facebook')).length;
+
+    const tbody = document.getElementById('customersBody');
+    tbody.innerHTML = list.map(c => {
+      const providerBadge = (c.provider || '').includes('google')
+        ? '<span style="background:rgba(66,133,244,0.1);color:#4285f4;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600">Google</span>'
+        : (c.provider || '').includes('facebook')
+        ? '<span style="background:rgba(24,119,242,0.1);color:#1877f2;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:600">Facebook</span>'
+        : '<span style="color:var(--text-dim);font-size:0.75rem">' + escapeHTML(c.provider || '-') + '</span>';
+      const avatar = c.photoURL
+        ? '<img src="' + escapeHTML(c.photoURL) + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover">'
+        : '<div style="width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">' + (c.name || '?').charAt(0).toUpperCase() + '</div>';
+      return `<tr>
+        <td>${avatar}</td>
+        <td style="font-weight:500">${escapeHTML(c.name)}</td>
+        <td>${c.email ? '<a href="mailto:' + escapeHTML(c.email) + '">' + escapeHTML(c.email) + '</a>' : '<span style="color:#a0aec0;font-style:italic">Not available</span>'}</td>
+        <td>${providerBadge}</td>
+        <td style="text-align:center">${c.loginCount || 1}</td>
+        <td>${formatDate(c.firstLogin || c.timestamp)}</td>
+        <td>${formatDate(c.lastLogin)}</td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:40px">No customers yet</td></tr>';
+  }
+
+  function exportCustomerEmails() {
+    const withEmail = allCustomers.filter(c => c.email);
+    if (!withEmail.length) { showAdminToast('No customer emails to export', 'error'); return; }
+    const csv = 'Name,Email,Provider,First Login\n' + withEmail.map(c =>
+      '"' + (c.name || '').replace(/"/g, '""') + '","' + c.email + '","' + (c.provider || '') + '","' + (c.firstLogin || c.timestamp || '') + '"'
+    ).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dcte-customers-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    showAdminToast('Exported ' + withEmail.length + ' customer emails', 'success');
   }
 
   // ── Helpers ────────────────────────────────────────────────
