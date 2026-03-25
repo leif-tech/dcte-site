@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const helmet = require('helmet');
 
 let Anthropic, anthropic;
 try {
@@ -61,6 +62,10 @@ const upload = multer({
   }
 });
 
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow inline scripts/styles in SPA
+  crossOriginEmbedderPolicy: false
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 // Serve uploads from persistent volume if configured
