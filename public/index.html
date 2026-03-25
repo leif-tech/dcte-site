@@ -12,7 +12,7 @@
   <meta property="og:title" content="DCTE | Davao Computer Trade-in Express | Trade to Upgrade">
   <meta property="og:description" content="1st in the Philippines to offer PC parts trade-ins! Trade your old PC parts for huge discounts. Custom builds, repairs, GPU/CPU sales in Davao City.">
   <meta property="og:image" content="/hero-1.jpg">
-  <meta property="og:url" content="https://dcte-site-production.up.railway.app">
+  <meta property="og:url" content="https://dctestore.com">
   <meta property="og:site_name" content="DCTE | Davao Computer Trade-in Express">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -1583,6 +1583,7 @@
     async function loadProducts(){
       try{
         const res=await fetch('/api/products');
+        if(!res.ok)throw new Error('Server error '+res.status);
         const data=await res.json();
         products=data.map(p=>({cat:p.cat,label:p.label,name:p.name,price:p.price,img:p.img}));
         specDB={};productMeta={};

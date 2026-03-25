@@ -599,7 +599,7 @@
     // Show username + role badge
     const roleLabel = adminRole === 'owner' ? 'Owner' : 'Admin';
     const roleBadge = `<span class="role-badge ${adminRole}">${roleLabel}</span>`;
-    document.getElementById('adminUser').innerHTML = adminUsername + ' ' + roleBadge;
+    document.getElementById('adminUser').innerHTML = escapeHTML(adminUsername) + ' ' + roleBadge;
 
     // Role-based tab visibility — only Dashboard is owner-only
     const isOwner = adminRole === 'owner';
@@ -810,14 +810,14 @@
       <tr>
         <td class="cb-col"><input type="checkbox" value="${p.id}" ${checked} onchange="toggleProductSelect(this)"></td>
         <td><div style="width:40px;height:40px;border-radius:6px;overflow:hidden;background:var(--bg)">${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">` : ''}</div></td>
-        <td style="font-weight:500;max-width:300px">${p.name}</td>
-        <td>${catLabels[p.cat] || p.cat}</td>
+        <td style="font-weight:500;max-width:300px">${escapeHTML(p.name)}</td>
+        <td>${escapeHTML(catLabels[p.cat] || p.cat)}</td>
         <td style="font-weight:600">${formatPrice(p.price)}</td>
         <td><span class="stock-${ss}">${stockNum}</span> <span style="font-size:0.68rem;color:var(--text-dim)">${stockStatusText(ss)}</span></td>
-        <td>${p.badge ? `<span class="badge-pill badge-${p.badge}">${p.badge}</span>` : '-'}</td>
+        <td>${p.badge ? `<span class="badge-pill badge-${escapeHTML(p.badge)}">${escapeHTML(p.badge)}</span>` : '-'}</td>
         <td>
-          <button onclick="editProduct('${p.id}')" style="color:var(--cyan);font-size:0.78rem;margin-right:8px">Edit</button>
-          <button onclick="deleteProduct('${p.id}','${p.name.replace(/'/g, "\\'")}')" style="color:var(--danger);font-size:0.78rem">Delete</button>
+          <button onclick="editProduct('${escapeHTML(p.id)}')" style="color:var(--cyan);font-size:0.78rem;margin-right:8px">Edit</button>
+          <button onclick="deleteProduct('${escapeHTML(p.id)}','${escapeHTML(p.name).replace(/'/g, "\\'")}')" style="color:var(--danger);font-size:0.78rem">Delete</button>
         </td>
       </tr>`;
     }).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No products found</td></tr>';

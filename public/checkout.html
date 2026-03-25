@@ -269,6 +269,7 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const fmt = p => '\u20B1' + p.toLocaleString('en-PH');
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
     // Pre-fill from URL params (passed from storefront) or localStorage
     const storedUser = JSON.parse(localStorage.getItem('dcte_user') || 'null');
@@ -313,7 +314,7 @@
     cartItems.forEach(item => {
       const row = document.createElement('div');
       row.className = 'order-item';
-      row.innerHTML = `<div class="item-info"><div class="item-name">${item.name}</div><div class="item-qty">x ${item.qty}</div></div><span class="item-price">${fmt(item.price * item.qty)}</span>`;
+      row.innerHTML = `<div class="item-info"><div class="item-name">${esc(item.name)}</div><div class="item-qty">x ${item.qty}</div></div><span class="item-price">${fmt(item.price * item.qty)}</span>`;
       orderItemsEl.appendChild(row);
     });
     document.getElementById('subtotal').textContent = fmt(subtotalPrice);
