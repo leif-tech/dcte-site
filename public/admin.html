@@ -6,23 +6,24 @@
   <title>DCTE Admin Panel</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Open Sans',sans-serif;background:#0f0f23;color:#e2e8f0;min-height:100vh}
-    :root{--pink:#e91e8c;--purple:#8b2fc9;--cyan:#5cb8e6;--navy:#1a1a3e;--grad:linear-gradient(135deg,#e91e8c,#8b2fc9,#5cb8e6);--card:#1a1a2e;--card-hover:#22223a;--border:rgba(255,255,255,0.08);--text:#cbd5e1;--text-dim:#64748b;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b}
+    :root{--bg:#f1f5f9;--card:#ffffff;--card-hover:#f8fafc;--border:#e2e8f0;--text:#334155;--text-dim:#94a3b8;--navy:#1e293b;--purple:#7c3aed;--pink:#d946ef;--cyan:#0ea5e9;--grad:linear-gradient(135deg,#7c3aed,#6366f1,#0ea5e9);--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.06);--shadow-lg:0 10px 15px rgba(0,0,0,0.1),0 4px 6px rgba(0,0,0,0.05)}
+    body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
     a{color:var(--cyan);text-decoration:none}
     button{cursor:pointer;border:none;font-family:inherit;background:none;color:inherit}
-    input,select,textarea{font-family:inherit;font-size:0.85rem;background:#12122a;color:#e2e8f0;border:1px solid var(--border);border-radius:6px;padding:8px 12px;outline:none;width:100%}
-    input:focus,select:focus,textarea:focus{border-color:var(--purple)}
+    input,select,textarea{font-family:inherit;font-size:0.85rem;background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;outline:none;width:100%;transition:border-color 0.2s,box-shadow 0.2s}
+    input:focus,select:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.1)}
     select{appearance:auto}
     table{width:100%;border-collapse:collapse}
     th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);font-size:0.82rem}
-    th{font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);position:sticky;top:0;background:#0f0f23;z-index:1}
+    th{font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);position:sticky;top:0;background:var(--card);z-index:1}
     tr:hover{background:var(--card-hover)}
 
     /* Login Screen */
-    .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-    .login-box{background:var(--card);border-radius:16px;padding:40px;max-width:380px;width:100%;text-align:center;border:1px solid var(--border)}
+    .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:var(--bg)}
+    .login-box{background:var(--card);border-radius:16px;padding:40px;max-width:380px;width:100%;text-align:center;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
     .login-box h1{font-family:'Montserrat',sans-serif;font-size:1.4rem;margin-bottom:6px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .login-box p{color:var(--text-dim);font-size:0.82rem;margin-bottom:24px}
     .login-box input{margin-bottom:12px}
@@ -31,16 +32,21 @@
 
     /* Layout */
     .admin-wrap{display:none}
-    .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px}
+    .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow)}
     .topbar h1{font-family:'Montserrat',sans-serif;font-size:1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex:1}
-    .topbar .user{font-size:0.78rem;color:var(--text-dim)}
+    .topbar .user{font-size:0.78rem;color:var(--text-dim);display:flex;align-items:center;gap:8px}
     .topbar .btn-sm{font-size:0.72rem;padding:6px 14px}
+
+    /* Role badge */
+    .role-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;text-transform:uppercase;font-family:'Montserrat',sans-serif;letter-spacing:0.5px}
+    .role-badge.owner{background:rgba(124,58,237,0.12);color:var(--purple)}
+    .role-badge.employee{background:rgba(14,165,233,0.12);color:var(--cyan)}
 
     /* Tabs */
     .tabs{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto}
     .tab-btn{font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600;padding:14px 20px;color:var(--text-dim);border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s}
-    .tab-btn:hover{color:#e2e8f0}
-    .tab-btn.active{color:var(--pink);border-bottom-color:var(--pink)}
+    .tab-btn:hover{color:var(--text)}
+    .tab-btn.active{color:var(--purple);border-bottom-color:var(--purple)}
 
     /* Content */
     .content{padding:24px;max-width:1400px;margin:0 auto}
@@ -49,7 +55,8 @@
 
     /* Cards */
     .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-    .stat-card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
+    .stat-card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform 0.2s,box-shadow 0.2s}
+    .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
     .stat-card .label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);font-family:'Montserrat',sans-serif;font-weight:600}
     .stat-card .value{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:700;margin-top:4px}
     .stat-card .value.pink{color:var(--pink)}
@@ -59,10 +66,11 @@
     .stat-card .value.warn{color:var(--warning)}
 
     /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.78rem;transition:opacity 0.2s}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.78rem;transition:opacity 0.2s,transform 0.1s}
     .btn:hover{opacity:0.85}
+    .btn:active{transform:scale(0.98)}
     .btn-primary{background:var(--grad);color:#fff}
-    .btn-secondary{background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid var(--border)}
+    .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
     .btn-danger{background:var(--danger);color:#fff}
     .btn-success{background:var(--success);color:#fff}
 
@@ -72,14 +80,14 @@
     .toolbar .spacer{flex:1}
 
     /* Table wrapper */
-    .table-wrap{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:auto;max-height:calc(100vh - 280px)}
+    .table-wrap{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:auto;max-height:calc(100vh - 280px);box-shadow:var(--shadow)}
 
     /* Modal */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:20px}
     .modal-overlay.open{display:flex}
-    .modal{background:#12122a;border-radius:16px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--border)}
+    .modal{background:var(--card);border-radius:16px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
     .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
-    .modal-header h2{font-family:'Montserrat',sans-serif;font-size:1rem}
+    .modal-header h2{font-family:'Montserrat',sans-serif;font-size:1rem;color:var(--navy)}
     .modal-header .close{font-size:1.4rem;color:var(--text-dim);padding:4px}
     .modal-body{padding:24px}
     .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
@@ -88,7 +96,7 @@
     .form-group{margin-bottom:14px}
     .form-group label{display:block;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin-bottom:4px;font-family:'Montserrat',sans-serif}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .img-preview{width:80px;height:80px;border-radius:8px;background:#1a1a2e;border:1px solid var(--border);overflow:hidden;margin-top:6px;display:flex;align-items:center;justify-content:center}
+    .img-preview{width:80px;height:80px;border-radius:8px;background:var(--bg);border:1px solid var(--border);overflow:hidden;margin-top:6px;display:flex;align-items:center;justify-content:center}
     .img-preview img{width:100%;height:100%;object-fit:cover}
 
     /* Specs editor */
@@ -98,17 +106,17 @@
     .spec-row .remove-spec{color:var(--danger);font-size:1.2rem;padding:4px;flex-shrink:0}
 
     /* Order detail */
-    .order-detail{background:var(--card);border-radius:12px;padding:20px;margin-top:12px;border:1px solid var(--border)}
+    .order-detail{background:var(--bg);border-radius:12px;padding:20px;margin-top:12px;border:1px solid var(--border)}
     .order-detail h4{font-family:'Montserrat',sans-serif;font-size:0.85rem;margin-bottom:8px}
     .order-items{margin-top:8px}
     .order-item{display:flex;justify-content:space-between;padding:6px 0;font-size:0.82rem;border-bottom:1px solid var(--border)}
 
     /* Status badges */
     .status{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.68rem;font-weight:600;text-transform:uppercase;font-family:'Montserrat',sans-serif;letter-spacing:0.3px}
-    .status-pending{background:rgba(245,158,11,0.15);color:var(--warning)}
-    .status-confirmed{background:rgba(59,130,246,0.15);color:#3b82f6}
-    .status-shipped{background:rgba(139,47,201,0.15);color:var(--purple)}
-    .status-completed{background:rgba(34,197,94,0.15);color:var(--success)}
+    .status-pending{background:rgba(245,158,11,0.12);color:var(--warning)}
+    .status-confirmed{background:rgba(59,130,246,0.12);color:#3b82f6}
+    .status-shipped{background:rgba(124,58,237,0.12);color:var(--purple)}
+    .status-completed{background:rgba(34,197,94,0.12);color:var(--success)}
 
     /* Stock badges */
     .stock-in{color:var(--success)}
@@ -117,13 +125,66 @@
 
     /* Badge pills */
     .badge-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;text-transform:uppercase}
-    .badge-hot{background:rgba(233,30,140,0.15);color:var(--pink)}
-    .badge-new{background:rgba(92,184,230,0.15);color:var(--cyan)}
-    .badge-sale{background:rgba(34,197,94,0.15);color:var(--success)}
+    .badge-hot{background:rgba(217,70,239,0.12);color:var(--pink)}
+    .badge-new{background:rgba(14,165,233,0.12);color:var(--cyan)}
+    .badge-sale{background:rgba(34,197,94,0.12);color:var(--success)}
 
     /* Low stock alert */
     .alert{padding:12px 16px;border-radius:8px;font-size:0.82rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-    .alert-warning{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--warning)}
+    .alert-warning{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:#b45309}
+
+    /* Chart grid */
+    .chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
+    .chart-card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .chart-card h3{font-family:'Montserrat',sans-serif;font-size:0.85rem;margin-bottom:12px;color:var(--navy)}
+    .chart-card canvas{width:100%!important;height:260px!important;max-height:260px}
+
+    /* Period toggle */
+    .period-toggle{display:inline-flex;gap:0;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
+    .period-btn{padding:6px 14px;font-size:0.7rem;font-weight:600;font-family:'Montserrat',sans-serif;color:var(--text-dim);cursor:pointer;border:none;background:none;transition:all 0.2s}
+    .period-btn.active{background:var(--purple);color:#fff}
+
+    /* Top products sidebar */
+    .top-products{list-style:none;padding:0}
+    .top-products li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8rem}
+    .top-products li:last-child{border:none}
+    .top-products .tp-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:12px;color:var(--text)}
+    .top-products .tp-qty{font-weight:700;color:var(--purple);font-family:'Montserrat',sans-serif}
+
+    /* Checkbox column */
+    .cb-col{width:36px;text-align:center}
+    .cb-col input[type="checkbox"]{width:16px;height:16px;accent-color:var(--purple);cursor:pointer}
+
+    /* Bulk actions bar */
+    .bulk-bar{display:none;align-items:center;gap:12px;padding:10px 16px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:8px;margin-bottom:12px;flex-wrap:wrap}
+    .bulk-bar.show{display:flex}
+    .bulk-bar .bulk-count{font-size:0.78rem;font-weight:600;color:var(--purple);font-family:'Montserrat',sans-serif;min-width:100px}
+    .bulk-bar select,.bulk-bar input[type="number"]{max-width:140px;padding:6px 10px;font-size:0.78rem}
+
+    /* Image upload area */
+    .img-upload-area{display:flex;align-items:center;gap:10px;margin-top:6px}
+    .form-group .img-upload-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;font-size:0.72rem;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(14,165,233,0.08);color:var(--cyan);border:1px solid rgba(14,165,233,0.2);cursor:pointer;transition:opacity 0.2s;text-transform:none;letter-spacing:normal;margin-bottom:0}
+    .img-upload-btn:hover{opacity:0.8}
+    .img-upload-btn input[type="file"]{display:none}
+    .upload-status{font-size:0.7rem;color:var(--text-dim)}
+
+    /* Stock hint */
+    .stock-hint{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.68rem;font-weight:600;margin-left:8px}
+    .stock-hint.in{background:rgba(34,197,94,0.1);color:var(--success)}
+    .stock-hint.low{background:rgba(245,158,11,0.1);color:var(--warning)}
+    .stock-hint.out{background:rgba(239,68,68,0.1);color:var(--danger)}
+
+    /* Order filters */
+    .order-filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .order-filters select{max-width:160px}
+    .order-filters input[type="date"]{max-width:150px;padding:6px 10px}
+    .order-filters label{font-size:0.72rem;color:var(--text-dim);font-weight:600;font-family:'Montserrat',sans-serif}
+
+    /* Enhanced order detail */
+    .order-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .order-detail-grid .od-section h4{font-family:'Montserrat',sans-serif;font-size:0.82rem;margin-bottom:8px;color:var(--purple)}
+    .order-detail-grid .od-section p{font-size:0.8rem;line-height:1.6;color:var(--text)}
+    .order-total{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700;color:var(--success);margin-top:12px;text-align:right}
 
     /* Responsive */
     @media(max-width:768px){
@@ -132,10 +193,29 @@
       .content{padding:16px}
       .tabs{padding:0 12px}
       .tab-btn{padding:12px 14px;font-size:0.72rem}
+      .chart-grid{grid-template-columns:1fr}
+      .order-detail-grid{grid-template-columns:1fr}
+      .bulk-bar{gap:8px}
+      .order-filters{gap:6px}
     }
     @media(max-width:480px){
       .stat-grid{grid-template-columns:1fr}
     }
+
+    /* Admin toast */
+    .admin-toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;color:#fff;font-size:0.85rem;font-weight:600;font-family:'Montserrat',sans-serif;box-shadow:0 6px 24px rgba(0,0,0,0.15);transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
+    .admin-toast.show{transform:translateY(0);opacity:1}
+    .admin-toast.success{background:var(--success)}
+    .admin-toast.error{background:var(--danger)}
+
+    /* Guide popup */
+    .guide-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;align-items:center;justify-content:center;padding:20px}
+    .guide-overlay.show{display:flex}
+    .guide-box{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:32px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+    .guide-box h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:10px}
+    .guide-box p{font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:6px}
+    .guide-box .got-it{margin-top:14px;padding:10px 32px;background:var(--grad);color:#fff;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:opacity .2s}
+    .guide-box .got-it:hover{opacity:0.9}
   </style>
 </head>
 <body>
@@ -163,11 +243,11 @@
     <button class="btn btn-secondary btn-sm" onclick="doLogout()">Logout</button>
   </div>
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
-    <button class="tab-btn" onclick="switchTab('products',this)">Products</button>
-    <button class="tab-btn" onclick="switchTab('orders',this)">Orders</button>
-    <button class="tab-btn" onclick="switchTab('contacts',this)">Contacts</button>
+  <div class="tabs" id="tabsBar">
+    <button class="tab-btn active" id="tabBtn-dashboard" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="tab-btn" id="tabBtn-products" onclick="switchTab('products',this)">Products</button>
+    <button class="tab-btn" id="tabBtn-orders" onclick="switchTab('orders',this)">Orders</button>
+    <button class="tab-btn" id="tabBtn-contacts" onclick="switchTab('contacts',this)">Contacts</button>
   </div>
 
   <div class="content">
@@ -175,10 +255,36 @@
     <div class="tab-content active" id="tab-dashboard">
       <div class="stat-grid" id="statsGrid"></div>
       <div id="lowStockAlert"></div>
-      <h3 style="font-family:'Montserrat',sans-serif;font-size:0.9rem;margin-bottom:12px">Recent Orders</h3>
-      <div class="table-wrap">
-        <table><thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
-        <tbody id="recentOrdersBody"></tbody></table>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <h3 style="margin:0">Revenue</h3>
+            <div class="period-toggle">
+              <button class="period-btn active" onclick="setRevenuePeriod(7,this)">7 Days</button>
+              <button class="period-btn" onclick="setRevenuePeriod(30,this)">30 Days</button>
+            </div>
+          </div>
+          <canvas id="revenueChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Orders by Status</h3>
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div>
+          <h3 style="font-family:'Montserrat',sans-serif;font-size:0.9rem;margin-bottom:12px;color:var(--navy)">Recent Orders</h3>
+          <div class="table-wrap" style="max-height:300px">
+            <table><thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="recentOrdersBody"></tbody></table>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Top Selling Products</h3>
+          <ul class="top-products" id="topProductsList">
+            <li style="color:var(--text-dim);font-size:0.8rem">No data yet</li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -191,8 +297,26 @@
         <button class="btn btn-secondary" onclick="exportProducts()">Export Backup</button>
         <button class="btn btn-primary" onclick="openProductModal()">+ Add Product</button>
       </div>
+      <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selected</span>
+        <select id="bulkAction">
+          <option value="">Bulk Action...</option>
+          <option value="set-stock">Set Stock</option>
+          <option value="set-badge">Set Badge</option>
+          <option value="delete">Delete Selected</option>
+        </select>
+        <input type="number" id="bulkStockVal" placeholder="Qty" min="0" style="display:none;max-width:80px">
+        <select id="bulkBadgeVal" style="display:none;max-width:120px">
+          <option value="">None</option>
+          <option value="hot">Hot</option>
+          <option value="new">New</option>
+          <option value="sale">Sale</option>
+        </select>
+        <button class="btn btn-primary" onclick="executeBulk()" style="padding:6px 14px">Apply</button>
+        <button class="btn btn-secondary" onclick="clearSelection()" style="padding:6px 14px">Clear</button>
+      </div>
       <div class="table-wrap">
-        <table><thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Badge</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th class="cb-col"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Badge</th><th>Actions</th></tr></thead>
         <tbody id="productsBody"></tbody></table>
       </div>
     </div>
@@ -201,6 +325,19 @@
     <div class="tab-content" id="tab-orders">
       <div class="toolbar">
         <input type="text" id="orderSearch" placeholder="Search orders..." oninput="renderOrders()">
+        <div class="order-filters">
+          <select id="orderStatusFilter" onchange="renderOrders()" style="max-width:150px">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <label>From</label>
+          <input type="date" id="orderDateFrom" onchange="renderOrders()">
+          <label>To</label>
+          <input type="date" id="orderDateTo" onchange="renderOrders()">
+        </div>
       </div>
       <div class="table-wrap">
         <table><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr></thead>
@@ -221,6 +358,25 @@
     </div>
   </div>
 </div>
+
+<!-- Admin Guide Popups -->
+<div class="guide-overlay" id="guideDashboard">
+  <div class="guide-box">
+    <h3>Dashboard Overview</h3>
+    <p>See your store's stats at a glance: total products, orders, revenue, and contacts. Charts show revenue trends and order status breakdown.</p>
+    <button class="got-it" onclick="dismissAdminGuide('dashboard')">Got It</button>
+  </div>
+</div>
+<div class="guide-overlay" id="guideOrders">
+  <div class="guide-box">
+    <h3>Managing Orders</h3>
+    <p>Filter orders by status, date, or search by customer name. Click "Details" to expand order info. Use the dropdown to update order status — you'll be asked to confirm before saving.</p>
+    <button class="got-it" onclick="dismissAdminGuide('orders')">Got It</button>
+  </div>
+</div>
+
+<!-- Admin Toast -->
+<div class="admin-toast" id="adminToast"></div>
 
 <!-- Product Modal -->
 <div class="modal-overlay" id="productModal">
@@ -261,19 +417,25 @@
           <input type="number" id="fPrice" placeholder="0" min="0" required>
         </div>
         <div class="form-group">
-          <label>Image URL</label>
-          <input type="text" id="fImg" placeholder="https://..." oninput="previewImg()">
-          <div class="img-preview" id="imgPreview"><span style="color:var(--text-dim);font-size:0.7rem">No image</span></div>
+          <label>Image</label>
+          <input type="text" id="fImg" placeholder="URL or upload..." oninput="previewImg()">
+          <div class="img-upload-area">
+            <div class="img-preview" id="imgPreview"><span style="color:var(--text-dim);font-size:0.7rem">No image</span></div>
+            <label class="img-upload-btn">
+              Upload
+              <input type="file" id="fImgFile" accept="image/jpeg,image/png,image/gif,image/webp" onchange="uploadImage(this)">
+            </label>
+            <span class="upload-status" id="uploadStatus"></span>
+          </div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Stock Status</label>
-          <select id="fStock">
-            <option value="in">In Stock</option>
-            <option value="low">Low Stock</option>
-            <option value="out">Contact Us</option>
-          </select>
+          <label>Stock Quantity</label>
+          <div style="display:flex;align-items:center">
+            <input type="number" id="fStock" placeholder="50" min="0" value="50" oninput="updateStockHint()">
+            <span class="stock-hint in" id="stockHint">In Stock</span>
+          </div>
         </div>
         <div class="form-group">
           <label>Condition</label>
@@ -293,6 +455,13 @@
         </select>
       </div>
       <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="fShopee" style="width:18px;height:18px;accent-color:var(--purple);cursor:pointer">
+          <span style="font-size:0.82rem;font-weight:600;color:var(--text)">This product is listed on Shopee</span>
+        </label>
+        <p style="font-size:0.68rem;color:var(--text-dim);margin-top:4px;margin-left:26px">Only enable if this exact product is already posted on your Shopee store. A Shopee button will appear on the product page.</p>
+      </div>
+      <div class="form-group">
         <label>Specifications</label>
         <div class="spec-rows" id="specRows"></div>
         <button class="btn btn-secondary" onclick="addSpecRow()" style="margin-top:8px;font-size:0.72rem">+ Add Spec</button>
@@ -309,9 +478,32 @@
   const API = '';
   let token = sessionStorage.getItem('dcte_admin_token') || '';
   let adminUsername = sessionStorage.getItem('dcte_admin_user') || '';
+  let adminRole = sessionStorage.getItem('dcte_admin_role') || '';
   let allProducts = [], allOrders = [], allContacts = [];
+  let selectedProducts = new Set();
+  let revenueChart = null, statusChart = null;
+  let dashStats = null;
+  let revenuePeriod = 7;
 
   const catLabels = {gpu:'Video Card',cpu:'Processor',mobo:'Motherboard',ram:'Memory',psu:'PSU / UPS',monitor:'Monitor',case:'Case',cooler:'Cooler',bundle:'PC Bundle'};
+
+  // XSS prevention helper
+  function escapeHTML(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  }
+
+  function deriveStockStatus(stock) {
+    if (typeof stock === 'string') return stock === 'in' ? 'in' : stock === 'low' ? 'low' : 'out';
+    const n = Number(stock);
+    if (isNaN(n) || n <= 0) return 'out';
+    if (n <= 10) return 'low';
+    return 'in';
+  }
+
+  function stockStatusText(status) {
+    return status === 'in' ? 'In Stock' : status === 'low' ? 'Low Stock' : 'Out of Stock';
+  }
 
   // ── Auth ───────────────────────────────────────────────────
 
@@ -332,8 +524,10 @@
       if (!res.ok) throw new Error(data.error || 'Login failed');
       token = data.token;
       adminUsername = data.username;
+      adminRole = data.role || 'employee';
       sessionStorage.setItem('dcte_admin_token', token);
       sessionStorage.setItem('dcte_admin_user', adminUsername);
+      sessionStorage.setItem('dcte_admin_role', adminRole);
       showAdmin();
     } catch (err) {
       document.getElementById('loginError').textContent = err.message;
@@ -342,9 +536,10 @@
   }
 
   function doLogout() {
-    token = ''; adminUsername = '';
+    token = ''; adminUsername = ''; adminRole = '';
     sessionStorage.removeItem('dcte_admin_token');
     sessionStorage.removeItem('dcte_admin_user');
+    sessionStorage.removeItem('dcte_admin_role');
     document.getElementById('loginScreen').style.display = '';
     document.getElementById('adminWrap').style.display = 'none';
   }
@@ -353,7 +548,11 @@
     if (!token) return false;
     try {
       const res = await fetch(API + '/api/admin/verify', { headers: authHeaders() });
-      return res.ok;
+      if (!res.ok) return false;
+      const data = await res.json();
+      adminRole = data.role || 'employee';
+      sessionStorage.setItem('dcte_admin_role', adminRole);
+      return true;
     } catch { return false; }
   }
 
@@ -364,9 +563,22 @@
   async function showAdmin() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminWrap').style.display = 'block';
-    document.getElementById('adminUser').textContent = adminUsername;
-    await loadDashboard();
-    await loadProducts();
+
+    // Show username + role badge
+    const roleLabel = adminRole === 'owner' ? 'Owner' : 'Admin';
+    const roleBadge = `<span class="role-badge ${adminRole}">${roleLabel}</span>`;
+    document.getElementById('adminUser').innerHTML = adminUsername + ' ' + roleBadge;
+
+    // Role-based tab visibility — only Dashboard is owner-only
+    const isOwner = adminRole === 'owner';
+    document.getElementById('tabBtn-dashboard').style.display = isOwner ? '' : 'none';
+
+    if (!isOwner) {
+      // Employees default to Products tab
+      switchTab('products', document.getElementById('tabBtn-products'));
+    } else {
+      switchTab('dashboard', document.getElementById('tabBtn-dashboard'));
+    }
   }
 
   // ── Tabs ───────────────────────────────────────────────────
@@ -376,10 +588,22 @@
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
-    if (name === 'dashboard') loadDashboard();
+    if (name === 'dashboard') { loadDashboard(); showAdminGuideOnce('dashboard'); }
     if (name === 'products') loadProducts();
-    if (name === 'orders') loadOrders();
+    if (name === 'orders') { loadOrders(); showAdminGuideOnce('orders'); }
     if (name === 'contacts') loadContacts();
+  }
+
+  function showAdminGuideOnce(tab) {
+    const key = 'dcte_guide_admin_' + tab + '_seen';
+    if (localStorage.getItem(key)) return;
+    const el = document.getElementById('guide' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    if (el) el.classList.add('show');
+  }
+  function dismissAdminGuide(tab) {
+    localStorage.setItem('dcte_guide_admin_' + tab + '_seen', '1');
+    const el = document.getElementById('guide' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    if (el) el.classList.remove('show');
   }
 
   // ── Dashboard ──────────────────────────────────────────────
@@ -388,29 +612,137 @@
     try {
       const res = await fetch(API + '/api/admin/stats', { headers: authHeaders() });
       if (!res.ok) { if (res.status === 401) return doLogout(); throw new Error('Failed'); }
-      const s = await res.json();
+      dashStats = await res.json();
+      const s = dashStats;
+
       document.getElementById('statsGrid').innerHTML = `
         <div class="stat-card"><div class="label">Total Products</div><div class="value purple">${s.totalProducts}</div></div>
         <div class="stat-card"><div class="label">Total Orders</div><div class="value cyan">${s.totalOrders}</div></div>
-        <div class="stat-card"><div class="label">Total Contacts</div><div class="value pink">${s.totalContacts}</div></div>
         <div class="stat-card"><div class="label">Total Revenue</div><div class="value green">${formatPrice(s.totalRevenue)}</div></div>
+        <div class="stat-card"><div class="label">Contacts</div><div class="value pink">${s.totalContacts}</div></div>
       `;
-      if (s.lowStock > 0) {
-        document.getElementById('lowStockAlert').innerHTML = `<div class="alert alert-warning">&#9888; ${s.lowStock} product(s) with low stock</div>`;
-      } else {
-        document.getElementById('lowStockAlert').innerHTML = '';
-      }
+
+      // Low stock + out of stock alerts
+      let alertHTML = '';
+      if (s.lowStock > 0) alertHTML += `<div class="alert alert-warning">&#9888; ${s.lowStock} product(s) with low stock (1-10 units)</div>`;
+      if (s.outOfStock > 0) alertHTML += `<div class="alert alert-warning" style="background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:var(--danger)">&#10060; ${s.outOfStock} product(s) out of stock</div>`;
+      document.getElementById('lowStockAlert').innerHTML = alertHTML;
+
+      // Recent orders table
       const tbody = document.getElementById('recentOrdersBody');
       tbody.innerHTML = s.recentOrders.map(o => `
         <tr>
-          <td style="font-weight:600">${o.id}</td>
-          <td>${o.customer ? (o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
+          <td style="font-weight:600">${escapeHTML(o.id)}</td>
+          <td>${o.customer ? escapeHTML(o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
           <td>${formatPrice(parseFloat(o.total) || 0)}</td>
-          <td><span class="status status-${(o.status||'pending').toLowerCase()}">${o.status || 'Pending'}</span></td>
+          <td><span class="status status-${(o.status||'pending').toLowerCase()}">${escapeHTML(o.status || 'Pending')}</span></td>
           <td>${formatDate(o.timestamp)}</td>
         </tr>
       `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-dim)">No orders yet</td></tr>';
+
+      // Top products
+      const tpList = document.getElementById('topProductsList');
+      if (s.topProducts && s.topProducts.length) {
+        tpList.innerHTML = s.topProducts.map(tp => `
+          <li><span class="tp-name">${escapeHTML(tp.name)}</span><span class="tp-qty">${tp.qty} sold</span></li>
+        `).join('');
+      } else {
+        tpList.innerHTML = '<li style="color:var(--text-dim);font-size:0.8rem">No sales data yet</li>';
+      }
+
+      // Charts
+      renderRevenueChart();
+      renderStatusChart();
     } catch (err) { console.error(err); }
+  }
+
+  function setRevenuePeriod(days, btn) {
+    revenuePeriod = days;
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderRevenueChart();
+  }
+
+  function renderRevenueChart() {
+    if (!dashStats || !dashStats.revenueByDay) return;
+    const data = dashStats.revenueByDay.slice(-revenuePeriod);
+    const labels = data.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      return dt.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    });
+    const values = data.map(d => d.revenue);
+
+    if (revenueChart) revenueChart.destroy();
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    revenueChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Revenue',
+          data: values,
+          borderColor: '#7c3aed',
+          backgroundColor: 'rgba(124,58,237,0.08)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+          pointBackgroundColor: '#7c3aed'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => formatPrice(ctx.parsed.y)
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: '#e2e8f0' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+          y: { grid: { color: '#e2e8f0' }, ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => '\u20B1' + v.toLocaleString() } }
+        }
+      }
+    });
+  }
+
+  function renderStatusChart() {
+    if (!dashStats || !dashStats.ordersByStatus) return;
+    const statuses = Object.keys(dashStats.ordersByStatus);
+    const counts = Object.values(dashStats.ordersByStatus);
+    if (!statuses.length) {
+      if (statusChart) { statusChart.destroy(); statusChart = null; }
+      const ctx = document.getElementById('statusChart').getContext('2d');
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = '#94a3b8'; ctx.font = '12px Montserrat, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('No orders yet', ctx.canvas.width / 2, ctx.canvas.height / 2);
+      return;
+    }
+    const colors = { Pending: '#f59e0b', Confirmed: '#3b82f6', Shipped: '#7c3aed', Completed: '#22c55e' };
+
+    if (statusChart) statusChart.destroy();
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    statusChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: statuses,
+        datasets: [{
+          data: counts,
+          backgroundColor: statuses.map(s => colors[s] || '#94a3b8'),
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#334155', font: { size: 11 }, padding: 12 } }
+        }
+      }
+    });
   }
 
   // ── Products ───────────────────────────────────────────────
@@ -420,10 +752,11 @@
       const res = await fetch(API + '/api/admin/products', { headers: authHeaders() });
       if (!res.ok) { if (res.status === 401) return doLogout(); return; }
       allProducts = await res.json();
-      // Populate category filter
       const sel = document.getElementById('prodCatFilter');
       const cats = [...new Set(allProducts.map(p => p.cat))];
       sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('');
+      selectedProducts.clear();
+      updateBulkBar();
       renderProducts();
     } catch (err) { console.error(err); }
   }
@@ -435,21 +768,98 @@
     if (search) list = list.filter(p => p.name.toLowerCase().includes(search) || p.cat.includes(search));
     if (catFilter) list = list.filter(p => p.cat === catFilter);
     const tbody = document.getElementById('productsBody');
-    tbody.innerHTML = list.map(p => `
+    tbody.innerHTML = list.map(p => {
+      const ss = deriveStockStatus(p.stock);
+      const stockNum = typeof p.stock === 'number' ? p.stock : '—';
+      const checked = selectedProducts.has(p.id) ? 'checked' : '';
+      return `
       <tr>
-        <td><div style="width:40px;height:40px;border-radius:6px;overflow:hidden;background:#1a1a2e">${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">` : ''}</div></td>
+        <td class="cb-col"><input type="checkbox" value="${p.id}" ${checked} onchange="toggleProductSelect(this)"></td>
+        <td><div style="width:40px;height:40px;border-radius:6px;overflow:hidden;background:var(--bg)">${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">` : ''}</div></td>
         <td style="font-weight:500;max-width:300px">${p.name}</td>
         <td>${catLabels[p.cat] || p.cat}</td>
         <td style="font-weight:600">${formatPrice(p.price)}</td>
-        <td><span class="stock-${p.stock === 'in' ? 'in' : p.stock === 'low' ? 'low' : 'out'}">${p.stock === 'in' ? 'In Stock' : p.stock === 'low' ? 'Low Stock' : 'Contact'}</span></td>
+        <td><span class="stock-${ss}">${stockNum}</span> <span style="font-size:0.68rem;color:var(--text-dim)">${stockStatusText(ss)}</span></td>
         <td>${p.badge ? `<span class="badge-pill badge-${p.badge}">${p.badge}</span>` : '-'}</td>
         <td>
           <button onclick="editProduct('${p.id}')" style="color:var(--cyan);font-size:0.78rem;margin-right:8px">Edit</button>
           <button onclick="deleteProduct('${p.id}','${p.name.replace(/'/g, "\\'")}')" style="color:var(--danger);font-size:0.78rem">Delete</button>
         </td>
-      </tr>
-    `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:40px">No products found</td></tr>';
+      </tr>`;
+    }).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No products found</td></tr>';
   }
+
+  // ── Product Selection / Bulk Actions ──────────────────────
+
+  function toggleProductSelect(cb) {
+    if (cb.checked) selectedProducts.add(cb.value);
+    else selectedProducts.delete(cb.value);
+    updateBulkBar();
+  }
+
+  function toggleSelectAll(cb) {
+    const checkboxes = document.querySelectorAll('#productsBody input[type="checkbox"]');
+    checkboxes.forEach(c => {
+      c.checked = cb.checked;
+      if (cb.checked) selectedProducts.add(c.value);
+      else selectedProducts.delete(c.value);
+    });
+    updateBulkBar();
+  }
+
+  function clearSelection() {
+    selectedProducts.clear();
+    document.querySelectorAll('#productsBody input[type="checkbox"]').forEach(c => c.checked = false);
+    document.getElementById('selectAll').checked = false;
+    updateBulkBar();
+  }
+
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkBar');
+    const count = selectedProducts.size;
+    document.getElementById('bulkCount').textContent = count + ' selected';
+    bar.classList.toggle('show', count > 0);
+  }
+
+  // Show/hide sub-fields based on bulk action
+  (function() {
+    const actionSel = document.getElementById('bulkAction');
+    if (actionSel) actionSel.addEventListener('change', () => {
+      document.getElementById('bulkStockVal').style.display = actionSel.value === 'set-stock' ? '' : 'none';
+      document.getElementById('bulkBadgeVal').style.display = actionSel.value === 'set-badge' ? '' : 'none';
+    });
+  })();
+
+  async function executeBulk() {
+    const action = document.getElementById('bulkAction').value;
+    if (!action) return alert('Select a bulk action');
+    const ids = [...selectedProducts];
+    if (!ids.length) return;
+
+    let value;
+    if (action === 'set-stock') {
+      value = document.getElementById('bulkStockVal').value;
+      if (value === '' || isNaN(value)) return alert('Enter a stock quantity');
+      value = Number(value);
+    } else if (action === 'set-badge') {
+      value = document.getElementById('bulkBadgeVal').value;
+    } else if (action === 'delete') {
+      if (!confirm(`Delete ${ids.length} product(s)? This cannot be undone.`)) return;
+    }
+
+    try {
+      const res = await fetch(API + '/api/admin/products/bulk', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ action, ids, value })
+      });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
+      clearSelection();
+      await loadProducts();
+    } catch (err) { alert(err.message); }
+  }
+
+  // ── Product Modal ─────────────────────────────────────────
 
   function openProductModal(product) {
     document.getElementById('editProductId').value = product ? product.id : '';
@@ -459,10 +869,13 @@
     document.getElementById('fName').value = product ? product.name : '';
     document.getElementById('fPrice').value = product ? product.price : '';
     document.getElementById('fImg').value = product ? product.img : '';
-    document.getElementById('fStock').value = product ? product.stock : 'in';
+    document.getElementById('fStock').value = product ? product.stock : 50;
     document.getElementById('fCondition').value = product ? product.condition : 'new';
     document.getElementById('fBadge').value = product ? (product.badge || '') : '';
+    document.getElementById('fShopee').checked = product ? !!product.shopee : false;
+    document.getElementById('uploadStatus').textContent = '';
     previewImg();
+    updateStockHint();
     // Specs
     const specDiv = document.getElementById('specRows');
     specDiv.innerHTML = '';
@@ -494,6 +907,43 @@
     }
   }
 
+  function updateStockHint() {
+    const val = Number(document.getElementById('fStock').value);
+    const hint = document.getElementById('stockHint');
+    const ss = isNaN(val) ? 'out' : val <= 0 ? 'out' : val <= 10 ? 'low' : 'in';
+    hint.className = 'stock-hint ' + ss;
+    hint.textContent = stockStatusText(ss);
+  }
+
+  async function uploadImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const status = document.getElementById('uploadStatus');
+    status.textContent = 'Uploading...';
+    status.style.color = 'var(--text-dim)';
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await fetch(API + '/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token },
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      document.getElementById('fImg').value = data.url;
+      previewImg();
+      status.textContent = 'Uploaded!';
+      status.style.color = 'var(--success)';
+    } catch (err) {
+      status.textContent = err.message;
+      status.style.color = 'var(--danger)';
+    }
+    input.value = '';
+  }
+
   function addSpecRow(key, val) {
     const div = document.getElementById('specRows');
     const row = document.createElement('div');
@@ -516,10 +966,11 @@
       name: document.getElementById('fName').value,
       price: parseFloat(document.getElementById('fPrice').value),
       img: document.getElementById('fImg').value,
-      stock: document.getElementById('fStock').value,
+      stock: Number(document.getElementById('fStock').value) || 0,
       condition: document.getElementById('fCondition').value,
       badge: document.getElementById('fBadge').value || null,
-      specs
+      specs,
+      shopee: document.getElementById('fShopee').checked
     };
     if (!body.name || !body.price) return alert('Name and price are required');
     const btn = document.getElementById('saveProductBtn');
@@ -549,8 +1000,18 @@
     } catch (err) { alert(err.message); }
   }
 
-  function exportProducts() {
-    window.open(API + '/api/admin/export/products?token=' + token);
+  async function exportProducts() {
+    try {
+      const res = await fetch(API + '/api/admin/export/products', { headers: authHeaders() });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'products-backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) { alert(err.message); }
   }
 
   // ── Orders ─────────────────────────────────────────────────
@@ -558,49 +1019,87 @@
   async function loadOrders() {
     try {
       const res = await fetch(API + '/api/admin/orders', { headers: authHeaders() });
-      if (!res.ok) return;
+      if (!res.ok) {
+        if (res.status === 401) return doLogout();
+        if (res.status === 403) {
+          document.getElementById('ordersBody').innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--danger);padding:40px">Access denied. Owner permissions required.</td></tr>';
+          return;
+        }
+        throw new Error('Failed to load orders');
+      }
       allOrders = await res.json();
       renderOrders();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('ordersBody').innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--danger);padding:40px">Failed to load orders. Please try again.</td></tr>';
+    }
   }
 
   function renderOrders() {
     const search = (document.getElementById('orderSearch').value || '').toLowerCase();
+    const statusFilter = document.getElementById('orderStatusFilter').value;
+    const dateFrom = document.getElementById('orderDateFrom').value;
+    const dateTo = document.getElementById('orderDateTo').value;
+
     let list = allOrders;
     if (search) list = list.filter(o => (o.id || '').toLowerCase().includes(search) || ((o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '')).toLowerCase().includes(search));
+    if (statusFilter) list = list.filter(o => (o.status || 'Pending') === statusFilter);
+    if (dateFrom) list = list.filter(o => o.timestamp && o.timestamp.slice(0, 10) >= dateFrom);
+    if (dateTo) list = list.filter(o => o.timestamp && o.timestamp.slice(0, 10) <= dateTo);
+
     const tbody = document.getElementById('ordersBody');
-    tbody.innerHTML = list.map(o => `
+    tbody.innerHTML = list.map(o => {
+      const eid = escapeHTML(o.id);
+      return `
       <tr>
-        <td style="font-weight:600">${o.id}</td>
-        <td>${o.customer ? (o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
+        <td style="font-weight:600">${eid}</td>
+        <td>${o.customer ? escapeHTML(o.customer.firstName + ' ' + o.customer.lastName) : 'N/A'}</td>
         <td>${o.items ? o.items.length : 0}</td>
         <td style="font-weight:600">${formatPrice(parseFloat(o.total) || 0)}</td>
-        <td>${o.payment || 'N/A'}</td>
+        <td>${escapeHTML(o.payment || 'N/A')}</td>
         <td>
-          <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px 8px;font-size:0.72rem;background:#12122a;border-radius:4px">
+          <select data-order-id="${eid}" data-prev-status="${escapeHTML(o.status||'Pending')}" onchange="confirmStatusChange(this)" style="padding:4px 8px;font-size:0.72rem;background:var(--bg);border-radius:4px">
             ${['Pending','Confirmed','Shipped','Completed'].map(s => `<option value="${s}" ${(o.status||'Pending')===s?'selected':''}>${s}</option>`).join('')}
           </select>
         </td>
         <td>${formatDate(o.timestamp)}</td>
-        <td><button onclick="toggleOrderDetail('${o.id}')" style="color:var(--cyan);font-size:0.72rem">Details</button></td>
+        <td><button onclick="toggleOrderDetail('${eid}')" style="color:var(--cyan);font-size:0.72rem">Details</button></td>
       </tr>
-      <tr id="detail-${o.id}" style="display:none"><td colspan="8">${orderDetailHTML(o)}</td></tr>
-    `).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No orders yet</td></tr>';
+      <tr id="detail-${eid}" style="display:none"><td colspan="8">${orderDetailHTML(o)}</td></tr>`;
+    }).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No orders found</td></tr>';
   }
 
   function orderDetailHTML(o) {
     const c = o.customer || {};
-    const addr = o.shipping || {};
+    const itemTotal = (o.items || []).reduce((sum, i) => sum + (parseFloat(i.price || i.amount || 0) * (i.qty || i.quantity || 1)), 0);
+    const statusClass = 'status-' + (o.status || 'pending').toLowerCase();
+    const shipLabels = { rider: 'Rider Dash', outside: 'Outside Davao', pickup: 'Store Pickup' };
     return `
       <div class="order-detail">
-        <h4>Customer</h4>
-        <p>${c.firstName || ''} ${c.lastName || ''} &bull; ${c.email || ''} &bull; ${c.phone || ''}</p>
-        ${addr.address ? `<p style="margin-top:4px;color:var(--text-dim)">${addr.address}, ${addr.city || ''} ${addr.province || ''} ${addr.zip || ''}</p>` : ''}
-        ${o.notes ? `<p style="margin-top:8px"><strong>Notes:</strong> ${o.notes}</p>` : ''}
-        <h4 style="margin-top:12px">Items</h4>
-        <div class="order-items">
-          ${(o.items || []).map(i => `<div class="order-item"><span>${i.name || i.product || 'Item'} x${i.qty || i.quantity || 1}</span><span>${formatPrice(parseFloat(i.price || i.amount || 0) * (i.qty || i.quantity || 1))}</span></div>`).join('')}
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+          <span class="status ${statusClass}" style="font-size:0.75rem">${escapeHTML(o.status || 'Pending')}</span>
+          <span style="font-size:0.78rem;color:var(--text-dim)">Placed: ${formatDate(o.timestamp)}</span>
+          <span style="font-size:0.78rem;color:var(--text-dim)">Payment: <strong>${escapeHTML(o.payment || 'N/A')}</strong></span>
+          <span style="font-size:0.78rem;color:var(--text-dim)">Shipping: <strong>${escapeHTML(shipLabels[o.shipping] || o.shipping || 'N/A')}</strong></span>
         </div>
+        <div class="order-detail-grid">
+          <div class="od-section">
+            <h4>Customer Info</h4>
+            <p><strong>${escapeHTML((c.firstName || '') + ' ' + (c.lastName || ''))}</strong></p>
+            <p>${escapeHTML(c.email || '')}</p>
+            <p>${escapeHTML(c.phone || '')}</p>
+            ${c.notes ? `<p style="margin-top:8px"><strong>Notes:</strong> ${escapeHTML(c.notes)}</p>` : ''}
+          </div>
+          <div class="od-section">
+            <h4>Shipping Address</h4>
+            ${c.street ? `<p>${escapeHTML(c.street)}</p><p>${escapeHTML(c.city || '')}, ${escapeHTML(c.province || '')} ${escapeHTML(c.zip || '')}</p>` : '<p style="color:var(--text-dim)">No shipping info</p>'}
+          </div>
+        </div>
+        <h4 style="font-family:'Montserrat',sans-serif;font-size:0.82rem;margin:16px 0 8px;color:var(--purple)">Items</h4>
+        <div class="order-items">
+          ${(o.items || []).map(i => `<div class="order-item"><span>${escapeHTML(i.name || i.product || 'Item')} x${i.qty || i.quantity || 1}</span><span>${formatPrice(parseFloat(i.price || i.amount || 0) * (i.qty || i.quantity || 1))}</span></div>`).join('')}
+        </div>
+        <div class="order-total">Total: ${formatPrice(parseFloat(o.total) || itemTotal)}</div>
       </div>
     `;
   }
@@ -610,12 +1109,41 @@
     if (row) row.style.display = row.style.display === 'none' ? '' : 'none';
   }
 
-  async function updateOrderStatus(id, status) {
+  function confirmStatusChange(select) {
+    const id = select.dataset.orderId;
+    const prev = select.dataset.prevStatus;
+    const next = select.value;
+    if (next === prev) return;
+    if (!confirm(`Change order ${id} status from "${prev}" to "${next}"?`)) {
+      select.value = prev;
+      return;
+    }
+    updateOrderStatus(id, next, select);
+  }
+
+  async function updateOrderStatus(id, status, select) {
     try {
-      await fetch(`${API}/api/admin/orders/${id}/status`, {
+      const res = await fetch(`${API}/api/admin/orders/${id}/status`, {
         method: 'PUT', headers: authHeaders(), body: JSON.stringify({ status })
       });
-    } catch (err) { alert('Failed to update status'); }
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Failed');
+      // Update local data
+      const order = allOrders.find(o => o.id === id);
+      if (order) order.status = status;
+      if (select) select.dataset.prevStatus = status;
+      showAdminToast('Status updated to ' + status, 'success');
+    } catch (err) {
+      alert('Failed to update status: ' + err.message);
+      if (select) select.value = select.dataset.prevStatus;
+    }
+  }
+
+  function showAdminToast(msg, type) {
+    const toast = document.getElementById('adminToast');
+    toast.textContent = msg;
+    toast.className = 'admin-toast ' + (type || 'success') + ' show';
+    setTimeout(() => toast.classList.remove('show'), 2500);
   }
 
   // ── Contacts ───────────────────────────────────────────────
@@ -636,10 +1164,10 @@
     const tbody = document.getElementById('contactsBody');
     tbody.innerHTML = list.map(c => `
       <tr>
-        <td style="font-weight:500">${c.name}</td>
-        <td><a href="mailto:${c.email}">${c.email}</a></td>
-        <td>${c.phone || '-'}</td>
-        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.message}</td>
+        <td style="font-weight:500">${escapeHTML(c.name)}</td>
+        <td><a href="mailto:${escapeHTML(c.email)}">${escapeHTML(c.email)}</a></td>
+        <td>${escapeHTML(c.phone || '-')}</td>
+        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHTML(c.message)}</td>
         <td>${formatDate(c.timestamp)}</td>
       </tr>
     `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:40px">No contacts yet</td></tr>';
@@ -655,22 +1183,6 @@
     if (!ts) return '-';
     const d = new Date(ts);
     return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  // ── Export fix (token via header not query) ────────────────
-  // Override export to use auth header
-  async function exportProducts() {
-    try {
-      const res = await fetch(API + '/api/admin/export/products', { headers: authHeaders() });
-      if (!res.ok) throw new Error('Export failed');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'products-backup.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) { alert(err.message); }
   }
 
   // ── Init ───────────────────────────────────────────────────

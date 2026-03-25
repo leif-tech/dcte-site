@@ -89,6 +89,20 @@
     .success-msg p{font-size:0.85rem;color:#718096;line-height:1.6;margin-bottom:16px}
 
     .warning{font-size:0.75rem;color:#e53e3e;font-weight:600;margin-top:10px;text-align:center}
+
+    /* Guide popup */
+    .guide-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;padding:20px}
+    .guide-overlay.show{display:flex}
+    .guide-box{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:32px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+    .guide-box h3{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:12px}
+    .guide-box p{font-size:0.85rem;color:#4a5568;line-height:1.7;margin-bottom:6px}
+    .guide-box .steps{text-align:left;margin:16px 0;font-size:0.82rem;color:#4a5568;line-height:1.8}
+    .guide-box .steps b{color:var(--navy)}
+    .guide-box .got-it{margin-top:16px;padding:12px 36px;background:var(--grad);color:#fff;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:opacity .2s}
+    .guide-box .got-it:hover{opacity:0.9}
+
+    .field-error{border-color:#e53e3e !important;box-shadow:0 0 0 3px rgba(229,62,62,0.1) !important}
+    .error-msg{font-size:0.72rem;color:#e53e3e;margin-top:3px;font-weight:600}
   </style>
 </head>
 <body>
@@ -234,9 +248,33 @@
     </div>
   </div>
 
+  <!-- Guide popup -->
+  <div class="guide-overlay" id="checkoutGuide">
+    <div class="guide-box">
+      <h3>How to Complete Your Order</h3>
+      <div class="steps">
+        <b>1.</b> Fill in your billing &amp; shipping details<br>
+        <b>2.</b> Choose your shipping method<br>
+        <b>3.</b> Select a payment method and scan the QR code<br>
+        <b>4.</b> Place your order, then send your payment screenshot via Messenger
+      </div>
+      <p style="font-size:0.78rem;color:#718096">We'll confirm your order once payment is verified.</p>
+      <button class="got-it" onclick="dismissGuide()">Got It</button>
+    </div>
+  </div>
+
   <script>
     const params = new URLSearchParams(window.location.search);
     const fmt = p => '\u20B1' + p.toLocaleString('en-PH');
+
+    // One-time checkout guide
+    if (!localStorage.getItem('dcte_guide_checkout_seen')) {
+      document.getElementById('checkoutGuide').classList.add('show');
+    }
+    function dismissGuide() {
+      localStorage.setItem('dcte_guide_checkout_seen', '1');
+      document.getElementById('checkoutGuide').classList.remove('show');
+    }
 
     // Support multi-item cart checkout
     let cartItems = [];
@@ -249,7 +287,8 @@
       cartItems = [{ name: params.get('product') || 'Product', price: parseInt(params.get('price')) || 0, qty: 1 }];
     }
 
-    const totalPrice = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+    const subtotalPrice = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+    let shippingCost = 79; // Default: Rider Dash starting at P79
     const orderItemsEl = document.getElementById('orderItems');
     cartItems.forEach(item => {
       const row = document.createElement('div');
@@ -257,16 +296,23 @@
       row.innerHTML = `<div class="item-info"><div class="item-name">${item.name}</div><div class="item-qty">x ${item.qty}</div></div><span class="item-price">${fmt(item.price * item.qty)}</span>`;
       orderItemsEl.appendChild(row);
     });
-    document.getElementById('subtotal').textContent = fmt(totalPrice);
-    document.getElementById('totalPrice').textContent = fmt(totalPrice);
+    document.getElementById('subtotal').textContent = fmt(subtotalPrice);
+    updateTotal();
     document.title = 'Checkout - DCTE';
+
+    function updateTotal() {
+      document.getElementById('totalPrice').textContent = fmt(subtotalPrice + shippingCost);
+    }
 
     function selectShip(el, type) {
       document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
       el.classList.add('selected');
       el.querySelector('input').checked = true;
       const labels = { rider: 'Rider Dash (from \u20B179)', outside: 'Varies by location', pickup: 'Free - Store Pickup' };
-      document.getElementById('shippingLabel').textContent = labels[type];
+      const costs = { rider: 79, outside: 0, pickup: 0 };
+      shippingCost = costs[type];
+      document.getElementById('shippingLabel').textContent = labels[type] + (costs[type] > 0 ? '' : '');
+      updateTotal();
     }
 
     function switchTab(id, btn) {
@@ -276,8 +322,37 @@
       document.getElementById('tab-' + id).classList.add('active');
     }
 
+    function clearFieldError(el) {
+      el.classList.remove('field-error');
+      const msg = el.parentElement.querySelector('.error-msg');
+      if (msg) msg.remove();
+    }
+
+    function showFieldError(el, text) {
+      el.classList.add('field-error');
+      el.focus();
+      if (!el.parentElement.querySelector('.error-msg')) {
+        const msg = document.createElement('div');
+        msg.className = 'error-msg';
+        msg.textContent = text;
+        el.parentElement.appendChild(msg);
+      }
+    }
+
+    let isSubmitting = false;
+
     function placeOrder(e) {
       e.preventDefault();
+
+      // Prevent double submit
+      if (isSubmitting) return;
+
+      const btn = document.getElementById('placeBtn');
+      if (btn.disabled) return;
+
+      // Clear previous errors
+      document.querySelectorAll('.field-error').forEach(el => clearFieldError(el));
+
       const fname = document.getElementById('fname').value.trim();
       const lname = document.getElementById('lname').value.trim();
       const street = document.getElementById('street').value.trim();
@@ -290,34 +365,60 @@
         return;
       }
 
-      const btn = document.getElementById('placeBtn');
+      // Email validation
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(email)) {
+        showFieldError(document.getElementById('email'), 'Please enter a valid email address');
+        return;
+      }
+
+      // Phone validation (Philippine format)
+      const phoneClean = phone.replace(/[\s\-]/g, '');
+      const phoneRe = /^(\+?63|0)9\d{9}$/;
+      if (!phoneRe.test(phoneClean)) {
+        showFieldError(document.getElementById('phone'), 'Please enter a valid PH number (09XX XXX XXXX)');
+        return;
+      }
+
+      isSubmitting = true;
       btn.textContent = 'Placing Order...';
       btn.disabled = true;
 
       const shipEl = document.querySelector('.ship-option.selected input');
+      const orderTotal = subtotalPrice + shippingCost;
       const order = {
         customer: { firstName: fname, lastName: lname, street, city: document.getElementById('city').value, province: document.getElementById('province').value, zip: document.getElementById('zip').value, phone, email, notes: document.getElementById('notes').value },
         items: cartItems,
         shipping: shipEl ? shipEl.value : 'pickup',
         payment: document.querySelector('.pay-tab.active')?.textContent || 'GCash',
-        total: totalPrice
+        total: orderTotal
       };
 
       fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })
-        .then(r => r.json())
-        .then(d => {
+        .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+        .then(({ ok, data }) => {
+          if (!ok || !data.success) {
+            throw new Error(data.error || 'Order could not be placed');
+          }
           // Clear cart in localStorage
           try { localStorage.removeItem('dcte_cart'); } catch(e) {}
+          isSubmitting = false;
           btn.style.display = 'none';
           document.getElementById('successMsg').classList.add('show');
           document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
         })
-        .catch(() => {
+        .catch((err) => {
           btn.textContent = 'Place Order';
           btn.disabled = false;
-          alert('Order could not be placed. Please try again or message us on Facebook.');
+          isSubmitting = false;
+          alert(err.message || 'Order could not be placed. Please try again or message us on Facebook.');
         });
     }
+
+    // Clear error on input
+    document.querySelectorAll('#orderForm input, #orderForm select, #orderForm textarea').forEach(el => {
+      el.addEventListener('input', () => clearFieldError(el));
+    });
   </script>
 </body>
 </html>
