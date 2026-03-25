@@ -105,10 +105,9 @@ function ownerOnly(req, res, next) {
 
 // ── Public API ───────────────────────────────────────────────────
 
-// GET /api/products — public storefront (hides out-of-stock products)
+// GET /api/products — public storefront
 app.get('/api/products', (req, res) => {
   const products = readJSON('products.json')
-    .filter(p => deriveStockStatus(p.stock) !== 'out')
     .map(p => ({
       ...p,
       stockStatus: deriveStockStatus(p.stock)

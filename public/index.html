@@ -460,7 +460,7 @@
     .stock-badge{position:absolute;top:10px;right:10px;padding:3px 8px;border-radius:4px;font-size:0.58rem;font-weight:600;z-index:1}
     .stock-in{background:#dcfce7;color:#16a34a}
     .stock-low{background:#fef3c7;color:#d97706}
-    .stock-contact{background:#f3f4f6;color:#6b7280}
+    .stock-preorder{background:#ede9fe;color:#7c3aed}
     .cond-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.6rem;font-weight:600;margin-bottom:4px}
     .cond-new{background:#eff6ff;color:#2563eb}
     .cond-preowned{background:#fef3c7;color:#d97706}
@@ -1628,8 +1628,8 @@
       const meta=productMeta[idx]||{stock:'in',condition:'new',badge:null};
       const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'';
       const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
-      const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-contact';
-      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' in stock':'In Stock'):meta.stock==='low'?(meta.stockQty!==null?'Only '+meta.stockQty+' left! Grab Now':'Grab Now!'):'Contact Us';
+      const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-preorder';
+      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' on-hand':'On-Hand'):meta.stock==='low'?(meta.stockQty!==null?'Only '+meta.stockQty+' left! Grab Now':'Grab Now!'):'Pre-Order';
       const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
       const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
       const wishIcon=isWished(idx)?'&#9829;':'&#9825;';
@@ -2049,9 +2049,9 @@
       // Stock
       html+=`<tr><td>Stock</td>${prods.map(x=>{
         const s=x.meta.stock;const qty=x.meta.stockQty;
-        if(s==='in')return'<td><span style="color:#16a34a;font-weight:600">'+(qty!==null?qty+' in stock':'In Stock')+'</span></td>';
+        if(s==='in')return'<td><span style="color:#16a34a;font-weight:600">'+(qty!==null?qty+' on-hand':'On-Hand')+'</span></td>';
         if(s==='low')return'<td><span style="color:#d97706;font-weight:600">'+(qty!==null?qty+' left':'Low Stock')+'</span></td>';
-        return'<td><span style="color:#94a3b8">Contact Us</span></td>';
+        return'<td><span style="color:#7c3aed;font-weight:600">Pre-Order</span></td>';
       }).join('')}</tr>`;
 
       // Specs section
