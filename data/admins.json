@@ -1,7 +1,14 @@
 [
   {
+    "username": "kenny",
+    "password": "$2b$10$PCFywAN.7tJD6n9UCW2Iq.sSbSo0JZAoNzdcNOLPEaKEHS8bB8lkm",
+    "role": "owner",
+    "createdAt": "2026-03-25T02:56:24.870Z"
+  },
+  {
     "username": "admin",
-    "password": "$2b$10$4tSn2lCKGdgrfrFoZ93y/.v7VvK/kBAkak/k9e3d9BENnyeAN9RLG",
-    "createdAt": "2026-03-24T13:49:44.400Z"
+    "password": "$2b$10$U4gwnJdqRXJB7JXVXZlqbOOib2v8AHCyjJd/yemPct.PwaUrsCSzS",
+    "role": "employee",
+    "createdAt": "2026-03-25T02:56:28.563Z"
   }
 ]
