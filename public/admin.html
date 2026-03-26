@@ -208,10 +208,14 @@
     }
 
     /* Trade-in editor */
-    .ti-cond-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
-    .ti-cond-row label{font-size:0.75rem;font-weight:600;color:var(--text);min-width:90px;font-family:'Montserrat',sans-serif}
-    .ti-cond-row input[type="number"]{max-width:80px;text-align:center}
-    .ti-cond-row .ti-cond-label-input{flex:1;font-size:0.78rem}
+    .ti-cond-row{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg);border-radius:10px;border:1px solid var(--border)}
+    .ti-cond-key{font-size:0.72rem;font-weight:700;color:var(--purple);min-width:70px;font-family:'Montserrat',sans-serif;text-transform:uppercase;letter-spacing:0.3px}
+    .ti-cond-row .ti-cond-label-input{flex:1;font-size:0.8rem;min-width:0}
+    .ti-cond-mult{display:flex;align-items:center;gap:4px;flex-shrink:0}
+    .ti-cond-mult input[type="number"]{width:64px;text-align:center;font-weight:600}
+    .ti-cond-mult span{font-size:0.75rem;color:var(--text-dim);font-weight:600}
+    .ti-cond-row .ti-remove{color:var(--danger);font-size:1.1rem;padding:4px 6px;cursor:pointer;border-radius:4px;transition:background 0.2s;flex-shrink:0}
+    .ti-cond-row .ti-remove:hover{background:rgba(239,68,68,0.1)}
     .ti-type-tab{padding:10px 18px;font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:600;color:var(--text-dim);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:6px}
     .ti-type-tab:hover{color:var(--text)}
     .ti-type-tab.active{color:var(--purple);border-bottom-color:var(--purple)}
@@ -223,6 +227,14 @@
     .ti-model-row input[type="number"]{max-width:110px;flex:1}
     .ti-model-row .remove-model{color:var(--danger);font-size:1.1rem;padding:4px 6px;cursor:pointer;border-radius:4px;transition:background 0.2s}
     .ti-model-row .remove-model:hover{background:rgba(239,68,68,0.1)}
+    .ti-help{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(124,58,237,0.1);color:var(--purple);font-size:0.65rem;font-weight:700;cursor:help;position:relative;flex-shrink:0;font-family:'Montserrat',sans-serif}
+    .ti-help:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:8px 12px;border-radius:8px;font-size:0.72rem;font-weight:400;white-space:normal;width:220px;text-align:center;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.15);line-height:1.4;font-family:'Open Sans',sans-serif}
+    .ti-help:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--navy);z-index:101}
+    @media(max-width:768px){
+      .ti-cond-row{flex-wrap:wrap}
+      .ti-cond-key{min-width:100%;margin-bottom:-4px}
+      .ti-help:hover::after{left:auto;right:0;transform:none}
+    }
 
     /* Admin toast */
     .admin-toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;color:#fff;font-size:0.85rem;font-weight:600;font-family:'Montserrat',sans-serif;box-shadow:0 6px 24px rgba(0,0,0,0.15);transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
@@ -421,26 +433,42 @@
     <!-- Trade-In Estimator Settings -->
     <div class="tab-content" id="tab-tradein">
       <div class="toolbar">
-        <h3 style="font-family:'Montserrat',sans-serif;font-size:0.95rem;color:var(--navy);margin:0">Trade-In Estimator Settings</h3>
+        <div>
+          <h3 style="font-family:'Montserrat',sans-serif;font-size:0.95rem;color:var(--navy);margin:0">Trade-In Estimator Settings</h3>
+          <p style="font-size:0.72rem;color:var(--text-dim);margin-top:2px">Manage the trade-in estimator shown to customers. Changes apply after saving.</p>
+        </div>
         <span class="spacer"></span>
-        <button class="btn btn-primary" id="saveTradeinBtn" onclick="saveTradein()">Save All Changes</button>
+        <span id="tradeinUnsaved" style="display:none;font-size:0.72rem;color:var(--warning);font-weight:600;font-family:'Montserrat',sans-serif">Unsaved changes</span>
+        <button class="btn btn-primary" id="saveTradeinBtn" onclick="saveTradein()">Save &amp; Publish</button>
       </div>
 
       <!-- Condition Multipliers -->
-      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:20px;box-shadow:var(--shadow)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Condition Multipliers</h4>
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Condition Multipliers</h4>
+            <span class="ti-help" data-tip="Conditions determine how much of the base value a customer gets. For example, 100% for Excellent condition, 70% for Good, etc.">?</span>
+          </div>
           <button class="btn btn-secondary" onclick="addCondition()" style="font-size:0.72rem">+ Add Condition</button>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:14px">These percentages are applied to the base value range. For example, 70% means a customer gets 70% of the listed range.</p>
-        <div id="conditionRows" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px"></div>
+        <p style="font-size:0.75rem;color:var(--text-dim);margin-bottom:16px">Set how much of the base value a customer gets based on the item's condition. Customers choose these when estimating their trade-in.</p>
+        <div style="display:flex;gap:8px;padding:0 18px 8px;align-items:center">
+          <span style="min-width:70px;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px">Key</span>
+          <span style="flex:1;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px;display:flex;align-items:center;gap:4px">Customer-Facing Label <span class="ti-help" data-tip="This is what the customer sees in the Condition dropdown when estimating their trade-in value." style="width:14px;height:14px;font-size:0.55rem">?</span></span>
+          <span style="width:90px;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px;text-align:center;display:flex;align-items:center;gap:4px;justify-content:center">Value % <span class="ti-help" data-tip="Percentage of the base value range. 100% = full value, 70% = 70% of range, etc." style="width:14px;height:14px;font-size:0.55rem">?</span></span>
+          <span style="width:30px"></span>
+        </div>
+        <div id="conditionRows" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
 
       <!-- Component Types -->
-      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:24px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Component Types &amp; Models</h4>
-          <button class="btn btn-secondary" onclick="addTradeType()" style="font-size:0.72rem">+ Add Component Type</button>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px"><h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Component Types &amp; Models</h4><span class="ti-help" data-tip="Each component type is a category in the estimator (e.g. GPU, CPU). Models are specific items with trade-in value ranges.">?</span></div>
+            <p style="font-size:0.72rem;color:var(--text-dim);margin:0">Each type appears as a selectable button in the estimator. Add models with min/max trade-in values in PHP.</p>
+          </div>
+          <button class="btn btn-secondary" onclick="addTradeType()" style="font-size:0.72rem;flex-shrink:0;margin-left:16px">+ Add Component Type</button>
         </div>
         <div id="tradeTypeTabs" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;flex-wrap:nowrap"></div>
         <div id="tradeTypeEditor"></div>
@@ -462,6 +490,16 @@
     <h3>Managing Orders</h3>
     <p>Filter orders by status, date, or search by customer name. Click "Details" to expand order info. Use the dropdown to update order status — you'll be asked to confirm before saving.</p>
     <button class="got-it" onclick="dismissAdminGuide('orders')">Got It</button>
+  </div>
+</div>
+<div class="guide-overlay" id="guideTradein">
+  <div class="guide-box">
+    <h3>Trade-In Estimator Settings</h3>
+    <p>This controls the Trade-In Estimator that customers see on your website.</p>
+    <p><strong>Conditions</strong> &mdash; Set how much value a customer gets based on their item's condition (e.g. Excellent = 100%, Good = 70%).</p>
+    <p><strong>Component Types</strong> &mdash; Manage the categories customers can choose from (GPU, CPU, RAM, etc.). Each type has models with min/max trade-in values.</p>
+    <p>Changes take effect on the live site immediately after clicking <strong>Save &amp; Publish</strong>.</p>
+    <button class="got-it" onclick="dismissAdminGuide('tradein')">Got It</button>
   </div>
 </div>
 
@@ -768,7 +806,7 @@
     if (name === 'orders') { loadOrders(); showAdminGuideOnce('orders'); }
     if (name === 'contacts') loadContacts();
     if (name === 'customers') loadCustomers();
-    if (name === 'tradein') loadTradein();
+    if (name === 'tradein') { loadTradein(); showAdminGuideOnce('tradein'); }
   }
 
   function showAdminGuideOnce(tab) {
@@ -1603,6 +1641,7 @@
   // ── Trade-In ──────────────────────────────────────────────
 
   let tradeinData = { conditions: {}, types: {} };
+  let tradeinOriginal = '';
   let activeTradeType = null;
 
   async function loadTradein() {
@@ -1612,26 +1651,41 @@
       tradeinData = await res.json();
       if (!tradeinData.conditions) tradeinData.conditions = {};
       if (!tradeinData.types) tradeinData.types = {};
+      tradeinOriginal = JSON.stringify(tradeinData);
       renderTradeinConditions();
       renderTradeinTypes();
+      checkTradeinUnsaved();
     } catch (err) { console.error(err); }
   }
+
+  function markTradeinDirty() {
+    checkTradeinUnsaved();
+  }
+
+  function checkTradeinUnsaved() {
+    const changed = JSON.stringify(tradeinData) !== tradeinOriginal;
+    document.getElementById('tradeinUnsaved').style.display = changed ? '' : 'none';
+  }
+
+  // ── Conditions ──
 
   function renderTradeinConditions() {
     const wrap = document.getElementById('conditionRows');
     const condKeys = Object.keys(tradeinData.conditions);
     if (!condKeys.length) {
-      wrap.innerHTML = '<p style="color:var(--text-dim);font-size:0.8rem">No conditions defined. Click "+ Add Condition" to create one.</p>';
+      wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:0.82rem">No conditions defined yet. Click <strong>+ Add Condition</strong> above to create one.</div>';
       return;
     }
     wrap.innerHTML = condKeys.map(key => {
       const c = tradeinData.conditions[key];
       return `<div class="ti-cond-row">
-        <label>${escapeHTML(key)}</label>
-        <input type="text" class="ti-cond-label-input" value="${escapeHTML(c.label || '')}" data-cond-key="${escapeHTML(key)}" data-field="label" placeholder="Description..." onchange="updateCondField(this)">
-        <input type="number" value="${Math.round((c.multiplier || 0) * 100)}" min="0" max="100" step="1" data-cond-key="${escapeHTML(key)}" data-field="multiplier" onchange="updateCondField(this)">
-        <span style="font-size:0.75rem;color:var(--text-dim)">%</span>
-        <button class="remove-model" onclick="removeCondition('${escapeHTML(key)}')" title="Remove">&times;</button>
+        <span class="ti-cond-key">${escapeHTML(key)}</span>
+        <input type="text" class="ti-cond-label-input" value="${escapeHTML(c.label || '')}" data-cond-key="${escapeHTML(key)}" data-field="label" placeholder="Description shown to customer..." oninput="updateCondField(this)">
+        <div class="ti-cond-mult">
+          <input type="number" value="${Math.round((c.multiplier || 0) * 100)}" min="0" max="100" step="1" data-cond-key="${escapeHTML(key)}" data-field="multiplier" oninput="updateCondField(this)">
+          <span>%</span>
+        </div>
+        <button class="ti-remove" onclick="removeCondition('${escapeHTML(key)}')" title="Remove condition">&times;</button>
       </div>`;
     }).join('');
   }
@@ -1645,34 +1699,39 @@
     } else {
       tradeinData.conditions[key].label = el.value;
     }
+    markTradeinDirty();
   }
 
   function addCondition() {
-    const key = prompt('Enter a short key for the condition (e.g. "excellent", "good", "fair", "broken"):');
+    const key = prompt('Enter a short key (e.g. "excellent", "good", "fair", "broken"):');
     if (!key) return;
     const clean = key.toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (!clean) return alert('Invalid key');
+    if (!clean) return alert('Invalid key - use only letters and numbers');
     if (tradeinData.conditions[clean]) return alert('Condition "' + clean + '" already exists');
-    const label = prompt('Enter the description shown to customers (e.g. "Good: Works well, minor wear"):');
+    const label = prompt('Enter the label customers will see (e.g. "Good: Works well, minor wear"):');
     if (!label) return;
-    const pct = prompt('Enter the percentage multiplier (e.g. 70 for 70%):', '50');
+    const pct = prompt('Value percentage (e.g. 70 means customer gets 70% of base value):', '50');
     if (pct === null) return;
     const mult = Math.max(0, Math.min(100, parseInt(pct) || 0));
     tradeinData.conditions[clean] = { label, multiplier: mult / 100 };
     renderTradeinConditions();
+    markTradeinDirty();
   }
 
   function removeCondition(key) {
-    if (!confirm(`Remove condition "${key}"?`)) return;
+    if (!confirm('Remove condition "' + key + '"? This affects how customers estimate values.')) return;
     delete tradeinData.conditions[key];
     renderTradeinConditions();
+    markTradeinDirty();
   }
+
+  // ── Component Types ──
 
   function renderTradeinTypes() {
     const tabsWrap = document.getElementById('tradeTypeTabs');
     const typeKeys = Object.keys(tradeinData.types);
     if (!typeKeys.length) {
-      tabsWrap.innerHTML = '<span style="padding:10px;color:var(--text-dim);font-size:0.8rem">No component types. Click "+ Add Component Type" to start.</span>';
+      tabsWrap.innerHTML = '<div style="padding:16px;color:var(--text-dim);font-size:0.82rem;text-align:center;width:100%">No component types yet. Click <strong>+ Add Component Type</strong> to get started.</div>';
       document.getElementById('tradeTypeEditor').innerHTML = '';
       return;
     }
@@ -1682,7 +1741,8 @@
     tabsWrap.innerHTML = typeKeys.map(key => {
       const t = tradeinData.types[key];
       const active = key === activeTradeType ? ' active' : '';
-      return `<div class="ti-type-tab${active}" onclick="selectTradeType('${escapeHTML(key)}')">${t.icon || ''} ${escapeHTML(t.label || key)}</div>`;
+      const count = (t.models || []).length;
+      return `<div class="ti-type-tab${active}" onclick="selectTradeType('${escapeHTML(key)}')">${t.icon || ''} ${escapeHTML(t.label || key)} <span style="font-size:0.62rem;color:var(--text-dim);font-weight:400">(${count})</span></div>`;
     }).join('');
     renderTradeTypeEditor();
   }
@@ -1702,39 +1762,42 @@
       wrap.innerHTML = '';
       return;
     }
-    const t = tradeinData.types[activeTradeType];
+    const k = activeTradeType;
+    const t = tradeinData.types[k];
     const models = t.models || [];
+    const noModels = !models.length ? '<div style="padding:24px;text-align:center;color:var(--text-dim);font-size:0.82rem">No models yet. Click <strong>+ Add Model</strong> to add trade-in items for this category.</div>' : '';
     wrap.innerHTML = `
       <div class="ti-type-header">
         <div class="form-group" style="margin:0">
-          <label style="font-size:0.68rem;margin-bottom:2px">Key</label>
-          <input type="text" value="${escapeHTML(activeTradeType)}" style="max-width:120px;background:var(--bg);font-size:0.78rem" disabled>
+          <label style="font-size:0.68rem;margin-bottom:2px;display:flex;align-items:center;gap:4px">Key <span class="ti-help" data-tip="Internal identifier. Set when the type is created and cannot be changed." style="width:14px;height:14px;font-size:0.55rem">?</span></label>
+          <input type="text" value="${escapeHTML(k)}" style="max-width:120px;background:var(--bg);font-size:0.78rem;color:var(--text-dim)" disabled>
+        </div>
+        <div class="form-group" style="margin:0;min-width:180px">
+          <label style="font-size:0.68rem;margin-bottom:2px;display:flex;align-items:center;gap:4px">Display Label <span class="ti-help" data-tip="The name customers see in the estimator, e.g. 'GPU / Video Card'" style="width:14px;height:14px;font-size:0.55rem">?</span></label>
+          <input type="text" value="${escapeHTML(t.label || '')}" oninput="tradeinData.types['${k}'].label=this.value;markTradeinDirty()" onchange="renderTradeinTypes()" style="font-size:0.78rem" placeholder="e.g. GPU / Video Card">
         </div>
         <div class="form-group" style="margin:0">
-          <label style="font-size:0.68rem;margin-bottom:2px">Label</label>
-          <input type="text" value="${escapeHTML(t.label || '')}" onchange="tradeinData.types['${escapeHTML(activeTradeType)}'].label=this.value;renderTradeinTypes()" style="font-size:0.78rem">
-        </div>
-        <div class="form-group" style="margin:0">
-          <label style="font-size:0.68rem;margin-bottom:2px">Icon (emoji)</label>
-          <input type="text" value="${t.icon || ''}" onchange="tradeinData.types['${escapeHTML(activeTradeType)}'].icon=this.value;renderTradeinTypes()" style="max-width:70px;text-align:center;font-size:1rem">
+          <label style="font-size:0.68rem;margin-bottom:2px;display:flex;align-items:center;gap:4px">Icon <span class="ti-help" data-tip="An emoji shown next to the label in the estimator. Copy-paste any emoji here." style="width:14px;height:14px;font-size:0.55rem">?</span></label>
+          <input type="text" value="${t.icon || ''}" oninput="tradeinData.types['${k}'].icon=this.value;markTradeinDirty()" onchange="renderTradeinTypes()" style="max-width:60px;text-align:center;font-size:1.1rem" placeholder="emoji">
         </div>
         <span style="flex:1"></span>
-        <button class="btn btn-danger" onclick="deleteTradeType('${escapeHTML(activeTradeType)}')" style="font-size:0.72rem;padding:6px 14px">Delete Type</button>
+        <button class="btn btn-danger" onclick="deleteTradeType('${k}')" style="font-size:0.72rem;padding:6px 14px;align-self:flex-end">Delete Type</button>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600;color:var(--text)">${models.length} model(s)</span>
+        <span class="ti-help" data-tip="Each model is a selectable option under this type. Set a min and max trade-in value in PHP for each." style="width:15px;height:15px;font-size:0.58rem">?</span>
         <span style="flex:1"></span>
         <button class="btn btn-secondary" onclick="addTradeModel()" style="font-size:0.72rem">+ Add Model</button>
       </div>
-      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
-        <div style="display:flex;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:4px">
-          <span style="flex:2;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Model Name</span>
-          <span style="max-width:110px;flex:1;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Min Value (PHP)</span>
-          <span style="max-width:110px;flex:1;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Max Value (PHP)</span>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
+        ${models.length ? `<div style="display:flex;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:4px">
+          <span style="flex:2;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px">Model / Series Name</span>
+          <span style="max-width:110px;flex:1;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px">Min Value (PHP)</span>
+          <span style="max-width:110px;flex:1;font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif;letter-spacing:0.5px">Max Value (PHP)</span>
           <span style="width:30px"></span>
-        </div>
+        </div>` : ''}
         <div id="tradeModelRows">
-          ${models.map((m, i) => tradeModelRowHTML(i, m)).join('')}
+          ${models.map((m, i) => tradeModelRowHTML(i, m)).join('') || noModels}
         </div>
       </div>
     `;
@@ -1742,10 +1805,10 @@
 
   function tradeModelRowHTML(idx, model) {
     return `<div class="ti-model-row" data-model-idx="${idx}">
-      <input type="text" value="${escapeHTML(model.name || '')}" onchange="updateTradeModel(${idx},'name',this.value)" placeholder="Model name...">
-      <input type="number" value="${model.val ? model.val[0] : 0}" min="0" step="100" onchange="updateTradeModel(${idx},'low',this.value)" placeholder="Min">
-      <input type="number" value="${model.val ? model.val[1] : 0}" min="0" step="100" onchange="updateTradeModel(${idx},'high',this.value)" placeholder="Max">
-      <button class="remove-model" onclick="removeTradeModel(${idx})" title="Remove">&times;</button>
+      <input type="text" value="${escapeHTML(model.name || '')}" oninput="updateTradeModel(${idx},'name',this.value)" placeholder="e.g. RTX 4090, Ryzen 7 5800X...">
+      <input type="number" value="${model.val ? model.val[0] : 0}" min="0" step="100" oninput="updateTradeModel(${idx},'low',this.value)" placeholder="Min">
+      <input type="number" value="${model.val ? model.val[1] : 0}" min="0" step="100" oninput="updateTradeModel(${idx},'high',this.value)" placeholder="Max">
+      <button class="remove-model" onclick="removeTradeModel(${idx})" title="Remove model">&times;</button>
     </div>`;
   }
 
@@ -1756,65 +1819,81 @@
     if (field === 'name') model.name = value;
     else if (field === 'low') model.val[0] = parseInt(value) || 0;
     else if (field === 'high') model.val[1] = parseInt(value) || 0;
+    markTradeinDirty();
   }
 
   function addTradeModel() {
     if (!tradeinData.types[activeTradeType]) return;
     tradeinData.types[activeTradeType].models.push({ name: '', val: [0, 0] });
     renderTradeTypeEditor();
-    // Focus the new row's name input
     const rows = document.querySelectorAll('#tradeModelRows .ti-model-row');
     const last = rows[rows.length - 1];
     if (last) last.querySelector('input[type="text"]').focus();
+    markTradeinDirty();
   }
 
   function removeTradeModel(idx) {
     if (!tradeinData.types[activeTradeType]) return;
     const m = tradeinData.types[activeTradeType].models[idx];
-    if (m && m.name && !confirm(`Remove model "${m.name}"?`)) return;
+    if (m && m.name && !confirm('Remove "' + m.name + '"?')) return;
     tradeinData.types[activeTradeType].models.splice(idx, 1);
     renderTradeTypeEditor();
+    markTradeinDirty();
   }
 
   function addTradeType() {
     const key = prompt('Enter a short key for the component type (e.g. "ssd", "laptop", "keyboard"):');
     if (!key) return;
     const clean = key.toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (!clean) return alert('Invalid key');
+    if (!clean) return alert('Invalid key - use only letters and numbers');
     if (tradeinData.types[clean]) return alert('Type "' + clean + '" already exists');
     const label = prompt('Enter the display label (e.g. "SSD / Storage", "Laptop"):');
     if (!label) return;
     tradeinData.types[clean] = { label, icon: '', models: [] };
     activeTradeType = clean;
     renderTradeinTypes();
+    markTradeinDirty();
   }
 
   function deleteTradeType(key) {
     const t = tradeinData.types[key];
     if (!t) return;
     const modelCount = (t.models || []).length;
-    if (!confirm(`Delete "${t.label || key}" and all ${modelCount} model(s)?`)) return;
+    if (!confirm('Delete "' + (t.label || key) + '" and all ' + modelCount + ' model(s)? This cannot be undone after saving.')) return;
     delete tradeinData.types[key];
     activeTradeType = null;
     renderTradeinTypes();
+    markTradeinDirty();
   }
 
   async function saveTradein() {
+    // Clean up: remove models with empty names before saving
+    const cleaned = JSON.parse(JSON.stringify(tradeinData));
+    for (const [key, type] of Object.entries(cleaned.types)) {
+      type.models = (type.models || []).filter(m => m.name && m.name.trim());
+    }
+
     const btn = document.getElementById('saveTradeinBtn');
-    btn.textContent = 'Saving...'; btn.disabled = true;
+    btn.innerHTML = 'Saving...'; btn.disabled = true;
     try {
       const res = await fetch(API + '/api/admin/tradein', {
         method: 'PUT',
         headers: authHeaders(),
-        body: JSON.stringify(tradeinData)
+        body: JSON.stringify(cleaned)
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save');
-      showAdminToast('Trade-in data saved', 'success');
+      // Update local data with the cleaned version
+      tradeinData = cleaned;
+      tradeinOriginal = JSON.stringify(tradeinData);
+      renderTradeinConditions();
+      renderTradeinTypes();
+      checkTradeinUnsaved();
+      showAdminToast('Trade-in settings saved & published', 'success');
     } catch (err) {
-      showAdminToast(err.message, 'error');
+      showAdminToast('Error: ' + err.message, 'error');
     } finally {
-      btn.textContent = 'Save All Changes'; btn.disabled = false;
+      btn.innerHTML = 'Save &amp; Publish'; btn.disabled = false;
     }
   }
 
