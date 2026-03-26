@@ -26,6 +26,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preload" as="image" href="/hero-1.jpg">
+  <link rel="dns-prefetch" href="https://www.gstatic.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2382,6 +2384,19 @@
         handleRoute(path);
       }
     }
+
+    // Pause continuous animations when off-screen to save CPU/GPU
+    const tickerObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const track = e.target.querySelector('.customer-track, .brand-track');
+        if (track) track.style.animationPlayState = e.isIntersecting ? 'running' : 'paused';
+      });
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('.customer-ticker, .brand-ticker').forEach(el => {
+      const track = el.querySelector('.customer-track, .brand-track');
+      if (track) track.style.animationPlayState = 'paused';
+      tickerObs.observe(el);
+    });
 
     // Load products from API on page load
     loadProducts();

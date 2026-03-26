@@ -6,9 +6,15 @@
   const sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
   let leadCaptured = false;
 
+  // Load Inter font via link tag instead of blocking @import
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'stylesheet';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+  document.head.appendChild(fontLink);
+
   const style = document.createElement('style');
   style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    /* Inter font loaded via link tag to avoid render-blocking @import */
 
     #wlai-bubble { position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px; border-radius: 50%; background: #0066cc; border: none; cursor: pointer; box-shadow: 0 4px 24px rgba(0,0,0,0.25), 0 0 0 0 rgba(0,102,204,0.4); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); animation: wlai-pulse 3s infinite; }
     #wlai-bubble:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(0,0,0,0.35); }

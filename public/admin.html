@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DCTE Admin Panel</title>
   <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
@@ -296,7 +298,8 @@
     <div class="tab-content" id="tab-products">
       <div class="toolbar">
         <input type="text" id="prodSearch" placeholder="Search products..." oninput="renderProducts()">
-        <select id="prodCatFilter" onchange="renderProducts()" style="max-width:180px"><option value="">All Categories</option></select>
+        <select id="prodCatFilter" onchange="renderProducts();toggleDeleteCatBtn()" style="max-width:180px"><option value="">All Categories</option></select>
+        <button class="btn btn-danger" id="deleteCatBtn" style="display:none;padding:6px 12px" onclick="deleteCategory()">Delete Category</button>
         <span class="spacer"></span>
         <button class="btn btn-secondary" onclick="exportProducts()">Export Backup</button>
         <button class="btn btn-primary" onclick="openProductModal()">+ Add Product</button>
@@ -502,7 +505,7 @@
           <option value="sale">Sale</option>
         </select>
       </div>
-      <input type="hidden" id="fShopee">
+      <input type="checkbox" id="fShopee" style="display:none">
       <div class="form-group">
         <label>Specifications</label>
         <div class="spec-rows" id="specRows"></div>
@@ -589,6 +592,27 @@
         sel.insertBefore(opt, customOpt);
       }
     });
+  }
+
+  function toggleDeleteCatBtn() {
+    const cat = document.getElementById('prodCatFilter').value;
+    document.getElementById('deleteCatBtn').style.display = cat ? '' : 'none';
+  }
+
+  async function deleteCategory() {
+    const cat = document.getElementById('prodCatFilter').value;
+    if (!cat) return;
+    const label = catLabels[cat] || cat;
+    const count = allProducts.filter(p => p.cat === cat).length;
+    if (!confirm(`Delete the "${label}" category?\n\nThis will permanently remove all ${count} product(s) in this category.`)) return;
+    try {
+      const res = await fetch(API + '/api/admin/categories/' + encodeURIComponent(cat), { method: 'DELETE', headers: authHeaders() });
+      if (!res.ok) { const e = await res.json(); alert(e.error || 'Failed'); return; }
+      const data = await res.json();
+      delete catLabels[cat];
+      alert(`Category "${label}" deleted (${data.removed} product(s) removed).`);
+      loadProducts();
+    } catch (err) { alert('Error: ' + err.message); }
   }
 
   // XSS prevention helper
@@ -1170,7 +1194,14 @@
     const div = document.getElementById('specRows');
     const row = document.createElement('div');
     row.className = 'spec-row';
-    row.innerHTML = `<input type="text" placeholder="Key (e.g. Memory)" value="${key || ''}"><input type="text" placeholder="Value (e.g. 8GB DDR6)" value="${val || ''}"><button class="remove-spec" onclick="this.parentElement.remove()">&times;</button>`;
+    const keyInput = document.createElement('input');
+    keyInput.type = 'text'; keyInput.placeholder = 'Key (e.g. Memory)'; keyInput.value = key || '';
+    const valInput = document.createElement('input');
+    valInput.type = 'text'; valInput.placeholder = 'Value (e.g. 8GB DDR6)'; valInput.value = val || '';
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-spec'; removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = function() { this.parentElement.remove(); };
+    row.appendChild(keyInput); row.appendChild(valInput); row.appendChild(removeBtn);
     div.appendChild(row);
   }
 

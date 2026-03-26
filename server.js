@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const helmet = require('helmet');
+const compression = require('compression');
 
 let Anthropic, anthropic;
 try {
@@ -62,26 +63,40 @@ const upload = multer({
   }
 });
 
+app.use(compression());
 app.use(helmet({
   contentSecurityPolicy: false, // Allow inline scripts/styles in SPA
   crossOriginEmbedderPolicy: false
 }));
 app.use(express.json({ limit: '10mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Static files with long cache (images, fonts, etc.)
+const staticCacheOptions = { maxAge: '7d', etag: true, lastModified: true };
+app.use(express.static(path.join(__dirname, 'public'), staticCacheOptions));
 // Serve uploads from persistent volume if configured
 if (process.env.UPLOADS_PATH) {
-  app.use('/uploads', express.static(UPLOADS_DIR));
+  app.use('/uploads', express.static(UPLOADS_DIR, staticCacheOptions));
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
 
+// In-memory cache to avoid reading from disk on every request
+const jsonCache = {};
+
 function readJSON(filename) {
+  if (jsonCache[filename]) return JSON.parse(JSON.stringify(jsonCache[filename]));
   const file = path.join(DATA_DIR, filename);
-  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return []; }
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    jsonCache[filename] = data;
+    return JSON.parse(JSON.stringify(data));
+  } catch { return []; }
 }
 
 function writeJSON(filename, data) {
-  fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2));
+  const json = JSON.stringify(data, null, 2);
+  jsonCache[filename] = JSON.parse(json);
+  fs.writeFileSync(path.join(DATA_DIR, filename), json);
 }
 
 function appendToFile(filename, entry) {
@@ -329,6 +344,22 @@ app.get('/api/admin/stats', authMiddleware, ownerOnly, (req, res) => {
     ordersByStatus,
     topProducts
   });
+});
+
+// ── Admin: Delete Category ────────────────────────────────────────
+
+app.delete('/api/admin/categories/:cat', authMiddleware, (req, res) => {
+  const cat = req.params.cat;
+  let products = readJSON('products.json');
+  const matching = products.filter(p => p.cat === cat);
+  if (!matching.length) {
+    return res.status(404).json({ error: 'No products found in this category' });
+  }
+  const removed = matching.length;
+  products = products.filter(p => p.cat !== cat);
+  writeJSON('products.json', products);
+  console.log(`[ADMIN] Category "${cat}" deleted (${removed} product(s) removed)`);
+  res.json({ success: true, removed });
 });
 
 // ── Admin: Products CRUD ─────────────────────────────────────────
