@@ -656,6 +656,53 @@ app.get('/api/admin/export/products', authMiddleware, (req, res) => {
   res.download(file, 'products-backup.json');
 });
 
+// ── Trade-In Estimator ──────────────────────────────────────────
+
+// Public: get trade-in data for storefront estimator
+app.get('/api/tradein', (req, res) => {
+  const data = readJSON('tradein.json');
+  if (!data || (!data.types && !Array.isArray(data))) {
+    return res.status(404).json({ error: 'Trade-in data not configured' });
+  }
+  res.json(data);
+});
+
+// Admin: get trade-in data
+app.get('/api/admin/tradein', authMiddleware, (req, res) => {
+  const data = readJSON('tradein.json');
+  res.json(data && data.types ? data : { conditions: {}, types: {} });
+});
+
+// Admin: update trade-in data
+app.put('/api/admin/tradein', authMiddleware, (req, res) => {
+  const { conditions, types } = req.body;
+  if (!conditions || typeof conditions !== 'object') {
+    return res.status(400).json({ error: 'Conditions object is required' });
+  }
+  if (!types || typeof types !== 'object') {
+    return res.status(400).json({ error: 'Types object is required' });
+  }
+  // Validate structure
+  for (const [key, cond] of Object.entries(conditions)) {
+    if (typeof cond.multiplier !== 'number' || cond.multiplier < 0 || cond.multiplier > 1) {
+      return res.status(400).json({ error: `Invalid multiplier for condition "${key}"` });
+    }
+  }
+  for (const [key, type] of Object.entries(types)) {
+    if (!type.label || !Array.isArray(type.models)) {
+      return res.status(400).json({ error: `Invalid type "${key}": needs label and models array` });
+    }
+    for (const model of type.models) {
+      if (!model.name || !Array.isArray(model.val) || model.val.length !== 2) {
+        return res.status(400).json({ error: `Invalid model in "${key}": needs name and val [low, high]` });
+      }
+    }
+  }
+  writeJSON('tradein.json', { conditions, types });
+  console.log(`[ADMIN] Trade-in data updated (${Object.keys(types).length} types)`);
+  res.json({ success: true });
+});
+
 // ── API 404 handler ──────────────────────────────────────────────
 
 app.all('/api/*', (req, res) => {

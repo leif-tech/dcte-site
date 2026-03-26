@@ -207,6 +207,23 @@
       .stat-grid{grid-template-columns:1fr}
     }
 
+    /* Trade-in editor */
+    .ti-cond-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+    .ti-cond-row label{font-size:0.75rem;font-weight:600;color:var(--text);min-width:90px;font-family:'Montserrat',sans-serif}
+    .ti-cond-row input[type="number"]{max-width:80px;text-align:center}
+    .ti-cond-row .ti-cond-label-input{flex:1;font-size:0.78rem}
+    .ti-type-tab{padding:10px 18px;font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:600;color:var(--text-dim);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+    .ti-type-tab:hover{color:var(--text)}
+    .ti-type-tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+    .ti-type-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .ti-type-header input{max-width:200px}
+    .ti-model-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .ti-model-row:last-child{border-bottom:none}
+    .ti-model-row input[type="text"]{flex:2}
+    .ti-model-row input[type="number"]{max-width:110px;flex:1}
+    .ti-model-row .remove-model{color:var(--danger);font-size:1.1rem;padding:4px 6px;cursor:pointer;border-radius:4px;transition:background 0.2s}
+    .ti-model-row .remove-model:hover{background:rgba(239,68,68,0.1)}
+
     /* Admin toast */
     .admin-toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;color:#fff;font-size:0.85rem;font-weight:600;font-family:'Montserrat',sans-serif;box-shadow:0 6px 24px rgba(0,0,0,0.15);transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
     .admin-toast.show{transform:translateY(0);opacity:1}
@@ -254,6 +271,7 @@
     <button class="tab-btn" id="tabBtn-orders" onclick="switchTab('orders',this)">Orders</button>
     <button class="tab-btn" id="tabBtn-contacts" onclick="switchTab('contacts',this)">Contacts</button>
     <button class="tab-btn" id="tabBtn-customers" onclick="switchTab('customers',this)">Customers</button>
+    <button class="tab-btn" id="tabBtn-tradein" onclick="switchTab('tradein',this)">Trade-In</button>
   </div>
 
   <div class="content">
@@ -397,6 +415,35 @@
       <div class="table-wrap">
         <table><thead><tr><th></th><th>Name</th><th>Email</th><th>Phone</th><th>Provider</th><th>Logins</th><th>First Login</th><th>Last Login</th><th>Actions</th></tr></thead>
         <tbody id="customersBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Trade-In Estimator Settings -->
+    <div class="tab-content" id="tab-tradein">
+      <div class="toolbar">
+        <h3 style="font-family:'Montserrat',sans-serif;font-size:0.95rem;color:var(--navy);margin:0">Trade-In Estimator Settings</h3>
+        <span class="spacer"></span>
+        <button class="btn btn-primary" id="saveTradeinBtn" onclick="saveTradein()">Save All Changes</button>
+      </div>
+
+      <!-- Condition Multipliers -->
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px;margin-bottom:20px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Condition Multipliers</h4>
+          <button class="btn btn-secondary" onclick="addCondition()" style="font-size:0.72rem">+ Add Condition</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:14px">These percentages are applied to the base value range. For example, 70% means a customer gets 70% of the listed range.</p>
+        <div id="conditionRows" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px"></div>
+      </div>
+
+      <!-- Component Types -->
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Component Types &amp; Models</h4>
+          <button class="btn btn-secondary" onclick="addTradeType()" style="font-size:0.72rem">+ Add Component Type</button>
+        </div>
+        <div id="tradeTypeTabs" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;flex-wrap:nowrap"></div>
+        <div id="tradeTypeEditor"></div>
       </div>
     </div>
   </div>
@@ -721,6 +768,7 @@
     if (name === 'orders') { loadOrders(); showAdminGuideOnce('orders'); }
     if (name === 'contacts') loadContacts();
     if (name === 'customers') loadCustomers();
+    if (name === 'tradein') loadTradein();
   }
 
   function showAdminGuideOnce(tab) {
@@ -1550,6 +1598,224 @@
     a.download = 'dcte-customers-' + new Date().toISOString().slice(0,10) + '.csv';
     a.click();
     showAdminToast('Exported ' + withEmail.length + ' customer emails', 'success');
+  }
+
+  // ── Trade-In ──────────────────────────────────────────────
+
+  let tradeinData = { conditions: {}, types: {} };
+  let activeTradeType = null;
+
+  async function loadTradein() {
+    try {
+      const res = await fetch(API + '/api/admin/tradein', { headers: authHeaders() });
+      if (!res.ok) { if (res.status === 401) return doLogout(); return; }
+      tradeinData = await res.json();
+      if (!tradeinData.conditions) tradeinData.conditions = {};
+      if (!tradeinData.types) tradeinData.types = {};
+      renderTradeinConditions();
+      renderTradeinTypes();
+    } catch (err) { console.error(err); }
+  }
+
+  function renderTradeinConditions() {
+    const wrap = document.getElementById('conditionRows');
+    const condKeys = Object.keys(tradeinData.conditions);
+    if (!condKeys.length) {
+      wrap.innerHTML = '<p style="color:var(--text-dim);font-size:0.8rem">No conditions defined. Click "+ Add Condition" to create one.</p>';
+      return;
+    }
+    wrap.innerHTML = condKeys.map(key => {
+      const c = tradeinData.conditions[key];
+      return `<div class="ti-cond-row">
+        <label>${escapeHTML(key)}</label>
+        <input type="text" class="ti-cond-label-input" value="${escapeHTML(c.label || '')}" data-cond-key="${escapeHTML(key)}" data-field="label" placeholder="Description..." onchange="updateCondField(this)">
+        <input type="number" value="${Math.round((c.multiplier || 0) * 100)}" min="0" max="100" step="1" data-cond-key="${escapeHTML(key)}" data-field="multiplier" onchange="updateCondField(this)">
+        <span style="font-size:0.75rem;color:var(--text-dim)">%</span>
+        <button class="remove-model" onclick="removeCondition('${escapeHTML(key)}')" title="Remove">&times;</button>
+      </div>`;
+    }).join('');
+  }
+
+  function updateCondField(el) {
+    const key = el.dataset.condKey;
+    const field = el.dataset.field;
+    if (!tradeinData.conditions[key]) return;
+    if (field === 'multiplier') {
+      tradeinData.conditions[key].multiplier = Math.max(0, Math.min(100, parseInt(el.value) || 0)) / 100;
+    } else {
+      tradeinData.conditions[key].label = el.value;
+    }
+  }
+
+  function addCondition() {
+    const key = prompt('Enter a short key for the condition (e.g. "excellent", "good", "fair", "broken"):');
+    if (!key) return;
+    const clean = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!clean) return alert('Invalid key');
+    if (tradeinData.conditions[clean]) return alert('Condition "' + clean + '" already exists');
+    const label = prompt('Enter the description shown to customers (e.g. "Good: Works well, minor wear"):');
+    if (!label) return;
+    const pct = prompt('Enter the percentage multiplier (e.g. 70 for 70%):', '50');
+    if (pct === null) return;
+    const mult = Math.max(0, Math.min(100, parseInt(pct) || 0));
+    tradeinData.conditions[clean] = { label, multiplier: mult / 100 };
+    renderTradeinConditions();
+  }
+
+  function removeCondition(key) {
+    if (!confirm(`Remove condition "${key}"?`)) return;
+    delete tradeinData.conditions[key];
+    renderTradeinConditions();
+  }
+
+  function renderTradeinTypes() {
+    const tabsWrap = document.getElementById('tradeTypeTabs');
+    const typeKeys = Object.keys(tradeinData.types);
+    if (!typeKeys.length) {
+      tabsWrap.innerHTML = '<span style="padding:10px;color:var(--text-dim);font-size:0.8rem">No component types. Click "+ Add Component Type" to start.</span>';
+      document.getElementById('tradeTypeEditor').innerHTML = '';
+      return;
+    }
+    if (!activeTradeType || !tradeinData.types[activeTradeType]) {
+      activeTradeType = typeKeys[0];
+    }
+    tabsWrap.innerHTML = typeKeys.map(key => {
+      const t = tradeinData.types[key];
+      const active = key === activeTradeType ? ' active' : '';
+      return `<div class="ti-type-tab${active}" onclick="selectTradeType('${escapeHTML(key)}')">${t.icon || ''} ${escapeHTML(t.label || key)}</div>`;
+    }).join('');
+    renderTradeTypeEditor();
+  }
+
+  function selectTradeType(key) {
+    activeTradeType = key;
+    document.querySelectorAll('.ti-type-tab').forEach(t => t.classList.remove('active'));
+    const tabs = document.querySelectorAll('.ti-type-tab');
+    const idx = Object.keys(tradeinData.types).indexOf(key);
+    if (tabs[idx]) tabs[idx].classList.add('active');
+    renderTradeTypeEditor();
+  }
+
+  function renderTradeTypeEditor() {
+    const wrap = document.getElementById('tradeTypeEditor');
+    if (!activeTradeType || !tradeinData.types[activeTradeType]) {
+      wrap.innerHTML = '';
+      return;
+    }
+    const t = tradeinData.types[activeTradeType];
+    const models = t.models || [];
+    wrap.innerHTML = `
+      <div class="ti-type-header">
+        <div class="form-group" style="margin:0">
+          <label style="font-size:0.68rem;margin-bottom:2px">Key</label>
+          <input type="text" value="${escapeHTML(activeTradeType)}" style="max-width:120px;background:var(--bg);font-size:0.78rem" disabled>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label style="font-size:0.68rem;margin-bottom:2px">Label</label>
+          <input type="text" value="${escapeHTML(t.label || '')}" onchange="tradeinData.types['${escapeHTML(activeTradeType)}'].label=this.value;renderTradeinTypes()" style="font-size:0.78rem">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label style="font-size:0.68rem;margin-bottom:2px">Icon (emoji)</label>
+          <input type="text" value="${t.icon || ''}" onchange="tradeinData.types['${escapeHTML(activeTradeType)}'].icon=this.value;renderTradeinTypes()" style="max-width:70px;text-align:center;font-size:1rem">
+        </div>
+        <span style="flex:1"></span>
+        <button class="btn btn-danger" onclick="deleteTradeType('${escapeHTML(activeTradeType)}')" style="font-size:0.72rem;padding:6px 14px">Delete Type</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600;color:var(--text)">${models.length} model(s)</span>
+        <span style="flex:1"></span>
+        <button class="btn btn-secondary" onclick="addTradeModel()" style="font-size:0.72rem">+ Add Model</button>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
+        <div style="display:flex;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:4px">
+          <span style="flex:2;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Model Name</span>
+          <span style="max-width:110px;flex:1;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Min Value (PHP)</span>
+          <span style="max-width:110px;flex:1;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);font-family:'Montserrat',sans-serif">Max Value (PHP)</span>
+          <span style="width:30px"></span>
+        </div>
+        <div id="tradeModelRows">
+          ${models.map((m, i) => tradeModelRowHTML(i, m)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function tradeModelRowHTML(idx, model) {
+    return `<div class="ti-model-row" data-model-idx="${idx}">
+      <input type="text" value="${escapeHTML(model.name || '')}" onchange="updateTradeModel(${idx},'name',this.value)" placeholder="Model name...">
+      <input type="number" value="${model.val ? model.val[0] : 0}" min="0" step="100" onchange="updateTradeModel(${idx},'low',this.value)" placeholder="Min">
+      <input type="number" value="${model.val ? model.val[1] : 0}" min="0" step="100" onchange="updateTradeModel(${idx},'high',this.value)" placeholder="Max">
+      <button class="remove-model" onclick="removeTradeModel(${idx})" title="Remove">&times;</button>
+    </div>`;
+  }
+
+  function updateTradeModel(idx, field, value) {
+    if (!tradeinData.types[activeTradeType]) return;
+    const model = tradeinData.types[activeTradeType].models[idx];
+    if (!model) return;
+    if (field === 'name') model.name = value;
+    else if (field === 'low') model.val[0] = parseInt(value) || 0;
+    else if (field === 'high') model.val[1] = parseInt(value) || 0;
+  }
+
+  function addTradeModel() {
+    if (!tradeinData.types[activeTradeType]) return;
+    tradeinData.types[activeTradeType].models.push({ name: '', val: [0, 0] });
+    renderTradeTypeEditor();
+    // Focus the new row's name input
+    const rows = document.querySelectorAll('#tradeModelRows .ti-model-row');
+    const last = rows[rows.length - 1];
+    if (last) last.querySelector('input[type="text"]').focus();
+  }
+
+  function removeTradeModel(idx) {
+    if (!tradeinData.types[activeTradeType]) return;
+    const m = tradeinData.types[activeTradeType].models[idx];
+    if (m && m.name && !confirm(`Remove model "${m.name}"?`)) return;
+    tradeinData.types[activeTradeType].models.splice(idx, 1);
+    renderTradeTypeEditor();
+  }
+
+  function addTradeType() {
+    const key = prompt('Enter a short key for the component type (e.g. "ssd", "laptop", "keyboard"):');
+    if (!key) return;
+    const clean = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!clean) return alert('Invalid key');
+    if (tradeinData.types[clean]) return alert('Type "' + clean + '" already exists');
+    const label = prompt('Enter the display label (e.g. "SSD / Storage", "Laptop"):');
+    if (!label) return;
+    tradeinData.types[clean] = { label, icon: '', models: [] };
+    activeTradeType = clean;
+    renderTradeinTypes();
+  }
+
+  function deleteTradeType(key) {
+    const t = tradeinData.types[key];
+    if (!t) return;
+    const modelCount = (t.models || []).length;
+    if (!confirm(`Delete "${t.label || key}" and all ${modelCount} model(s)?`)) return;
+    delete tradeinData.types[key];
+    activeTradeType = null;
+    renderTradeinTypes();
+  }
+
+  async function saveTradein() {
+    const btn = document.getElementById('saveTradeinBtn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    try {
+      const res = await fetch(API + '/api/admin/tradein', {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(tradeinData)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save');
+      showAdminToast('Trade-in data saved', 'success');
+    } catch (err) {
+      showAdminToast(err.message, 'error');
+    } finally {
+      btn.textContent = 'Save All Changes'; btn.disabled = false;
+    }
   }
 
   // ── Helpers ────────────────────────────────────────────────

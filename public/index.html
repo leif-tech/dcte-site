@@ -413,13 +413,18 @@
     @media(max-width:480px){.featured-grid{grid-template-columns:1fr}}
 
     /* ===== SHOP PAGE ===== */
-    .shop-page{display:none;position:fixed;inset:0;z-index:2000;background:#fff;overflow-y:auto}
+    .shop-page{display:none;position:fixed;inset:0;z-index:2000;background:#f8f9fc;overflow-y:auto}
     .shop-page.open{display:block}
-    .shop-topbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;box-shadow:0 1px 6px rgba(0,0,0,0.04)}
-    .shop-back{font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:6px;transition:.2s}
-    .shop-back:hover{color:var(--pink)}
-    .topbar-cart{position:relative;display:flex;align-items:center;gap:10px;padding:9px 18px;border-radius:50px;background:linear-gradient(135deg,rgba(233,30,140,0.08),rgba(139,47,201,0.08));color:var(--navy);font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .25s ease;border:1.5px solid rgba(139,47,201,0.18);backdrop-filter:blur(8px)}
-    .topbar-cart:hover{background:linear-gradient(135deg,rgba(233,30,140,0.15),rgba(139,47,201,0.15));border-color:rgba(139,47,201,0.35);transform:translateY(-1px);box-shadow:0 4px 16px rgba(139,47,201,0.15)}
+    .shop-topbar{
+      background:linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,248,252,0.98));
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(139,47,201,0.08);position:sticky;top:0;z-index:10;
+      box-shadow:0 2px 20px rgba(139,47,201,0.06),0 1px 3px rgba(0,0,0,0.04);
+    }
+    .shop-back{font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:6px;transition:all .25s}
+    .shop-back:hover{color:var(--pink);transform:translateX(-2px)}
+    .topbar-cart{position:relative;display:flex;align-items:center;gap:10px;padding:9px 18px;border-radius:50px;background:linear-gradient(135deg,rgba(233,30,140,0.06),rgba(139,47,201,0.06));color:var(--navy);font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(0.4,0,0.2,1);border:1.5px solid rgba(139,47,201,0.12)}
+    .topbar-cart:hover{background:linear-gradient(135deg,rgba(233,30,140,0.12),rgba(139,47,201,0.12));border-color:rgba(139,47,201,0.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(139,47,201,0.15)}
     .topbar-cart svg{flex-shrink:0;color:var(--purple);stroke-width:2.2}
     .topbar-cart-count{background:var(--grad);color:#fff;padding:2px 8px;border-radius:50px;font-size:0.68rem;min-width:22px;text-align:center;font-weight:800;letter-spacing:0.3px;box-shadow:0 2px 8px rgba(233,30,140,0.3)}
     .topbar-cart-count:empty{display:none}
@@ -427,52 +432,78 @@
     .topbar-cart-total:empty{display:none}
     .shop-body{padding:32px 0 60px}
     .shop-layout{display:grid;grid-template-columns:260px 1fr;gap:32px}
-    .shop-sidebar{position:sticky;top:88px;height:fit-content}
-    .shop-search input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:0.88rem;font-family:'Open Sans',sans-serif;outline:none;transition:.3s}
-    .shop-search input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,47,201,0.08)}
-    .filter-group{margin-top:24px}
-    .filter-group h4{font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px}
-    .filter-group label{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:0.84rem;color:var(--text);cursor:pointer;transition:.2s}
-    .filter-group label:hover{color:var(--purple)}
-    .filter-group input[type="checkbox"]{accent-color:var(--purple);width:16px;height:16px}
+    .shop-sidebar{
+      position:sticky;top:88px;height:fit-content;
+      background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:22px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.04),0 0 0 1px rgba(139,47,201,0.03);
+    }
+    .shop-search input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;font-size:0.88rem;font-family:'Open Sans',sans-serif;outline:none;transition:all .3s;background:#f8f9fc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23718096' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 12px center no-repeat}
+    .shop-search input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,47,201,0.08),0 2px 8px rgba(139,47,201,0.06);background-color:#fff}
+    .shop-search input::placeholder{color:#a0aec0}
+    .filter-group{margin-top:22px;padding-top:18px;border-top:1px solid rgba(0,0,0,0.05)}
+    .filter-group:first-of-type{border-top:none;margin-top:18px;padding-top:0}
+    .filter-group h4{font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--navy);margin-bottom:12px}
+    .filter-group label{display:flex;align-items:center;gap:8px;padding:5px 8px;margin:0 -8px;font-size:0.84rem;color:var(--text);cursor:pointer;transition:all .2s;border-radius:6px}
+    .filter-group label:hover{color:var(--purple);background:rgba(139,47,201,0.03)}
+    .filter-group input[type="checkbox"]{accent-color:var(--purple);width:16px;height:16px;border-radius:4px}
     .filter-brands-list{max-height:200px;overflow-y:auto;padding-right:8px}
     .filter-brands-list::-webkit-scrollbar{width:3px}
     .filter-brands-list::-webkit-scrollbar-thumb{background:var(--purple);border-radius:3px}
     .price-range{display:flex;align-items:center;gap:8px}
-    .price-range input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:0.84rem;outline:none;font-family:'Open Sans',sans-serif}
-    .price-range input:focus{border-color:var(--purple)}
-    .price-range span{color:var(--text-dim);font-size:0.9rem}
-    .shop-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-    .shop-count{font-size:0.85rem;color:var(--text-dim);font-weight:600}
-    .shop-header select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.84rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--text);cursor:pointer}
-    .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .shop-card{position:relative;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
-    .shop-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(139,47,201,0.08);border-color:rgba(139,47,201,0.15)}
-    .shop-card-img{width:100%;aspect-ratio:1;background:var(--card-alt);display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .shop-card-img img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .3s}
+    .price-range input{width:100%;padding:9px 10px;border:1.5px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.84rem;outline:none;font-family:'Open Sans',sans-serif;background:#f8f9fc;transition:all .25s}
+    .price-range input:focus{border-color:var(--purple);background:#fff;box-shadow:0 0 0 3px rgba(139,47,201,0.06)}
+    .price-range input::placeholder{color:#a0aec0}
+    .price-range span{color:var(--text-dim);font-size:0.9rem;font-weight:600}
+    .shop-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .shop-count{font-size:0.85rem;color:var(--text-dim);font-weight:600;background:rgba(139,47,201,0.05);padding:5px 14px;border-radius:20px}
+    .shop-header select{padding:9px 32px 9px 14px;border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;font-size:0.84rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--text);cursor:pointer;background:#fff;transition:all .25s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23718096' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+    .shop-header select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,47,201,0.06)}
+    .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .shop-card{
+      position:relative;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:16px;overflow:hidden;
+      transition:all .35s cubic-bezier(0.4,0,0.2,1);cursor:pointer;
+      box-shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.02);
+    }
+    .shop-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 12px 32px rgba(139,47,201,0.1),0 4px 12px rgba(0,0,0,0.06);
+      border-color:rgba(139,47,201,0.15);
+    }
+    .shop-card-img{
+      width:100%;aspect-ratio:1;
+      background:linear-gradient(145deg,#f8f9fc,#f0f1f6);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      border-bottom:1px solid rgba(0,0,0,0.04);position:relative;
+    }
+    .shop-card-img img{width:100%;height:100%;object-fit:contain;padding:16px;transition:transform .4s cubic-bezier(0.4,0,0.2,1)}
     .shop-card:hover .shop-card-img img{transform:scale(1.08)}
     .shop-card-img .placeholder{font-size:2.5rem;color:#cbd5e1}
-    .shop-card-body{padding:14px 16px 16px}
-    .shop-card-cat{font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--purple);margin-bottom:4px}
-    .shop-card-name{font-size:0.82rem;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:10px;min-height:2.2em;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-    .shop-card-bottom{display:flex;align-items:center;justify-content:space-between}
-    .shop-card-price{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.92rem;color:var(--pink)}
-    .shop-card-btn{padding:6px 12px;background:var(--grad);color:#fff;border-radius:6px;font-size:0.68rem;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;transition:all .3s;display:inline-block}
-    .shop-card-btn:hover{opacity:0.9}
+    .shop-card-body{padding:16px 18px 18px}
+    .shop-card-cat{font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple);margin-bottom:5px;opacity:0.85}
+    .shop-card-name{font-size:0.84rem;font-weight:600;color:var(--navy);line-height:1.35;margin-bottom:12px;min-height:2.3em;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .shop-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .shop-card-price{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--pink)}
+    .shop-card-btn{
+      padding:8px 14px;background:var(--grad);color:#fff;border-radius:8px;
+      font-size:0.68rem;font-weight:700;font-family:'Montserrat',sans-serif;text-transform:uppercase;
+      transition:all .3s cubic-bezier(0.4,0,0.2,1);display:inline-block;letter-spacing:0.3px;
+      box-shadow:0 2px 8px rgba(139,47,201,0.2);white-space:nowrap;
+    }
+    .shop-card-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(139,47,201,0.3)}
     /* mobile shop overrides are in the mobile filter toggle section below */
 
     /* ===== PRODUCT BADGES ===== */
-    .badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:4px;font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;z-index:1;color:#fff}
-    .badge-hot{background:#ef4444}
-    .badge-new{background:#22c55e}
-    .badge-sale{background:#f59e0b}
-    .stock-badge{position:absolute;top:10px;right:10px;padding:3px 8px;border-radius:4px;font-size:0.58rem;font-weight:600;z-index:1}
-    .stock-in{background:#dcfce7;color:#16a34a}
-    .stock-low{background:#fef3c7;color:#d97706}
-    .stock-preorder{background:#ede9fe;color:#7c3aed}
-    .cond-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.6rem;font-weight:600;margin-bottom:4px}
-    .cond-new{background:#eff6ff;color:#2563eb}
-    .cond-preowned{background:#fef3c7;color:#d97706}
+    .badge{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;z-index:1;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+    .badge-hot{background:linear-gradient(135deg,#ef4444,#dc2626)}
+    .badge-new{background:linear-gradient(135deg,#22c55e,#16a34a)}
+    .badge-sale{background:linear-gradient(135deg,#f59e0b,#d97706)}
+    .stock-badge{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:6px;font-size:0.58rem;font-weight:700;z-index:1;letter-spacing:0.2px}
+    .stock-in{background:#dcfce7;color:#16a34a;border:1px solid rgba(34,197,94,0.15)}
+    .stock-low{background:#fef3c7;color:#d97706;border:1px solid rgba(245,158,11,0.15)}
+    .stock-preorder{background:#ede9fe;color:#7c3aed;border:1px solid rgba(124,58,237,0.15)}
+    .cond-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:0.6rem;font-weight:700;margin-bottom:5px;letter-spacing:0.2px}
+    .cond-new{background:#eff6ff;color:#2563eb;border:1px solid rgba(37,99,235,0.1)}
+    .cond-preowned{background:#fef3c7;color:#d97706;border:1px solid rgba(217,119,6,0.1)}
     .shop-card-img,.feat-card-img{position:relative}
 
     /* ===== NAVBAR ICONS ===== */
@@ -730,46 +761,50 @@
     /* ===== QUICK ACTION BUTTONS ON CARDS ===== */
     .card-quick-actions{
       position:absolute;top:10px;right:40px;display:flex;gap:6px;z-index:2;
-      opacity:0;transform:translateY(-6px);transition:all .3s;
+      opacity:0;transform:translateY(-6px);transition:all .3s cubic-bezier(0.4,0,0.2,1);
     }
     .feat-card:hover .card-quick-actions,
     .shop-card:hover .card-quick-actions{opacity:1;transform:translateY(0)}
     .card-quick-btn{
-      width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.95);
-      border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-      cursor:pointer;transition:all .2s;color:var(--text-dim);font-size:0.9rem;
-      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+      width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.97);
+      border:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:all .25s cubic-bezier(0.4,0,0.2,1);color:var(--text-dim);font-size:0.9rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08),0 0 0 1px rgba(255,255,255,0.5);
+      backdrop-filter:blur(8px);
     }
-    .card-quick-btn:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
-    .card-quick-btn.wishlisted{color:var(--pink);background:rgba(233,30,140,0.1);border-color:var(--pink)}
+    .card-quick-btn:hover{background:var(--pink);color:#fff;border-color:var(--pink);transform:scale(1.1);box-shadow:0 4px 12px rgba(233,30,140,0.25)}
+    .card-quick-btn.wishlisted{color:var(--pink);background:rgba(233,30,140,0.08);border-color:rgba(233,30,140,0.3)}
     @media(max-width:768px){.card-quick-actions{opacity:1;transform:translateY(0)}}
 
     /* ===== MOBILE FILTER TOGGLE ===== */
     .mobile-filter-toggle{
-      display:none;padding:12px 20px;background:var(--grad);color:#fff;border-radius:10px;
+      display:none;padding:12px 20px;background:#fff;color:var(--navy);border-radius:12px;
       font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;
       text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;
       width:100%;justify-content:center;align-items:center;gap:8px;
+      border:1.5px solid rgba(139,47,201,0.15);
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .25s;
     }
-    .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:5999}
+    .mobile-filter-toggle:hover{border-color:var(--purple);box-shadow:0 4px 12px rgba(139,47,201,0.1)}
+    .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:5999;backdrop-filter:blur(4px)}
     .filter-overlay.open{display:block}
     .filter-overlay-close{display:none}
     @media(max-width:900px){
       .mobile-filter-toggle{display:flex}
       .shop-sidebar{
         display:block!important;position:fixed;top:0;left:0;width:320px;max-width:85vw;height:100%;
-        background:#fff;z-index:6000;padding:20px;overflow-y:auto;
-        box-shadow:4px 0 24px rgba(0,0,0,0.15);
-        transform:translateX(-100%);transition:transform .3s;
+        background:#fff;z-index:6000;padding:24px;overflow-y:auto;border-radius:0;
+        box-shadow:4px 0 30px rgba(0,0,0,0.12);
+        transform:translateX(-100%);transition:transform .35s cubic-bezier(0.4,0,0.2,1);
       }
       .shop-sidebar.open{transform:translateX(0)}
       .filter-overlay-close{
         display:flex;align-items:center;justify-content:space-between;
-        margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);
+        margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(0,0,0,0.06);
       }
       .filter-overlay-close h3{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;color:var(--navy)}
-      .filter-overlay-close button{font-size:1.5rem;color:var(--text-dim);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px}
-      .filter-overlay-close button:hover{background:var(--card-alt)}
+      .filter-overlay-close button{font-size:1.5rem;color:var(--text-dim);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s}
+      .filter-overlay-close button:hover{background:var(--card-alt);color:var(--navy)}
       .shop-layout{grid-template-columns:1fr!important}
       .shop-grid{grid-template-columns:repeat(2,1fr)!important}
     }
@@ -1090,7 +1125,7 @@
     <div class="shop-topbar">
       <div class="container" style="display:flex;align-items:center;justify-content:space-between;height:56px">
         <button class="shop-back" onclick="navigateTo('/home')">&#10094; Back to Home</button>
-        <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:var(--navy)">DCTE Shop</span>
+        <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">DCTE Shop</span>
         <button class="topbar-cart" id="topbarCart" onclick="toggleCartDrawer()">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
           <span class="topbar-cart-count" id="topbarCartCount"></span>
@@ -1126,7 +1161,7 @@
                 <input type="number" id="priceMax" placeholder="Max" oninput="filterShop()">
               </div>
             </div>
-            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;padding:10px 16px;font-size:0.78rem" onclick="resetFilters()">Reset Filters</button>
+            <button style="width:100%;margin-top:16px;padding:10px 16px;font-size:0.78rem;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;color:var(--text-dim);background:#f8f9fc;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px" onmouseover="this.style.borderColor='var(--purple)';this.style.color='var(--purple)';this.style.background='rgba(139,47,201,0.03)'" onmouseout="this.style.borderColor='rgba(0,0,0,0.08)';this.style.color='var(--text-dim)';this.style.background='#f8f9fc'" onclick="resetFilters()">&#8634; Reset Filters</button>
           </aside>
           <main class="shop-main">
             <button class="mobile-filter-toggle" onclick="openMobileFilters()">&#9776; Filters &amp; Sort</button>
@@ -1254,14 +1289,7 @@
         <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:20px">Get an estimated trade-in value for your old PC parts. Bring them to our store for an exact assessment.</p>
         <div class="estimator-card">
           <label for="estType">Component Type</label>
-          <div class="est-types" id="estTypes">
-            <button class="est-type-btn" data-val="gpu" onclick="selectEstType(this)"><span class="est-type-icon">🎮</span>GPU / Video Card</button>
-            <button class="est-type-btn" data-val="cpu" onclick="selectEstType(this)"><span class="est-type-icon">⚡</span>CPU / Processor</button>
-            <button class="est-type-btn" data-val="ram" onclick="selectEstType(this)"><span class="est-type-icon">🧩</span>RAM / Memory</button>
-            <button class="est-type-btn" data-val="mobo" onclick="selectEstType(this)"><span class="est-type-icon">🔧</span>Motherboard</button>
-            <button class="est-type-btn" data-val="psu" onclick="selectEstType(this)"><span class="est-type-icon">🔌</span>Power Supply</button>
-            <button class="est-type-btn" data-val="monitor" onclick="selectEstType(this)"><span class="est-type-icon">🖥️</span>Monitor</button>
-          </div>
+          <div class="est-types" id="estTypes"></div>
           <input type="hidden" id="estType" value="">
           <label for="estModel">Model / Series</label>
           <select id="estModel" onchange="updateEstCondition()">
@@ -1270,10 +1298,6 @@
           <label for="estCond">Condition</label>
           <select id="estCond" onchange="calcEstimate()">
             <option value="">Select condition...</option>
-            <option value="excellent">Excellent: Works perfectly, no scratches</option>
-            <option value="good">Good: Works well, minor wear</option>
-            <option value="fair">Fair: Works but has issues or cosmetic damage</option>
-            <option value="broken">Not Working: For parts only</option>
           </select>
           <div id="estResult" style="display:none"></div>
         </div>
@@ -2028,7 +2052,7 @@
       }
 
       document.getElementById('shopCount').textContent=filtered.length+' product'+(filtered.length!==1?'s':'');
-      document.getElementById('shopGrid').innerHTML=filtered.map(p=>cardHTML(p,'shop')).join('')||'<p style="text-align:center;color:var(--text-dim);padding:40px;grid-column:1/-1">No products found matching your filters.</p>';
+      document.getElementById('shopGrid').innerHTML=filtered.map(p=>cardHTML(p,'shop')).join('')||'<div style="text-align:center;padding:60px 20px;grid-column:1/-1"><div style="font-size:3rem;margin-bottom:12px;opacity:0.3">&#128269;</div><p style="font-family:Montserrat,sans-serif;font-weight:700;color:var(--navy);font-size:1rem;margin-bottom:6px">No products found</p><p style="color:var(--text-dim);font-size:0.85rem">Try adjusting your search or filters</p></div>';
     }
 
     function resetFilters(){
@@ -2261,56 +2285,56 @@
     }
 
     // ===== TRADE-IN ESTIMATOR =====
-    // Trade-in values = ~35-50% of PH secondhand market prices (store resells at profit)
-    // Secondhand prices sourced from TipidPC, FB Marketplace, Carousell, Shopee PH (2025-2026)
-    const tradeInData={
-      gpu:[
-        {name:'RTX 4090',val:[22000,28000]},{name:'RTX 4080 / 4080 Super',val:[16000,20000]},
-        {name:'RTX 4070 Ti / 4070',val:[11000,14000]},{name:'RTX 4060 Ti',val:[8000,10000]},
-        {name:'RTX 4060',val:[6500,8500]},{name:'RTX 3080 / 3090',val:[8000,12000]},
-        {name:'RTX 3070 / 3070 Ti',val:[5500,7500]},{name:'RTX 3060 Ti',val:[4500,6000]},
-        {name:'RTX 3060 12GB',val:[3500,5000]},{name:'RTX 3050',val:[2500,3500]},
-        {name:'GTX 1660 Super / Ti',val:[2500,3500]},{name:'GTX 1650',val:[1500,2200]},
-        {name:'GTX 1050 Ti',val:[1000,1600]},{name:'GTX 1030 / GT 730',val:[300,700]},
-        {name:'RX 6700 XT',val:[4500,6000]},{name:'RX 6600 / 6600 XT',val:[3000,4200]},
-        {name:'RX 580 8GB',val:[1200,2000]},{name:'RX 570 4GB',val:[800,1400]}
-      ],
-      cpu:[
-        {name:'Ryzen 9 5900X / 5950X',val:[4500,6500]},{name:'Ryzen 7 5800X / 5700X',val:[2500,3800]},
-        {name:'Ryzen 7 5700G',val:[2200,3200]},{name:'Ryzen 5 5600X',val:[1800,2600]},
-        {name:'Ryzen 5 5600 / 5500',val:[1400,2200]},{name:'Ryzen 5 3600',val:[1000,1600]},
-        {name:'Ryzen 5 3400G / 3200G',val:[800,1400]},{name:'Ryzen 3 3100',val:[600,1000]},
-        {name:'i7-12700 / 13700',val:[4000,6000]},{name:'i5-12400 / 13400',val:[2200,3500]},
-        {name:'i5-11400 / 10400',val:[1400,2200]},{name:'i3-12100 / 13100',val:[1500,2200]},
-        {name:'i3-10100 / 10105',val:[800,1300]}
-      ],
-      ram:[
-        {name:'DDR5 32GB Kit (5600+)',val:[1800,2800]},{name:'DDR5 16GB Kit (5200+)',val:[1000,1700]},
-        {name:'DDR4 32GB Kit (3200+)',val:[1200,1800]},{name:'DDR4 16GB Kit (3200+)',val:[700,1100]},
-        {name:'DDR4 16GB Kit (2666)',val:[500,800]},{name:'DDR4 8GB Single (3200)',val:[300,500]},
-        {name:'DDR4 8GB Single (2666)',val:[200,400]},{name:'DDR3 8GB',val:[150,300]},
-        {name:'DDR3 4GB',val:[80,150]}
-      ],
-      mobo:[
-        {name:'X570 (AM4)',val:[1800,3000]},{name:'B550 (AM4)',val:[1200,2200]},
-        {name:'B450 (AM4)',val:[700,1400]},{name:'A520 (AM4)',val:[600,1000]},
-        {name:'Z690 / Z790 (LGA1700)',val:[2500,4000]},{name:'B660 / B760 (LGA1700)',val:[1500,2500]},
-        {name:'H610 (LGA1700)',val:[800,1400]},{name:'B460 / Z490 (LGA1200)',val:[800,1600]},
-        {name:'H510 / H410 (LGA1200)',val:[500,900]}
-      ],
-      psu:[
-        {name:'850W+ 80+ Gold (Modular)',val:[1500,2500]},{name:'750W 80+ Gold',val:[1200,1800]},
-        {name:'650W 80+ Bronze/Gold',val:[700,1200]},{name:'550W 80+ Bronze',val:[400,800]},
-        {name:'500W Generic / Non-rated',val:[150,400]},
-        {name:'UPS 1500VA+',val:[800,1500]},{name:'UPS 650-1000VA',val:[400,800]}
-      ],
-      monitor:[
-        {name:'32"+ 144Hz+ QHD/4K',val:[3500,5500]},{name:'27" 240Hz IPS',val:[3000,4500]},
-        {name:'27" 144-165Hz IPS/VA',val:[2000,3200]},{name:'27" 75-100Hz IPS',val:[1200,2000]},
-        {name:'24" 144Hz+ IPS/VA',val:[1400,2200]},{name:'24" 75-100Hz IPS',val:[800,1400]},
-        {name:'22" FHD',val:[500,900]}
-      ]
-    };
+    let tradeInData={};
+    let tradeInConditions={excellent:{multiplier:1},good:{multiplier:0.7},fair:{multiplier:0.4},broken:{multiplier:0.15}};
+    (async function loadTradeInData(){
+      try{
+        const res=await fetch('/api/tradein');
+        if(res.ok){
+          const data=await res.json();
+          if(data.types){
+            // Build tradeInData from types (convert to flat model arrays)
+            tradeInData={};
+            for(const[key,t]of Object.entries(data.types)){
+              tradeInData[key]=t.models||[];
+            }
+            // Render type buttons
+            const typesWrap=document.getElementById('estTypes');
+            typesWrap.innerHTML=Object.entries(data.types).map(([key,t])=>
+              `<button class="est-type-btn" data-val="${key}" onclick="selectEstType(this)"><span class="est-type-icon">${t.icon||''}</span>${t.label||key}</button>`
+            ).join('');
+            // Render condition options
+            if(data.conditions){
+              tradeInConditions=data.conditions;
+              const condSel=document.getElementById('estCond');
+              condSel.innerHTML='<option value="">Select condition...</option>';
+              for(const[key,c]of Object.entries(data.conditions)){
+                condSel.innerHTML+=`<option value="${key}">${c.label||key}</option>`;
+              }
+            }
+          }
+        }
+      }catch(e){console.log('Trade-in API unavailable, using defaults');}
+      // Fallback: if no data loaded from API, use hardcoded defaults
+      if(!Object.keys(tradeInData).length){
+        tradeInData={
+          gpu:[{name:'RTX 4090',val:[22000,28000]},{name:'RTX 4080 / 4080 Super',val:[16000,20000]},{name:'RTX 4070 Ti / 4070',val:[11000,14000]},{name:'RTX 4060 Ti',val:[8000,10000]},{name:'RTX 4060',val:[6500,8500]},{name:'RTX 3080 / 3090',val:[8000,12000]},{name:'RTX 3070 / 3070 Ti',val:[5500,7500]},{name:'RTX 3060 Ti',val:[4500,6000]},{name:'RTX 3060 12GB',val:[3500,5000]},{name:'RTX 3050',val:[2500,3500]},{name:'GTX 1660 Super / Ti',val:[2500,3500]},{name:'GTX 1650',val:[1500,2200]},{name:'GTX 1050 Ti',val:[1000,1600]},{name:'GTX 1030 / GT 730',val:[300,700]},{name:'RX 6700 XT',val:[4500,6000]},{name:'RX 6600 / 6600 XT',val:[3000,4200]},{name:'RX 580 8GB',val:[1200,2000]},{name:'RX 570 4GB',val:[800,1400]}],
+          cpu:[{name:'Ryzen 9 5900X / 5950X',val:[4500,6500]},{name:'Ryzen 7 5800X / 5700X',val:[2500,3800]},{name:'Ryzen 7 5700G',val:[2200,3200]},{name:'Ryzen 5 5600X',val:[1800,2600]},{name:'Ryzen 5 5600 / 5500',val:[1400,2200]},{name:'Ryzen 5 3600',val:[1000,1600]},{name:'Ryzen 5 3400G / 3200G',val:[800,1400]},{name:'Ryzen 3 3100',val:[600,1000]},{name:'i7-12700 / 13700',val:[4000,6000]},{name:'i5-12400 / 13400',val:[2200,3500]},{name:'i5-11400 / 10400',val:[1400,2200]},{name:'i3-12100 / 13100',val:[1500,2200]},{name:'i3-10100 / 10105',val:[800,1300]}],
+          ram:[{name:'DDR5 32GB Kit (5600+)',val:[1800,2800]},{name:'DDR5 16GB Kit (5200+)',val:[1000,1700]},{name:'DDR4 32GB Kit (3200+)',val:[1200,1800]},{name:'DDR4 16GB Kit (3200+)',val:[700,1100]},{name:'DDR4 16GB Kit (2666)',val:[500,800]},{name:'DDR4 8GB Single (3200)',val:[300,500]},{name:'DDR4 8GB Single (2666)',val:[200,400]},{name:'DDR3 8GB',val:[150,300]},{name:'DDR3 4GB',val:[80,150]}],
+          mobo:[{name:'X570 (AM4)',val:[1800,3000]},{name:'B550 (AM4)',val:[1200,2200]},{name:'B450 (AM4)',val:[700,1400]},{name:'A520 (AM4)',val:[600,1000]},{name:'Z690 / Z790 (LGA1700)',val:[2500,4000]},{name:'B660 / B760 (LGA1700)',val:[1500,2500]},{name:'H610 (LGA1700)',val:[800,1400]},{name:'B460 / Z490 (LGA1200)',val:[800,1600]},{name:'H510 / H410 (LGA1200)',val:[500,900]}],
+          psu:[{name:'850W+ 80+ Gold (Modular)',val:[1500,2500]},{name:'750W 80+ Gold',val:[1200,1800]},{name:'650W 80+ Bronze/Gold',val:[700,1200]},{name:'550W 80+ Bronze',val:[400,800]},{name:'500W Generic / Non-rated',val:[150,400]},{name:'UPS 1500VA+',val:[800,1500]},{name:'UPS 650-1000VA',val:[400,800]}],
+          monitor:[{name:'32"+ 144Hz+ QHD/4K',val:[3500,5500]},{name:'27" 240Hz IPS',val:[3000,4500]},{name:'27" 144-165Hz IPS/VA',val:[2000,3200]},{name:'27" 75-100Hz IPS',val:[1200,2000]},{name:'24" 144Hz+ IPS/VA',val:[1400,2200]},{name:'24" 75-100Hz IPS',val:[800,1400]},{name:'22" FHD',val:[500,900]}]
+        };
+        tradeInConditions={excellent:{label:'Excellent: Works perfectly, no scratches',multiplier:1},good:{label:'Good: Works well, minor wear',multiplier:0.7},fair:{label:'Fair: Works but has issues or cosmetic damage',multiplier:0.4},broken:{label:'Not Working: For parts only',multiplier:0.15}};
+        document.getElementById('estTypes').innerHTML=[
+          {k:'gpu',i:'\ud83c\udfae',l:'GPU / Video Card'},{k:'cpu',i:'\u26a1',l:'CPU / Processor'},
+          {k:'ram',i:'\ud83e\udde9',l:'RAM / Memory'},{k:'mobo',i:'\ud83d\udd27',l:'Motherboard'},
+          {k:'psu',i:'\ud83d\udd0c',l:'Power Supply'},{k:'monitor',i:'\ud83d\udcbb',l:'Monitor'}
+        ].map(t=>`<button class="est-type-btn" data-val="${t.k}" onclick="selectEstType(this)"><span class="est-type-icon">${t.i}</span>${t.l}</button>`).join('');
+        const condSel=document.getElementById('estCond');
+        condSel.innerHTML='<option value="">Select condition...</option>'+Object.entries(tradeInConditions).map(([k,c])=>`<option value="${k}">${c.label}</option>`).join('');
+      }
+    })();
     function selectEstType(btn){
       document.querySelectorAll('.est-type-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
@@ -2333,7 +2357,7 @@
       if(!type||modelIdx===''||!cond)return;
       const model=tradeInData[type][parseInt(modelIdx)];
       if(!model)return;
-      const mult={excellent:1,good:0.7,fair:0.4,broken:0.15}[cond]||0;
+      const mult=(tradeInConditions[cond]&&tradeInConditions[cond].multiplier)||0;
       const low=Math.round(model.val[0]*mult/100)*100;
       const high=Math.round(model.val[1]*mult/100)*100;
       document.getElementById('estResult').style.display='block';

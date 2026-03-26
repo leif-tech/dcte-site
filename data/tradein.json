@@ -1,0 +1,85 @@
+{
+  "conditions": {
+    "excellent": { "label": "Excellent: Works perfectly, no scratches", "multiplier": 1 },
+    "good": { "label": "Good: Works well, minor wear", "multiplier": 0.7 },
+    "fair": { "label": "Fair: Works but has issues or cosmetic damage", "multiplier": 0.4 },
+    "broken": { "label": "Not Working: For parts only", "multiplier": 0.15 }
+  },
+  "types": {
+    "gpu": { "label": "GPU / Video Card", "icon": "\ud83c\udfae", "models": [
+      { "name": "RTX 4090", "val": [22000, 28000] },
+      { "name": "RTX 4080 / 4080 Super", "val": [16000, 20000] },
+      { "name": "RTX 4070 Ti / 4070", "val": [11000, 14000] },
+      { "name": "RTX 4060 Ti", "val": [8000, 10000] },
+      { "name": "RTX 4060", "val": [6500, 8500] },
+      { "name": "RTX 3080 / 3090", "val": [8000, 12000] },
+      { "name": "RTX 3070 / 3070 Ti", "val": [5500, 7500] },
+      { "name": "RTX 3060 Ti", "val": [4500, 6000] },
+      { "name": "RTX 3060 12GB", "val": [3500, 5000] },
+      { "name": "RTX 3050", "val": [2500, 3500] },
+      { "name": "GTX 1660 Super / Ti", "val": [2500, 3500] },
+      { "name": "GTX 1650", "val": [1500, 2200] },
+      { "name": "GTX 1050 Ti", "val": [1000, 1600] },
+      { "name": "GTX 1030 / GT 730", "val": [300, 700] },
+      { "name": "RX 6700 XT", "val": [4500, 6000] },
+      { "name": "RX 6600 / 6600 XT", "val": [3000, 4200] },
+      { "name": "RX 580 8GB", "val": [1200, 2000] },
+      { "name": "RX 570 4GB", "val": [800, 1400] }
+    ]},
+    "cpu": { "label": "CPU / Processor", "icon": "\u26a1", "models": [
+      { "name": "Ryzen 9 5900X / 5950X", "val": [4500, 6500] },
+      { "name": "Ryzen 7 5800X / 5700X", "val": [2500, 3800] },
+      { "name": "Ryzen 7 5700G", "val": [2200, 3200] },
+      { "name": "Ryzen 5 5600X", "val": [1800, 2600] },
+      { "name": "Ryzen 5 5600 / 5500", "val": [1400, 2200] },
+      { "name": "Ryzen 5 3600", "val": [1000, 1600] },
+      { "name": "Ryzen 5 3400G / 3200G", "val": [800, 1400] },
+      { "name": "Ryzen 3 3100", "val": [600, 1000] },
+      { "name": "i7-12700 / 13700", "val": [4000, 6000] },
+      { "name": "i5-12400 / 13400", "val": [2200, 3500] },
+      { "name": "i5-11400 / 10400", "val": [1400, 2200] },
+      { "name": "i3-12100 / 13100", "val": [1500, 2200] },
+      { "name": "i3-10100 / 10105", "val": [800, 1300] }
+    ]},
+    "ram": { "label": "RAM / Memory", "icon": "\ud83e\udde9", "models": [
+      { "name": "DDR5 32GB Kit (5600+)", "val": [1800, 2800] },
+      { "name": "DDR5 16GB Kit (5200+)", "val": [1000, 1700] },
+      { "name": "DDR4 32GB Kit (3200+)", "val": [1200, 1800] },
+      { "name": "DDR4 16GB Kit (3200+)", "val": [700, 1100] },
+      { "name": "DDR4 16GB Kit (2666)", "val": [500, 800] },
+      { "name": "DDR4 8GB Single (3200)", "val": [300, 500] },
+      { "name": "DDR4 8GB Single (2666)", "val": [200, 400] },
+      { "name": "DDR3 8GB", "val": [150, 300] },
+      { "name": "DDR3 4GB", "val": [80, 150] }
+    ]},
+    "mobo": { "label": "Motherboard", "icon": "\ud83d\udd27", "models": [
+      { "name": "X570 (AM4)", "val": [1800, 3000] },
+      { "name": "B550 (AM4)", "val": [1200, 2200] },
+      { "name": "B450 (AM4)", "val": [700, 1400] },
+      { "name": "A520 (AM4)", "val": [600, 1000] },
+      { "name": "Z690 / Z790 (LGA1700)", "val": [2500, 4000] },
+      { "name": "B660 / B760 (LGA1700)", "val": [1500, 2500] },
+      { "name": "H610 (LGA1700)", "val": [800, 1400] },
+      { "name": "B460 / Z490 (LGA1200)", "val": [800, 1600] },
+      { "name": "H510 / H410 (LGA1200)", "val": [500, 900] }
+    ]},
+    "psu": { "label": "Power Supply", "icon": "\ud83d\udd0c", "models": [
+      { "name": "850W+ 80+ Gold (Modular)", "val": [1500, 2500] },
+      { "name": "750W 80+ Gold", "val": [1200, 1800] },
+      { "name": "650W 80+ Bronze/Gold", "val": [700, 1200] },
+      { "name": "550W 80+ Bronze", "val": [400, 800] },
+      { "name": "500W Generic / Non-rated", "val": [150, 400] },
+      { "name": "UPS 1500VA+", "val": [800, 1500] },
+      { "name": "UPS 650-1000VA", "val": [400, 800] }
+    ]},
+    "monitor": { "label": "Monitor", "icon": "\ud83d\udcbb", "models": [
+      { "name": "32\"+ 144Hz+ QHD/4K", "val": [3500, 5500] },
+      { "name": "27\" 240Hz IPS", "val": [3000, 4500] },
+      { "name": "27\" 144-165Hz IPS/VA", "val": [2000, 3200] },
+      { "name": "27\" 75-100Hz IPS", "val": [1200, 2000] },
+      { "name": "24\" 144Hz+ IPS/VA", "val": [1400, 2200] },
+      { "name": "24\" 75-100Hz IPS", "val": [800, 1400] },
+      { "name": "22\" FHD", "val": [500, 900] }
+    ]}
+  }
+}
