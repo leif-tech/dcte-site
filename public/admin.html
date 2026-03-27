@@ -681,7 +681,7 @@
 
   function toggleDeleteCatBtn() {
     const cat = document.getElementById('prodCatFilter').value;
-    document.getElementById('deleteCatBtn').style.display = cat ? '' : 'none';
+    document.getElementById('deleteCatBtn').style.display = (cat && cat !== '__uncategorized__') ? '' : 'none';
   }
 
   async function deleteCategory() {
@@ -975,9 +975,10 @@
       syncCatDropdown();
       const sel = document.getElementById('prodCatFilter');
       const prevFilter = sel.value;
-      const cats = [...new Set(allProducts.map(p => p.cat))];
-      sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('');
-      if (prevFilter && cats.includes(prevFilter)) sel.value = prevFilter;
+      const cats = [...new Set(allProducts.map(p => p.cat).filter(Boolean))];
+      const hasUncategorized = allProducts.some(p => !p.cat);
+      sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('') + (hasUncategorized ? '<option value="__uncategorized__">Uncategorized</option>' : '');
+      if (prevFilter && (cats.includes(prevFilter) || prevFilter === '__uncategorized__')) sel.value = prevFilter;
       selectedProducts.clear();
       updateBulkBar();
       renderProducts();
@@ -989,7 +990,8 @@
     const catFilter = document.getElementById('prodCatFilter').value;
     let list = allProducts;
     if (search) list = list.filter(p => p.name.toLowerCase().includes(search) || p.cat.includes(search));
-    if (catFilter) list = list.filter(p => p.cat === catFilter);
+    if (catFilter === '__uncategorized__') list = list.filter(p => !p.cat);
+    else if (catFilter) list = list.filter(p => p.cat === catFilter);
     const tbody = document.getElementById('productsBody');
     tbody.innerHTML = list.map(p => {
       const ss = deriveStockStatus(p.stock);
