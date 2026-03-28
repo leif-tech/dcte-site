@@ -976,8 +976,8 @@
       const sel = document.getElementById('prodCatFilter');
       const prevFilter = sel.value;
       const cats = [...new Set(allProducts.map(p => p.cat).filter(Boolean))];
-      const hasUncategorized = allProducts.some(p => !p.cat);
-      sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('') + (hasUncategorized ? '<option value="__uncategorized__">Uncategorized</option>' : '');
+      const uncatCount = allProducts.filter(p => !p.cat).length;
+      sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${catLabels[c] || c}</option>`).join('') + `<option value="__uncategorized__">Uncategorized (${uncatCount})</option>`;
       if (prevFilter && (cats.includes(prevFilter) || prevFilter === '__uncategorized__')) sel.value = prevFilter;
       selectedProducts.clear();
       updateBulkBar();
