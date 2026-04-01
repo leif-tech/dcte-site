@@ -370,7 +370,7 @@ app.get('/api/admin/products', authMiddleware, (req, res) => {
 
 app.post('/api/admin/products', authMiddleware, (req, res) => {
   const products = readJSON('products.json');
-  const { cat, label, name, price, img, stock, condition, badge, specs, shopee } = req.body;
+  const { cat, label, name, price, priceTiers, img, stock, condition, badge, specs, shopee } = req.body;
   if (!cat || !name || !price || isNaN(Number(price)) || Number(price) <= 0) {
     return res.status(400).json({ error: 'Category, name, and valid price are required' });
   }
@@ -382,6 +382,7 @@ app.post('/api/admin/products', authMiddleware, (req, res) => {
   const product = {
     id: 'prod-' + (maxNum + 1),
     cat, label: label || cat, name, price: Number(price),
+    priceTiers: priceTiers || null,
     img: img || '', stock: stock !== undefined ? Number(stock) : 50, condition: condition || 'new',
     badge: badge || null, specs: specs || {}, shopee: !!shopee
   };
@@ -396,11 +397,12 @@ app.put('/api/admin/products/:id', authMiddleware, (req, res) => {
   const idx = products.findIndex(p => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Product not found' });
 
-  const { cat, label, name, price, img, stock, condition, badge, specs, shopee } = req.body;
+  const { cat, label, name, price, priceTiers, img, stock, condition, badge, specs, shopee } = req.body;
   if (cat !== undefined) products[idx].cat = cat;
   if (label !== undefined) products[idx].label = label;
   if (name !== undefined) products[idx].name = name;
   if (price !== undefined) products[idx].price = Number(price);
+  if (priceTiers !== undefined) products[idx].priceTiers = priceTiers;
   if (img !== undefined) products[idx].img = img;
   if (stock !== undefined) products[idx].stock = Number(stock);
   if (condition !== undefined) products[idx].condition = condition;

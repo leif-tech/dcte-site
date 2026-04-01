@@ -549,9 +549,25 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Price (PHP)</label>
+          <label>Cash Price (PHP)</label>
           <input type="number" id="fPrice" placeholder="0" min="0" required>
         </div>
+        <div class="form-group">
+          <label>Installment Price</label>
+          <input type="number" id="fPriceInstallment" placeholder="0 (leave empty to hide)" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Credit Card Price</label>
+          <input type="number" id="fPriceCreditCard" placeholder="0 (leave empty to hide)" min="0">
+        </div>
+        <div class="form-group">
+          <label>Home Credit Price</label>
+          <input type="number" id="fPriceHomeCredit" placeholder="0 (leave empty to hide)" min="0">
+        </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
           <label>Image</label>
           <input type="text" id="fImg" placeholder="URL or upload..." oninput="previewImg()">
@@ -1104,6 +1120,9 @@
     document.getElementById('fLabel').value = product ? product.label : 'Video Card';
     document.getElementById('fName').value = product ? product.name : '';
     document.getElementById('fPrice').value = product ? product.price : '';
+    document.getElementById('fPriceInstallment').value = product && product.priceTiers && product.priceTiers.installment ? product.priceTiers.installment : '';
+    document.getElementById('fPriceCreditCard').value = product && product.priceTiers && product.priceTiers.creditCard ? product.priceTiers.creditCard : '';
+    document.getElementById('fPriceHomeCredit').value = product && product.priceTiers && product.priceTiers.homeCredit ? product.priceTiers.homeCredit : '';
     document.getElementById('fImg').value = product ? product.img : '';
     document.getElementById('fStock').value = product ? product.stock : 50;
     document.getElementById('fCondition').value = product ? product.condition : 'new';
@@ -1306,11 +1325,19 @@
       catVal = document.getElementById('fCatCustomKey').value.trim();
       if (!catVal) return alert('Please enter a category key');
     }
+    const priceTiers = {};
+    const piVal = parseFloat(document.getElementById('fPriceInstallment').value);
+    const pcVal = parseFloat(document.getElementById('fPriceCreditCard').value);
+    const phVal = parseFloat(document.getElementById('fPriceHomeCredit').value);
+    if (piVal > 0) priceTiers.installment = piVal;
+    if (pcVal > 0) priceTiers.creditCard = pcVal;
+    if (phVal > 0) priceTiers.homeCredit = phVal;
     const body = {
       cat: catVal,
       label: document.getElementById('fLabel').value,
       name: document.getElementById('fName').value,
       price: parseFloat(document.getElementById('fPrice').value),
+      priceTiers: Object.keys(priceTiers).length > 0 ? priceTiers : null,
       img: document.getElementById('fImg').value,
       stock: Number(document.getElementById('fStock').value) || 0,
       condition: document.getElementById('fCondition').value,
