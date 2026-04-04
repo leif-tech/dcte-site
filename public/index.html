@@ -1577,20 +1577,22 @@
     }
 
     function signInWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithRedirect(provider);
+      var provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then(function(result) {
+        closeAuthModal();
+      }).catch(function(err) {
+        console.error('Google sign-in error:', err.code, err.message);
+        if (err.code === 'auth/account-exists-with-different-credential') {
+          showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
+        } else if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+          // User closed popup, do nothing
+        } else if (err.code === 'auth/popup-blocked') {
+          showToast('Popup Blocked', 'Please allow popups for this site and try again.', '&#9888;');
+        } else {
+          showToast('Sign-In Error', err.message || 'Google sign-in failed', '&#9888;');
+        }
+      });
     }
-
-    // Handle Google redirect result on page load
-    auth.getRedirectResult().then(result => {
-      if (result.user) { closeAuthModal(); }
-    }).catch(err => {
-      if (err.code === 'auth/account-exists-with-different-credential') {
-        showToast('Account Exists', 'Try signing in with the other provider linked to this email.', '&#9888;');
-      } else if (err.message) {
-        showToast('Sign-In Error', err.message, '&#9888;');
-      }
-    });
 
     function signInWithFacebook() {
       if (typeof FB === 'undefined') {
@@ -1603,10 +1605,11 @@
           auth.signInWithCredential(credential).then(function() {
             closeAuthModal();
           }).catch(function(err) {
+            console.error('Facebook credential error:', err.code, err.message);
             if (err.code === 'auth/account-exists-with-different-credential') {
               showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
             } else {
-              showToast('Sign-In Error', err.message, '&#9888;');
+              showToast('Sign-In Error', err.message || 'Facebook sign-in failed', '&#9888;');
             }
           });
         }
