@@ -1567,8 +1567,10 @@
         localStorage.setItem('dcte_user', JSON.stringify({ name: user.displayName, email: user.email, uid: user.uid, photo: user.photoURL }));
         // Register customer in backend for marketing
         registerCustomer(user);
-        // Execute pending action
-        if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; closeAuthModal(); setTimeout(action, 100); }
+        // Close the auth modal and execute pending action if any
+        closeAuthModal();
+        showToast('Welcome!', 'Signed in as ' + firstName, '&#128075;');
+        if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; setTimeout(action, 100); }
       } else {
         loginBtn.style.display = 'flex';
         avatar.style.display = 'none';
