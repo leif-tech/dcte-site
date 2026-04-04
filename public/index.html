@@ -28,7 +28,6 @@
   <!-- Facebook SDK for direct OAuth (avoids Firebase redirect handler domain issues) -->
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <!-- Google Identity Services for direct OAuth -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preload" as="image" href="/hero-1.jpg">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -1517,39 +1516,8 @@
       FB.init({ appId: '1621416802476680', cookie: false, xfbml: false, version: 'v21.0' });
     };
 
-    // Initialize Google Identity Services (uses native Google sign-in to avoid Firebase popup/redirect issues)
-    var googleClient = null;
-    function initGoogleClient() {
-      if (googleClient || typeof google === 'undefined' || !google.accounts) return;
-      googleClient = google.accounts.oauth2.initTokenClient({
-        client_id: '318464562975-53bmm8csu72j6ijaslsin2gu89lpo4hn.apps.googleusercontent.com',
-        scope: 'email profile openid',
-        callback: function(response) {
-          console.log('[GOOGLE] Token response received:', JSON.stringify(response));
-          if (response.access_token) {
-            console.log('[GOOGLE] Got access_token, creating credential...');
-            var credential = firebase.auth.GoogleAuthProvider.credential(null, response.access_token);
-            console.log('[GOOGLE] Calling signInWithCredential...');
-            auth.signInWithCredential(credential).then(function(result) {
-              console.log('[GOOGLE] signInWithCredential SUCCESS:', result.user.email);
-              closeAuthModal();
-            }).catch(function(err) {
-              console.error('[GOOGLE] signInWithCredential FAILED:', err.code, err.message);
-              if (err.code === 'auth/account-exists-with-different-credential') {
-                showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
-              } else {
-                showToast('Sign-In Error', err.message || 'Google sign-in failed', '&#9888;');
-              }
-            });
-          } else if (response.error) {
-            console.error('[GOOGLE] Token error:', response.error);
-            showToast('Sign-In Error', response.error, '&#9888;');
-          } else {
-            console.log('[GOOGLE] No token and no error in response');
-          }
-        }
-      });
-    }
+    // Google Auth Provider (using Firebase signInWithPopup — works now that COOP header is disabled)
+    var googleProvider = new firebase.auth.GoogleAuthProvider();
 
     // Auth state listener
     console.log('[AUTH] Setting up onAuthStateChanged listener');
@@ -1617,14 +1585,20 @@
     }
 
     function signInWithGoogle() {
-      console.log('[GOOGLE] signInWithGoogle called');
-      initGoogleClient();
-      console.log('[GOOGLE] googleClient:', googleClient ? 'ready' : 'null');
-      if (!googleClient) {
-        showToast('Loading...', 'Google is still loading. Please try again in a moment.', '&#9888;');
-        return;
-      }
-      googleClient.requestAccessToken();
+      console.log('[GOOGLE] signInWithPopup called');
+      auth.signInWithPopup(googleProvider).then(function(result) {
+        console.log('[GOOGLE] signInWithPopup SUCCESS:', result.user.email);
+        closeAuthModal();
+      }).catch(function(err) {
+        console.error('[GOOGLE] signInWithPopup FAILED:', err.code, err.message);
+        if (err.code === 'auth/popup-closed-by-user') {
+          // User closed popup, no action needed
+        } else if (err.code === 'auth/account-exists-with-different-credential') {
+          showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
+        } else {
+          showToast('Sign-In Error', err.message || 'Google sign-in failed', '&#9888;');
+        }
+      });
     }
 
     function signInWithFacebook() {
