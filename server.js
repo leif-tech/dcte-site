@@ -717,6 +717,12 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+// Serve Facebook auth callback with no-cache (must always load latest version)
+app.get('/fb-auth-callback.html', (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.sendFile(path.join(__dirname, 'public', 'fb-auth-callback.html'));
+});
+
 // Serve privacy and data deletion pages
 app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
