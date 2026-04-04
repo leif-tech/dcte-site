@@ -1516,57 +1516,47 @@
     facebookProvider.addScope('email');
 
     // Auth state listener
-    console.log('[AUTH] Setting up onAuthStateChanged listener');
     auth.onAuthStateChanged(user => {
-      console.log('[AUTH] onAuthStateChanged fired, user:', user ? user.email : 'null');
-      try {
-        currentUser = user;
-        const loginBtn = document.getElementById('navLoginBtn');
-        const avatar = document.getElementById('navUserAvatar');
-        const userName = document.getElementById('navUserName');
-        const mobileLink = document.getElementById('mobileAuthLink');
-        console.log('[AUTH] DOM elements:', { loginBtn: !!loginBtn, avatar: !!avatar, userName: !!userName, mobileLink: !!mobileLink });
-        if (user) {
-          const firstName = (user.displayName || '').split(' ')[0] || 'User';
-          console.log('[AUTH] User signed in:', firstName, user.email, 'photoURL:', user.photoURL);
-          if (loginBtn) loginBtn.style.display = 'none';
-          if (avatar) {
-            avatar.src = user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238b2fc9"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 00-8 0v2"/></svg>';
-            avatar.style.display = 'block';
-          }
-          if (userName) {
-            userName.textContent = firstName;
-            userName.style.display = 'block';
-          }
-          var udName = document.getElementById('udName');
-          var udEmail = document.getElementById('udEmail');
-          if (udName) udName.textContent = user.displayName || 'User';
-          if (udEmail) udEmail.textContent = user.email || '';
-          if (mobileLink) {
-            mobileLink.textContent = 'Sign Out (' + firstName + ')';
-            mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); signOutUser(); };
-          }
-          localStorage.setItem('dcte_user', JSON.stringify({ name: user.displayName, email: user.email, uid: user.uid, photo: user.photoURL }));
-          registerCustomer(user);
-          console.log('[AUTH] Closing modal...');
-          closeAuthModal();
-          showToast('Welcome!', 'Signed in as ' + firstName, '&#128075;');
-          console.log('[AUTH] UI update complete');
-          if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; setTimeout(action, 100); }
-        } else {
-          if (loginBtn) loginBtn.style.display = 'flex';
-          if (avatar) avatar.style.display = 'none';
-          if (userName) userName.style.display = 'none';
-          var dropdown = document.getElementById('navUserDropdown');
-          if (dropdown) dropdown.classList.remove('open');
-          if (mobileLink) {
-            mobileLink.textContent = 'Sign In';
-            mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); openAuthModal(); };
-          }
-          localStorage.removeItem('dcte_user');
+      currentUser = user;
+      const loginBtn = document.getElementById('navLoginBtn');
+      const avatar = document.getElementById('navUserAvatar');
+      const userName = document.getElementById('navUserName');
+      const mobileLink = document.getElementById('mobileAuthLink');
+      if (user) {
+        const firstName = (user.displayName || '').split(' ')[0] || 'User';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (avatar) {
+          avatar.src = user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238b2fc9"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 00-8 0v2"/></svg>';
+          avatar.style.display = 'block';
         }
-      } catch (e) {
-        console.error('[AUTH] ERROR in onAuthStateChanged:', e.message, e.stack);
+        if (userName) {
+          userName.textContent = firstName;
+          userName.style.display = 'block';
+        }
+        var udName = document.getElementById('udName');
+        var udEmail = document.getElementById('udEmail');
+        if (udName) udName.textContent = user.displayName || 'User';
+        if (udEmail) udEmail.textContent = user.email || '';
+        if (mobileLink) {
+          mobileLink.textContent = 'Sign Out (' + firstName + ')';
+          mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); signOutUser(); };
+        }
+        localStorage.setItem('dcte_user', JSON.stringify({ name: user.displayName, email: user.email, uid: user.uid, photo: user.photoURL }));
+        registerCustomer(user);
+        closeAuthModal();
+        showToast('Welcome!', 'Signed in as ' + firstName, '&#128075;');
+        if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; setTimeout(action, 100); }
+      } else {
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (avatar) avatar.style.display = 'none';
+        if (userName) userName.style.display = 'none';
+        var dropdown = document.getElementById('navUserDropdown');
+        if (dropdown) dropdown.classList.remove('open');
+        if (mobileLink) {
+          mobileLink.textContent = 'Sign In';
+          mobileLink.onclick = function(e) { e.preventDefault(); closeMobile(); openAuthModal(); };
+        }
+        localStorage.removeItem('dcte_user');
       }
     });
 
@@ -1597,12 +1587,9 @@
     }
 
     function signInWithGoogle() {
-      console.log('[GOOGLE] signInWithPopup called');
       auth.signInWithPopup(googleProvider).then(function(result) {
-        console.log('[GOOGLE] signInWithPopup SUCCESS:', result.user.email);
         closeAuthModal();
       }).catch(function(err) {
-        console.error('[GOOGLE] signInWithPopup FAILED:', err.code, err.message);
         if (err.code === 'auth/popup-closed-by-user') {
           // User closed popup, no action needed
         } else if (err.code === 'auth/account-exists-with-different-credential') {
@@ -1614,12 +1601,9 @@
     }
 
     function signInWithFacebook() {
-      console.log('[FB] signInWithPopup called');
       auth.signInWithPopup(facebookProvider).then(function(result) {
-        console.log('[FB] signInWithPopup SUCCESS:', result.user.email);
         closeAuthModal();
       }).catch(function(err) {
-        console.error('[FB] signInWithPopup FAILED:', err.code, err.message);
         if (err.code === 'auth/popup-closed-by-user') {
           // User closed popup, no action needed
         } else if (err.code === 'auth/account-exists-with-different-credential') {
