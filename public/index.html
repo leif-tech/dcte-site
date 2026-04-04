@@ -27,6 +27,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <!-- Facebook SDK for direct OAuth (avoids Firebase redirect handler domain issues) -->
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <!-- Google Identity Services for direct OAuth -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preload" as="image" href="/hero-1.jpg">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -1515,6 +1517,34 @@
       FB.init({ appId: '1621416802476680', cookie: true, xfbml: false, version: 'v19.0' });
     };
 
+    // Initialize Google Identity Services (uses native Google sign-in to avoid Firebase popup/redirect issues)
+    var googleClient = null;
+    function initGoogleClient() {
+      if (googleClient || typeof google === 'undefined' || !google.accounts) return;
+      googleClient = google.accounts.oauth2.initTokenClient({
+        client_id: '318464562975-53bmm8csu72j6ijaslsin2gu89lpo4hn.apps.googleusercontent.com',
+        scope: 'email profile openid',
+        callback: function(response) {
+          if (response.access_token) {
+            var credential = firebase.auth.GoogleAuthProvider.credential(null, response.access_token);
+            auth.signInWithCredential(credential).then(function() {
+              closeAuthModal();
+            }).catch(function(err) {
+              console.error('Google credential error:', err.code, err.message);
+              if (err.code === 'auth/account-exists-with-different-credential') {
+                showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
+              } else {
+                showToast('Sign-In Error', err.message || 'Google sign-in failed', '&#9888;');
+              }
+            });
+          } else if (response.error) {
+            console.error('Google token error:', response.error);
+            showToast('Sign-In Error', response.error, '&#9888;');
+          }
+        }
+      });
+    }
+
     // Auth state listener
     auth.onAuthStateChanged(user => {
       currentUser = user;
@@ -1577,21 +1607,12 @@
     }
 
     function signInWithGoogle() {
-      var provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then(function(result) {
-        closeAuthModal();
-      }).catch(function(err) {
-        console.error('Google sign-in error:', err.code, err.message);
-        if (err.code === 'auth/account-exists-with-different-credential') {
-          showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
-        } else if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-          // User closed popup, do nothing
-        } else if (err.code === 'auth/popup-blocked') {
-          showToast('Popup Blocked', 'Please allow popups for this site and try again.', '&#9888;');
-        } else {
-          showToast('Sign-In Error', err.message || 'Google sign-in failed', '&#9888;');
-        }
-      });
+      initGoogleClient();
+      if (!googleClient) {
+        showToast('Loading...', 'Google is still loading. Please try again in a moment.', '&#9888;');
+        return;
+      }
+      googleClient.requestAccessToken();
     }
 
     function signInWithFacebook() {
@@ -1600,7 +1621,8 @@
         return;
       }
       FB.login(function(response) {
-        if (response.authResponse) {
+        console.log('FB.login response:', JSON.stringify(response));
+        if (response.authResponse && response.authResponse.accessToken) {
           var credential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
           auth.signInWithCredential(credential).then(function() {
             closeAuthModal();
@@ -1612,8 +1634,13 @@
               showToast('Sign-In Error', err.message || 'Facebook sign-in failed', '&#9888;');
             }
           });
+        } else {
+          console.error('FB.login: no authResponse', response);
+          if (response.status === 'not_authorized') {
+            showToast('Not Authorized', 'You need to authorize the app to sign in.', '&#9888;');
+          }
         }
-      }, { scope: 'email,public_profile' });
+      }, { scope: 'email,public_profile', return_scopes: true });
     }
     function signOutUser() {
       auth.signOut();
