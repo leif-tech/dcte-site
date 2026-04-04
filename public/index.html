@@ -1525,12 +1525,16 @@
         client_id: '318464562975-53bmm8csu72j6ijaslsin2gu89lpo4hn.apps.googleusercontent.com',
         scope: 'email profile openid',
         callback: function(response) {
+          console.log('[GOOGLE] Token response received:', JSON.stringify(response));
           if (response.access_token) {
+            console.log('[GOOGLE] Got access_token, creating credential...');
             var credential = firebase.auth.GoogleAuthProvider.credential(null, response.access_token);
-            auth.signInWithCredential(credential).then(function() {
+            console.log('[GOOGLE] Calling signInWithCredential...');
+            auth.signInWithCredential(credential).then(function(result) {
+              console.log('[GOOGLE] signInWithCredential SUCCESS:', result.user.email);
               closeAuthModal();
             }).catch(function(err) {
-              console.error('Google credential error:', err.code, err.message);
+              console.error('[GOOGLE] signInWithCredential FAILED:', err.code, err.message);
               if (err.code === 'auth/account-exists-with-different-credential') {
                 showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
               } else {
@@ -1538,15 +1542,19 @@
               }
             });
           } else if (response.error) {
-            console.error('Google token error:', response.error);
+            console.error('[GOOGLE] Token error:', response.error);
             showToast('Sign-In Error', response.error, '&#9888;');
+          } else {
+            console.log('[GOOGLE] No token and no error in response');
           }
         }
       });
     }
 
     // Auth state listener
+    console.log('[AUTH] Setting up onAuthStateChanged listener');
     auth.onAuthStateChanged(user => {
+      console.log('[AUTH] onAuthStateChanged fired, user:', user ? user.email : 'null');
       currentUser = user;
       const loginBtn = document.getElementById('navLoginBtn');
       const avatar = document.getElementById('navUserAvatar');
@@ -1609,7 +1617,9 @@
     }
 
     function signInWithGoogle() {
+      console.log('[GOOGLE] signInWithGoogle called');
       initGoogleClient();
+      console.log('[GOOGLE] googleClient:', googleClient ? 'ready' : 'null');
       if (!googleClient) {
         showToast('Loading...', 'Google is still loading. Please try again in a moment.', '&#9888;');
         return;
@@ -1618,6 +1628,7 @@
     }
 
     function signInWithFacebook() {
+      console.log('[FB] signInWithFacebook called');
       // Manual OAuth popup — most reliable, no dependency on FB SDK cookies
       var appId = '1621416802476680';
       var redirectUri = encodeURIComponent(window.location.origin + '/fb-auth-callback.html');
@@ -1629,16 +1640,21 @@
       var popup = window.open(authUrl, 'fb_login', 'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top);
 
       // Listen for the callback from the popup
+      console.log('[FB] Popup opened, waiting for postMessage...');
       window.addEventListener('message', function fbHandler(event) {
+        console.log('[FB] Received message from:', event.origin, 'data:', JSON.stringify(event.data));
         if (event.origin !== window.location.origin) return;
         if (event.data && event.data.type === 'fb-auth') {
           window.removeEventListener('message', fbHandler);
           if (event.data.accessToken) {
+            console.log('[FB] Got access_token, creating credential...');
             var credential = firebase.auth.FacebookAuthProvider.credential(event.data.accessToken);
-            auth.signInWithCredential(credential).then(function() {
+            console.log('[FB] Calling signInWithCredential...');
+            auth.signInWithCredential(credential).then(function(result) {
+              console.log('[FB] signInWithCredential SUCCESS:', result.user.email);
               closeAuthModal();
             }).catch(function(err) {
-              console.error('Facebook credential error:', err.code, err.message);
+              console.error('[FB] signInWithCredential FAILED:', err.code, err.message);
               if (err.code === 'auth/account-exists-with-different-credential') {
                 showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
               } else {
@@ -1646,6 +1662,7 @@
               }
             });
           } else {
+            console.log('[FB] No access_token received');
             showToast('Sign-In Error', 'Facebook login was cancelled or failed.', '&#9888;');
           }
         }
