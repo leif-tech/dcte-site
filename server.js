@@ -71,6 +71,12 @@ app.use(helmet({
 }));
 app.use(express.json({ limit: '10mb' }));
 
+// Serve Facebook auth callback BEFORE static middleware (must bypass 7-day cache)
+app.get('/fb-auth-callback.html', (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.sendFile(path.join(__dirname, 'public', 'fb-auth-callback.html'));
+});
+
 // Static files with long cache (images, fonts, etc.)
 const staticCacheOptions = { maxAge: '7d', etag: true, lastModified: true };
 app.use(express.static(path.join(__dirname, 'public'), staticCacheOptions));
@@ -715,12 +721,6 @@ app.all('/api/*', (req, res) => {
 // Serve admin panel
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// Serve Facebook auth callback with no-cache (must always load latest version)
-app.get('/fb-auth-callback.html', (req, res) => {
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
-  res.sendFile(path.join(__dirname, 'public', 'fb-auth-callback.html'));
 });
 
 // Serve privacy and data deletion pages
