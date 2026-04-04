@@ -64,18 +64,16 @@ const upload = multer({
 });
 
 app.use(compression());
+// IMPORTANT: Do NOT change these Helmet settings without testing Google & Facebook login.
+// crossOriginOpenerPolicy MUST be false — setting it to 'same-origin' will break
+// Firebase signInWithPopup for both Google and Facebook by killing window.opener
+// in the OAuth popup, causing silent auth failures.
 app.use(helmet({
-  contentSecurityPolicy: false, // Allow inline scripts/styles in SPA
+  contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
-  crossOriginOpenerPolicy: false // Allow window.opener in OAuth popups (FB/Google login)
+  crossOriginOpenerPolicy: false
 }));
 app.use(express.json({ limit: '10mb' }));
-
-// Serve Facebook auth callback BEFORE static middleware (must bypass 7-day cache)
-app.get('/fb-auth-callback.html', (req, res) => {
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
-  res.sendFile(path.join(__dirname, 'public', 'fb-auth-callback.html'));
-});
 
 // Static files with long cache (images, fonts, etc.)
 const staticCacheOptions = { maxAge: '7d', etag: true, lastModified: true };

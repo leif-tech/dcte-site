@@ -25,8 +25,6 @@
   <!-- Firebase Auth SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <!-- Facebook SDK for direct OAuth (avoids Firebase redirect handler domain issues) -->
-  <!-- Google Identity Services for direct OAuth -->
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preload" as="image" href="/hero-1.jpg">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -1510,7 +1508,9 @@
     let currentUser = null;
     let pendingAuthAction = null;
 
-    // Auth Providers (using Firebase signInWithPopup — works now that COOP header is disabled)
+    // Auth Providers — uses Firebase signInWithPopup (requires crossOriginOpenerPolicy:false in server.js Helmet config)
+    // Google Cloud Console: Authorized JS origins must include https://dctestore.com
+    // Facebook Developer Console: Valid OAuth Redirect URIs must include https://dctestore.firebaseapp.com/__/auth/handler
     var googleProvider = new firebase.auth.GoogleAuthProvider();
     var facebookProvider = new firebase.auth.FacebookAuthProvider();
     facebookProvider.addScope('email');
@@ -1590,8 +1590,8 @@
       auth.signInWithPopup(googleProvider).then(function(result) {
         closeAuthModal();
       }).catch(function(err) {
-        if (err.code === 'auth/popup-closed-by-user') {
-          // User closed popup, no action needed
+        if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+          // User closed popup or clicked another login button, no action needed
         } else if (err.code === 'auth/account-exists-with-different-credential') {
           showToast('Account Exists', 'Try signing in with Facebook instead.', '&#9888;');
         } else {
@@ -1604,8 +1604,8 @@
       auth.signInWithPopup(facebookProvider).then(function(result) {
         closeAuthModal();
       }).catch(function(err) {
-        if (err.code === 'auth/popup-closed-by-user') {
-          // User closed popup, no action needed
+        if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+          // User closed popup or clicked another login button, no action needed
         } else if (err.code === 'auth/account-exists-with-different-credential') {
           showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
         } else {
