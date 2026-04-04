@@ -66,7 +66,8 @@ const upload = multer({
 app.use(compression());
 app.use(helmet({
   contentSecurityPolicy: false, // Allow inline scripts/styles in SPA
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false // Allow window.opener in OAuth popups (FB/Google login)
 }));
 app.use(express.json({ limit: '10mb' }));
 
