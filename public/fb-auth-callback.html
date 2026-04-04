@@ -2,22 +2,55 @@
 <html>
 <head><title>Signing in...</title></head>
 <body>
-<p>Signing in, please wait...</p>
+<p id="status">Signing in, please wait...</p>
+<pre id="debug" style="background:#222;color:#0f0;padding:10px;margin:10px;font-size:12px;white-space:pre-wrap;word-break:break-all"></pre>
 <script>
-  // Facebook redirects here with access_token in the URL hash
+  var dbg = document.getElementById('debug');
+  var status = document.getElementById('status');
+
+  function log(msg) {
+    dbg.textContent += msg + '\n';
+    console.log('[FB-CALLBACK] ' + msg);
+  }
+
+  log('Page loaded');
+  log('window.opener: ' + (window.opener ? 'EXISTS' : 'NULL'));
+  log('window.location.origin: ' + window.location.origin);
+  log('window.location.hash: ' + window.location.hash);
+  log('window.location.href: ' + window.location.href);
+  log('window.location.search: ' + window.location.search);
+
   var hash = window.location.hash.substring(1);
   var params = {};
-  hash.split('&').forEach(function(part) {
-    var kv = part.split('=');
-    params[kv[0]] = decodeURIComponent(kv[1] || '');
-  });
+  if (hash) {
+    hash.split('&').forEach(function(part) {
+      var kv = part.split('=');
+      params[kv[0]] = decodeURIComponent(kv[1] || '');
+    });
+  }
+
+  log('Parsed params: ' + JSON.stringify(Object.keys(params)));
+  log('Has access_token: ' + !!params.access_token);
 
   if (params.access_token && window.opener) {
+    log('Sending postMessage to opener...');
     window.opener.postMessage({ type: 'fb-auth', accessToken: params.access_token }, window.location.origin);
-  } else if (window.opener) {
-    window.opener.postMessage({ type: 'fb-auth', accessToken: null }, window.location.origin);
+    log('postMessage sent! Closing in 2s...');
+    status.textContent = 'Success! Closing...';
+    setTimeout(function() { window.close(); }, 2000);
+  } else if (params.error) {
+    log('Facebook returned error: ' + params.error + ' - ' + (params.error_description || ''));
+    status.textContent = 'Error: ' + (params.error_description || params.error);
+  } else if (!window.opener) {
+    log('ERROR: window.opener is NULL - cannot send token back');
+    status.textContent = 'Error: Lost connection to main window. Please close this and try again.';
+  } else {
+    log('No access_token in URL');
+    if (window.opener) {
+      window.opener.postMessage({ type: 'fb-auth', accessToken: null }, window.location.origin);
+    }
+    status.textContent = 'Login failed or cancelled. You can close this window.';
   }
-  window.close();
 </script>
 </body>
 </html>
