@@ -1571,30 +1571,27 @@
 
     function signInWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).catch(err => {
-        if (err.code === 'auth/popup-blocked') {
-          auth.signInWithRedirect(provider);
-        } else if (err.code === 'auth/account-exists-with-different-credential') {
-          showToast('Account Exists', 'Try signing in with the other provider linked to this email.', '&#9888;');
-        } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
-          showToast('Sign-In Error', err.message, '&#9888;');
-        }
-      });
+      auth.signInWithRedirect(provider);
     }
     function signInWithFacebook() {
       const provider = new firebase.auth.FacebookAuthProvider();
       provider.addScope('email');
       provider.addScope('public_profile');
-      auth.signInWithPopup(provider).catch(err => {
-        if (err.code === 'auth/popup-blocked') {
-          auth.signInWithRedirect(provider);
-        } else if (err.code === 'auth/account-exists-with-different-credential') {
-          showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
-        } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
-          showToast('Sign-In Error', err.message, '&#9888;');
-        }
-      });
+      auth.signInWithRedirect(provider);
     }
+
+    // Handle redirect result on page load
+    auth.getRedirectResult().then(result => {
+      if (result.user) {
+        closeAuthModal();
+      }
+    }).catch(err => {
+      if (err.code === 'auth/account-exists-with-different-credential') {
+        showToast('Account Exists', 'Try signing in with the other provider linked to this email.', '&#9888;');
+      } else {
+        showToast('Sign-In Error', err.message, '&#9888;');
+      }
+    });
     function signOutUser() {
       auth.signOut();
       document.getElementById('navUserDropdown').classList.remove('open');
