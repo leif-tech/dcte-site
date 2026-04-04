@@ -26,7 +26,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <!-- Facebook SDK for direct OAuth (avoids Firebase redirect handler domain issues) -->
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <!-- Google Identity Services for direct OAuth -->
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preload" as="image" href="/hero-1.jpg">
@@ -1511,13 +1510,10 @@
     let currentUser = null;
     let pendingAuthAction = null;
 
-    // Initialize Facebook SDK (uses native FB login to avoid Firebase redirect handler domain issues)
-    window.fbAsyncInit = function() {
-      FB.init({ appId: '1621416802476680', cookie: false, xfbml: false, version: 'v21.0' });
-    };
-
-    // Google Auth Provider (using Firebase signInWithPopup — works now that COOP header is disabled)
+    // Auth Providers (using Firebase signInWithPopup — works now that COOP header is disabled)
     var googleProvider = new firebase.auth.GoogleAuthProvider();
+    var facebookProvider = new firebase.auth.FacebookAuthProvider();
+    facebookProvider.addScope('email');
 
     // Auth state listener
     console.log('[AUTH] Setting up onAuthStateChanged listener');
@@ -1602,43 +1598,18 @@
     }
 
     function signInWithFacebook() {
-      console.log('[FB] signInWithFacebook called');
-      // Manual OAuth popup — most reliable, no dependency on FB SDK cookies
-      var appId = '1621416802476680';
-      var redirectUri = encodeURIComponent(window.location.origin + '/fb-auth-callback.html');
-      var scope = 'email,public_profile';
-      var authUrl = 'https://www.facebook.com/v21.0/dialog/oauth?client_id=' + appId +
-        '&redirect_uri=' + redirectUri + '&scope=' + scope + '&response_type=token';
-      var w = 500, h = 600;
-      var left = (screen.width - w) / 2, top = (screen.height - h) / 2;
-      var popup = window.open(authUrl, 'fb_login', 'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top);
-
-      // Listen for the callback from the popup
-      console.log('[FB] Popup opened, waiting for postMessage...');
-      window.addEventListener('message', function fbHandler(event) {
-        console.log('[FB] Received message from:', event.origin, 'data:', JSON.stringify(event.data));
-        if (event.origin !== window.location.origin) return;
-        if (event.data && event.data.type === 'fb-auth') {
-          window.removeEventListener('message', fbHandler);
-          if (event.data.accessToken) {
-            console.log('[FB] Got access_token, creating credential...');
-            var credential = firebase.auth.FacebookAuthProvider.credential(event.data.accessToken);
-            console.log('[FB] Calling signInWithCredential...');
-            auth.signInWithCredential(credential).then(function(result) {
-              console.log('[FB] signInWithCredential SUCCESS:', result.user.email);
-              closeAuthModal();
-            }).catch(function(err) {
-              console.error('[FB] signInWithCredential FAILED:', err.code, err.message);
-              if (err.code === 'auth/account-exists-with-different-credential') {
-                showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
-              } else {
-                showToast('Sign-In Error', err.message || 'Facebook sign-in failed', '&#9888;');
-              }
-            });
-          } else {
-            console.log('[FB] No access_token received');
-            showToast('Sign-In Error', 'Facebook login was cancelled or failed.', '&#9888;');
-          }
+      console.log('[FB] signInWithPopup called');
+      auth.signInWithPopup(facebookProvider).then(function(result) {
+        console.log('[FB] signInWithPopup SUCCESS:', result.user.email);
+        closeAuthModal();
+      }).catch(function(err) {
+        console.error('[FB] signInWithPopup FAILED:', err.code, err.message);
+        if (err.code === 'auth/popup-closed-by-user') {
+          // User closed popup, no action needed
+        } else if (err.code === 'auth/account-exists-with-different-credential') {
+          showToast('Account Exists', 'Try signing in with Google instead — same email is already linked.', '&#9888;');
+        } else {
+          showToast('Sign-In Error', err.message || 'Facebook sign-in failed', '&#9888;');
         }
       });
     }
