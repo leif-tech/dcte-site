@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Signing in...</title></head>
+<body>
+<p>Signing in, please wait...</p>
+<script>
+  // Facebook redirects here with access_token in the URL hash
+  var hash = window.location.hash.substring(1);
+  var params = {};
+  hash.split('&').forEach(function(part) {
+    var kv = part.split('=');
+    params[kv[0]] = decodeURIComponent(kv[1] || '');
+  });
+
+  if (params.access_token && window.opener) {
+    window.opener.postMessage({ type: 'fb-auth', accessToken: params.access_token }, window.location.origin);
+  } else if (window.opener) {
+    window.opener.postMessage({ type: 'fb-auth', accessToken: null }, window.location.origin);
+  }
+  window.close();
+</script>
+</body>
+</html>
