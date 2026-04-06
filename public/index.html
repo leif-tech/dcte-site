@@ -927,7 +927,12 @@
     .points-modal{
       background:#fff;border-radius:20px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;
       box-shadow:0 20px 60px rgba(0,0,0,0.2);
+      scrollbar-width:thin;scrollbar-color:rgba(139,47,201,0.3) transparent;
     }
+    .points-modal::-webkit-scrollbar{width:6px}
+    .points-modal::-webkit-scrollbar-track{background:transparent;border-radius:0 20px 20px 0}
+    .points-modal::-webkit-scrollbar-thumb{background:rgba(139,47,201,0.3);border-radius:6px}
+    .points-modal::-webkit-scrollbar-thumb:hover{background:rgba(139,47,201,0.5)}
     .points-modal-header{
       text-align:center;padding:28px 24px 20px;
       background:var(--grad);border-radius:20px 20px 0 0;color:#fff;position:relative;
@@ -954,7 +959,11 @@
       font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;color:var(--navy);
       margin-bottom:10px;
     }
-    .points-history-list{max-height:200px;overflow-y:auto}
+    .points-history-list{max-height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(139,47,201,0.25) transparent}
+    .points-history-list::-webkit-scrollbar{width:4px}
+    .points-history-list::-webkit-scrollbar-track{background:transparent}
+    .points-history-list::-webkit-scrollbar-thumb{background:rgba(139,47,201,0.25);border-radius:4px}
+    .points-history-list::-webkit-scrollbar-thumb:hover{background:rgba(139,47,201,0.4)}
     .points-history-item{
       display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);
       font-size:0.8rem;
