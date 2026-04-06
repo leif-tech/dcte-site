@@ -847,7 +847,7 @@ app.post('/api/admin/points/credit', authMiddleware, (req, res) => {
     return res.status(400).json({ error: 'Valid uid and purchase amount required' });
   }
   const purchaseAmount = Number(amount);
-  const pointsEarned = Math.floor(purchaseAmount); // 1 pt per ₱1
+  const pointsEarned = Math.floor(purchaseAmount / 2); // 1 pt per ₱2
 
   // Duplicate guard: same uid + amount within 30 seconds
   const dedupKey = uid + ':' + purchaseAmount;

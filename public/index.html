@@ -937,9 +937,15 @@
       background:none;border:none;cursor:pointer;
     }
     .points-modal-header .close:hover{color:#fff}
-    .points-modal-header h2{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:4px}
-    .points-balance-big{font-family:'Montserrat',sans-serif;font-size:2.4rem;font-weight:900;margin:8px 0 2px}
-    .points-peso-val{font-size:0.85rem;opacity:0.9}
+    .points-modal-header h2{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;margin:0;opacity:0.9}
+    .points-header-subtitle{font-size:0.75rem;opacity:0.8;margin-bottom:8px;letter-spacing:0.02em}
+    .points-peso-big{font-family:'Montserrat',sans-serif;font-size:2.8rem;font-weight:900;margin:6px 0 2px;letter-spacing:-0.02em}
+    .points-peso-label{font-size:0.9rem;font-weight:600;opacity:0.95;margin-bottom:6px}
+    .points-pts-small{font-size:0.72rem;opacity:0.7;background:rgba(255,255,255,0.15);display:inline-block;padding:3px 12px;border-radius:20px}
+    .points-how{display:flex;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
+    .points-how-item{display:flex;align-items:center;gap:8px;flex:1;padding:10px 12px;border-radius:10px;background:var(--bg,#f8f9fa)}
+    .points-how-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0}
+    .points-how-text{font-size:0.7rem;color:var(--navy,#1a1a3e);line-height:1.4}
     .points-qr-section{text-align:center;padding:24px}
     .points-qr-section canvas{border-radius:12px;border:3px solid var(--border)}
     .points-qr-label{font-size:0.75rem;color:var(--text-dim);margin-top:10px;line-height:1.5}
@@ -1007,7 +1013,7 @@
           </div>
           <button class="ud-points-btn" onclick="openPointsModal()">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            My Points
+            My Rewards
             <span class="ud-points-badge" id="udPointsBadge">0</span>
           </button>
           <button class="ud-signout" onclick="signOutUser()">Sign Out</button>
@@ -1049,18 +1055,30 @@
     <div class="points-modal">
       <div class="points-modal-header">
         <button class="close" onclick="closePointsModal()">&times;</button>
-        <h2>My Reward Points</h2>
-        <div class="points-balance-big" id="pmBalance">0</div>
-        <div class="points-peso-val">= <span id="pmPeso">0.00</span> PHP</div>
+        <div class="points-header-subtitle">Thanks for shopping with us!</div>
+        <h2>You have</h2>
+        <div class="points-peso-big">&#8369;<span id="pmPeso">0.00</span></div>
+        <div class="points-peso-label">in rewards to spend</div>
+        <div class="points-pts-small"><span id="pmBalance">0</span> points earned</div>
+      </div>
+      <div class="points-how">
+        <div class="points-how-item">
+          <div class="points-how-icon" style="background:rgba(34,197,94,0.1);color:#22c55e">+</div>
+          <div class="points-how-text"><strong>Earn</strong> 1 point for every &#8369;2 you spend</div>
+        </div>
+        <div class="points-how-item">
+          <div class="points-how-icon" style="background:rgba(139,47,201,0.1);color:#8b2fc9">&#8369;</div>
+          <div class="points-how-text"><strong>Spend</strong> your points — 100 pts = &#8369;1 discount</div>
+        </div>
       </div>
       <div class="points-qr-section">
         <canvas id="pmQrCanvas"></canvas>
-        <div class="points-qr-label">Show this QR code to our staff when you purchase<br>to earn <strong>1 point per ₱1</strong> spent!</div>
+        <div class="points-qr-label">Show this QR code at checkout to earn or redeem</div>
       </div>
       <div class="points-history">
         <h3>Recent Activity</h3>
         <div class="points-history-list" id="pmHistoryList">
-          <div class="points-empty">No points activity yet. Start shopping to earn!</div>
+          <div class="points-empty">No activity yet — your rewards will show up here after your next purchase!</div>
         </div>
       </div>
     </div>
@@ -1776,7 +1794,7 @@
     function renderPointsHistory(history) {
       const list = document.getElementById('pmHistoryList');
       if (!history || !history.length) {
-        list.innerHTML = '<div class="points-empty">No points activity yet. Start shopping to earn!</div>';
+        list.innerHTML = '<div class="points-empty">No activity yet — your rewards will show up here after your next purchase!</div>';
         return;
       }
       list.innerHTML = history.map(h => {
