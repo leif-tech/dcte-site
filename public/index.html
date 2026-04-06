@@ -25,6 +25,7 @@
   <!-- Firebase Auth SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preload" as="image" href="/hero-1.jpg">
   <link rel="dns-prefetch" href="https://www.gstatic.com">
@@ -906,6 +907,66 @@
     }
     .nav-user-dropdown .ud-signout:hover{background:#fef2f2}
     @media(max-width:900px){.nav-user-name{display:none}}
+
+    /* ===== MY POINTS MODAL ===== */
+    .nav-user-dropdown .ud-points-btn{
+      display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:10px 16px;
+      font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:600;color:var(--purple);
+      background:none;border:none;cursor:pointer;border-bottom:1px solid var(--border);
+    }
+    .nav-user-dropdown .ud-points-btn:hover{background:rgba(139,47,201,0.04)}
+    .nav-user-dropdown .ud-points-badge{
+      margin-left:auto;background:var(--grad);color:#fff;padding:2px 8px;border-radius:10px;
+      font-size:0.65rem;font-weight:700;
+    }
+    .points-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);
+      z-index:2000;align-items:center;justify-content:center;padding:20px;
+    }
+    .points-overlay.open{display:flex}
+    .points-modal{
+      background:#fff;border-radius:20px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    }
+    .points-modal-header{
+      text-align:center;padding:28px 24px 20px;
+      background:var(--grad);border-radius:20px 20px 0 0;color:#fff;position:relative;
+    }
+    .points-modal-header .close{
+      position:absolute;top:12px;right:16px;font-size:1.5rem;color:rgba(255,255,255,0.8);
+      background:none;border:none;cursor:pointer;
+    }
+    .points-modal-header .close:hover{color:#fff}
+    .points-modal-header h2{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:4px}
+    .points-balance-big{font-family:'Montserrat',sans-serif;font-size:2.4rem;font-weight:900;margin:8px 0 2px}
+    .points-peso-val{font-size:0.85rem;opacity:0.9}
+    .points-qr-section{text-align:center;padding:24px}
+    .points-qr-section canvas{border-radius:12px;border:3px solid var(--border)}
+    .points-qr-label{font-size:0.75rem;color:var(--text-dim);margin-top:10px;line-height:1.5}
+    .points-history{padding:0 24px 24px}
+    .points-history h3{
+      font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;color:var(--navy);
+      margin-bottom:10px;
+    }
+    .points-history-list{max-height:200px;overflow-y:auto}
+    .points-history-item{
+      display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);
+      font-size:0.8rem;
+    }
+    .points-history-item:last-child{border-bottom:none}
+    .points-history-icon{
+      width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:0.75rem;flex-shrink:0;
+    }
+    .points-history-icon.earn{background:rgba(34,197,94,0.1);color:#22c55e}
+    .points-history-icon.redeem{background:rgba(239,68,68,0.1);color:#ef4444}
+    .points-history-info{flex:1;min-width:0}
+    .points-history-note{color:var(--navy);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .points-history-date{font-size:0.7rem;color:var(--text-dim)}
+    .points-history-amount{font-family:'Montserrat',sans-serif;font-weight:700;white-space:nowrap}
+    .points-history-amount.earn{color:#22c55e}
+    .points-history-amount.redeem{color:#ef4444}
+    .points-empty{text-align:center;color:var(--text-dim);font-size:0.82rem;padding:20px 0}
   </style>
 </head>
 <body>
@@ -944,6 +1005,11 @@
             <div class="ud-name" id="udName"></div>
             <div class="ud-email" id="udEmail"></div>
           </div>
+          <button class="ud-points-btn" onclick="openPointsModal()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            My Points
+            <span class="ud-points-badge" id="udPointsBadge">0</span>
+          </button>
           <button class="ud-signout" onclick="signOutUser()">Sign Out</button>
         </div>
       </div>
@@ -975,6 +1041,28 @@
         <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         Continue with Facebook
       </button>
+    </div>
+  </div>
+
+  <!-- POINTS MODAL -->
+  <div class="points-overlay" id="pointsOverlay" onclick="if(event.target===this)closePointsModal()">
+    <div class="points-modal">
+      <div class="points-modal-header">
+        <button class="close" onclick="closePointsModal()">&times;</button>
+        <h2>My Reward Points</h2>
+        <div class="points-balance-big" id="pmBalance">0</div>
+        <div class="points-peso-val">= <span id="pmPeso">0.00</span> PHP</div>
+      </div>
+      <div class="points-qr-section">
+        <canvas id="pmQrCanvas"></canvas>
+        <div class="points-qr-label">Show this QR code to our staff when you purchase<br>to earn <strong>1 point per ₱1</strong> spent!</div>
+      </div>
+      <div class="points-history">
+        <h3>Recent Activity</h3>
+        <div class="points-history-list" id="pmHistoryList">
+          <div class="points-empty">No points activity yet. Start shopping to earn!</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1543,6 +1631,7 @@
         }
         localStorage.setItem('dcte_user', JSON.stringify({ name: user.displayName, email: user.email, uid: user.uid, photo: user.photoURL }));
         registerCustomer(user);
+        loadUserPoints();
         closeAuthModal();
         showToast('Welcome!', 'Signed in as ' + firstName, '&#128075;');
         if (pendingAuthAction) { const action = pendingAuthAction; pendingAuthAction = null; setTimeout(action, 100); }
@@ -1628,6 +1717,85 @@
         document.getElementById('navUserDropdown').classList.remove('open');
       }
     });
+
+    // ===== POINTS SYSTEM =====
+    let userPointsData = null;
+
+    function loadUserPoints() {
+      if (!currentUser) return;
+      fetch('/api/points/' + encodeURIComponent(currentUser.uid))
+        .then(r => r.json())
+        .then(data => {
+          userPointsData = data;
+          const badge = document.getElementById('udPointsBadge');
+          if (badge) badge.textContent = (data.balance || 0).toLocaleString();
+        })
+        .catch(() => {});
+    }
+
+    function openPointsModal() {
+      if (!currentUser) { openAuthModal(); return; }
+      document.getElementById('navUserDropdown').classList.remove('open');
+      document.getElementById('pointsOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Load points data
+      fetch('/api/points/' + encodeURIComponent(currentUser.uid))
+        .then(r => r.json())
+        .then(data => {
+          userPointsData = data;
+          document.getElementById('pmBalance').textContent = (data.balance || 0).toLocaleString();
+          document.getElementById('pmPeso').textContent = data.pesoValue || '0.00';
+          const badge = document.getElementById('udPointsBadge');
+          if (badge) badge.textContent = (data.balance || 0).toLocaleString();
+          renderPointsHistory(data.history || []);
+        })
+        .catch(() => {});
+
+      // Generate QR code
+      fetch('/api/points/qr-token/' + encodeURIComponent(currentUser.uid))
+        .then(r => r.json())
+        .then(data => {
+          const canvas = document.getElementById('pmQrCanvas');
+          if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+            QRCode.toCanvas(canvas, data.token, {
+              width: 200,
+              margin: 2,
+              color: { dark: '#1a1a3e', light: '#ffffff' }
+            });
+          }
+        })
+        .catch(() => {});
+    }
+
+    function closePointsModal() {
+      document.getElementById('pointsOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function renderPointsHistory(history) {
+      const list = document.getElementById('pmHistoryList');
+      if (!history || !history.length) {
+        list.innerHTML = '<div class="points-empty">No points activity yet. Start shopping to earn!</div>';
+        return;
+      }
+      list.innerHTML = history.map(h => {
+        const isEarn = h.type === 'earn';
+        const icon = isEarn ? '+' : '-';
+        const cls = isEarn ? 'earn' : 'redeem';
+        const date = new Date(h.ts);
+        const dateStr = date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+        const sign = isEarn ? '+' : '-';
+        return `<div class="points-history-item">
+          <div class="points-history-icon ${cls}">${icon}</div>
+          <div class="points-history-info">
+            <div class="points-history-note">${h.note || (isEarn ? 'Points earned' : 'Points redeemed')}</div>
+            <div class="points-history-date">${dateStr}</div>
+          </div>
+          <div class="points-history-amount ${cls}">${sign}${h.points.toLocaleString()} pts</div>
+        </div>`;
+      }).join('');
+    }
 
     // HERO CAROUSEL
     let currentSlide=0;const slides=document.querySelectorAll('.hero-slide'),dotsC=document.getElementById('heroDots');

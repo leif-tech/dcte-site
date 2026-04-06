@@ -111,6 +111,65 @@ function appendToFile(filename, entry) {
   return arr[arr.length - 1];
 }
 
+// ── Points System Helpers ────────────────────────────────────────
+
+function readPoints() {
+  const data = readJSON('points.json');
+  return Array.isArray(data) ? {} : data;
+}
+
+function getCustomerPoints(uid) {
+  const points = readPoints();
+  if (!points[uid]) return { balance: 0, history: [] };
+  return points[uid];
+}
+
+function creditPoints(uid, amount, note, meta) {
+  const points = readPoints();
+  if (!points[uid]) points[uid] = { balance: 0, history: [] };
+  points[uid].balance += amount;
+  points[uid].history.push({
+    type: 'earn',
+    points: amount,
+    note: note || '',
+    ...meta,
+    ts: new Date().toISOString()
+  });
+  writeJSON('points.json', points);
+  return points[uid];
+}
+
+function redeemPoints(uid, pointsToRedeem, note, meta) {
+  const points = readPoints();
+  if (!points[uid] || points[uid].balance < pointsToRedeem) return null;
+  points[uid].balance -= pointsToRedeem;
+  points[uid].history.push({
+    type: 'redeem',
+    points: pointsToRedeem,
+    pesoValue: pointsToRedeem / 100,
+    note: note || '',
+    ...meta,
+    ts: new Date().toISOString()
+  });
+  writeJSON('points.json', points);
+  return points[uid];
+}
+
+function generateQRToken(uid) {
+  const hmac = crypto.createHmac('sha256', JWT_SECRET).update(uid).digest('hex');
+  return uid + ':' + hmac;
+}
+
+function verifyQRToken(token) {
+  const parts = token.split(':');
+  if (parts.length < 2) return null;
+  const uid = parts.slice(0, -1).join(':');
+  const sig = parts[parts.length - 1];
+  const expected = crypto.createHmac('sha256', JWT_SECRET).update(uid).digest('hex');
+  if (sig !== expected) return null;
+  return uid;
+}
+
 function deriveStockStatus(stock) {
   if (typeof stock === 'string') {
     return stock === 'in' ? 'in' : stock === 'low' ? 'low' : 'out';
@@ -592,10 +651,28 @@ app.put('/api/admin/orders/:id/status', authMiddleware, (req, res) => {
     return res.status(400).json({ error: 'Invalid status. Must be: ' + validStatuses.join(', ') });
   }
 
+  const prevStatus = order.status;
   order.status = req.body.status;
   writeJSON('orders.json', orders);
   console.log(`[ADMIN] Order ${order.id} status → ${order.status}`);
-  res.json({ success: true, order });
+
+  // Auto-credit points when order is completed
+  let pointsCredited = 0;
+  if (req.body.status === 'Completed' && prevStatus !== 'Completed' && order.customerUid) {
+    const subtotal = (order.items || []).reduce((sum, item) => sum + ((parseFloat(item.price) || 0) * (item.qty || item.quantity || 1)), 0);
+    if (subtotal > 0) {
+      const pointsEarned = Math.floor(subtotal); // 1 pt per ₱1
+      const existing = getCustomerPoints(order.customerUid);
+      const alreadyCredited = existing.history.some(h => h.orderId === order.id);
+      if (!alreadyCredited) {
+        creditPoints(order.customerUid, pointsEarned, 'Online order ' + order.id, { orderId: order.id, staffId: req.admin.username });
+        pointsCredited = pointsEarned;
+        console.log(`[POINTS] Auto-credited ${pointsEarned} pts for order ${order.id}`);
+      }
+    }
+  }
+
+  res.json({ success: true, order, pointsCredited });
 });
 
 // ── Admin: Contacts ──────────────────────────────────────────────
@@ -708,6 +785,112 @@ app.put('/api/admin/tradein', authMiddleware, (req, res) => {
   writeJSON('tradein.json', { conditions, types });
   console.log(`[ADMIN] Trade-in data updated (${Object.keys(types).length} types)`);
   res.json({ success: true });
+});
+
+// ── Points System (Customer) ─────────────────────────────────────
+
+// Get QR token for a customer
+app.get('/api/points/qr-token/:uid', (req, res) => {
+  const token = generateQRToken(req.params.uid);
+  res.json({ token });
+});
+
+// Get own points balance
+app.get('/api/points/:uid', (req, res) => {
+  const data = getCustomerPoints(req.params.uid);
+  res.json({
+    balance: data.balance,
+    pesoValue: (data.balance / 100).toFixed(2),
+    history: data.history.slice(-50).reverse()
+  });
+});
+
+// ── Admin: Points ────────────────────────────────────────────────
+
+// Verify QR token and look up customer
+app.post('/api/admin/points/verify-qr', authMiddleware, (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Token required' });
+  const uid = verifyQRToken(token);
+  if (!uid) return res.status(400).json({ error: 'Invalid QR code' });
+  const customers = readJSON('customers.json');
+  const customer = customers.find(c => c.uid === uid);
+  if (!customer) return res.status(404).json({ error: 'Customer not found' });
+  const points = getCustomerPoints(uid);
+  res.json({ customer, balance: points.balance, pesoValue: (points.balance / 100).toFixed(2), history: points.history.slice(-50).reverse() });
+});
+
+// Lookup customer points by uid or email
+app.post('/api/admin/points/lookup', authMiddleware, (req, res) => {
+  const { uid, email } = req.body;
+  const customers = readJSON('customers.json');
+  let customer;
+  if (uid) customer = customers.find(c => c.uid === uid);
+  else if (email) customer = customers.find(c => c.email && c.email.toLowerCase() === email.toLowerCase());
+  if (!customer) return res.status(404).json({ error: 'Customer not found' });
+  const points = getCustomerPoints(customer.uid);
+  res.json({ customer, balance: points.balance, pesoValue: (points.balance / 100).toFixed(2), history: points.history.slice(-50).reverse() });
+});
+
+// Credit points (in-store purchase) — duplicate-safe via 30s dedup window
+const recentCreditHashes = new Map();
+setInterval(() => {
+  const cutoff = Date.now() - 30000;
+  for (const [hash, ts] of recentCreditHashes) {
+    if (ts < cutoff) recentCreditHashes.delete(hash);
+  }
+}, 15000);
+
+app.post('/api/admin/points/credit', authMiddleware, (req, res) => {
+  const { uid, amount, note } = req.body;
+  if (!uid || !amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+    return res.status(400).json({ error: 'Valid uid and purchase amount required' });
+  }
+  const purchaseAmount = Number(amount);
+  const pointsEarned = Math.floor(purchaseAmount); // 1 pt per ₱1
+
+  // Duplicate guard: same uid + amount within 30 seconds
+  const dedupKey = uid + ':' + purchaseAmount;
+  if (recentCreditHashes.has(dedupKey)) {
+    return res.status(409).json({ error: 'Duplicate credit detected. Please wait before crediting the same amount again.' });
+  }
+  recentCreditHashes.set(dedupKey, Date.now());
+
+  const result = creditPoints(uid, pointsEarned, note || 'In-store purchase', { purchaseAmount, staffId: req.admin.username });
+  console.log(`[POINTS] Credited ${pointsEarned} pts to ${uid} (₱${purchaseAmount} purchase by ${req.admin.username})`);
+  res.json({ success: true, pointsEarned, balance: result.balance, pesoValue: (result.balance / 100).toFixed(2) });
+});
+
+// Redeem points
+app.post('/api/admin/points/redeem', authMiddleware, (req, res) => {
+  const { uid, points } = req.body;
+  if (!uid || !points || isNaN(Number(points)) || Number(points) <= 0) {
+    return res.status(400).json({ error: 'Valid uid and points required' });
+  }
+  const pointsToRedeem = Math.floor(Number(points));
+  const result = redeemPoints(uid, pointsToRedeem, 'In-store redemption', { staffId: req.admin.username });
+  if (!result) return res.status(400).json({ error: 'Insufficient points' });
+  console.log(`[POINTS] Redeemed ${pointsToRedeem} pts (₱${(pointsToRedeem / 100).toFixed(2)}) from ${uid} by ${req.admin.username}`);
+  res.json({ success: true, redeemed: pointsToRedeem, pesoValue: (pointsToRedeem / 100).toFixed(2), balance: result.balance });
+});
+
+// Get all customer points (admin overview)
+app.get('/api/admin/points', authMiddleware, (req, res) => {
+  const points = readPoints();
+  const customers = readJSON('customers.json');
+  const result = Object.entries(points).map(([uid, data]) => {
+    const customer = customers.find(c => c.uid === uid);
+    return {
+      uid,
+      name: customer ? customer.name : 'Unknown',
+      email: customer ? customer.email : null,
+      balance: data.balance,
+      pesoValue: (data.balance / 100).toFixed(2),
+      totalEarned: data.history.filter(h => h.type === 'earn').reduce((s, h) => s + h.points, 0),
+      totalRedeemed: data.history.filter(h => h.type === 'redeem').reduce((s, h) => s + h.points, 0)
+    };
+  }).filter(r => r.balance > 0 || r.totalEarned > 0);
+  res.json(result);
 });
 
 // ── API 404 handler ──────────────────────────────────────────────
