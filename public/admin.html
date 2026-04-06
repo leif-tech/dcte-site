@@ -2118,7 +2118,7 @@
       scannerRunning = true;
     }).catch(err => {
       console.error('Scanner error:', err);
-      adminToast('Camera access denied or not available', 'error');
+      showAdminToast('Camera access denied or not available', 'error');
       wrap.style.display = 'none';
       btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Scan QR Code';
       btn.className = 'btn btn-primary';
@@ -2146,17 +2146,17 @@
         body: JSON.stringify({ token })
       });
       const data = await res.json();
-      if (!res.ok) { adminToast(data.error || 'Invalid QR code', 'error'); return; }
+      if (!res.ok) { showAdminToast(data.error || 'Invalid QR code', 'error'); return; }
       showCustomerPoints(data);
-      adminToast('Customer found: ' + data.customer.name, 'success');
+      showAdminToast('Customer found: ' + data.customer.name, 'success');
     } catch (err) {
-      adminToast('Failed to verify QR code', 'error');
+      showAdminToast('Failed to verify QR code', 'error');
     }
   }
 
   async function lookupCustomerByEmail() {
     const email = document.getElementById('pointsEmailSearch').value.trim();
-    if (!email) { adminToast('Enter an email address', 'error'); return; }
+    if (!email) { showAdminToast('Enter an email address', 'error'); return; }
     try {
       const res = await fetch(API + '/api/admin/points/lookup', {
         method: 'POST',
@@ -2164,10 +2164,10 @@
         body: JSON.stringify({ email })
       });
       const data = await res.json();
-      if (!res.ok) { adminToast(data.error || 'Customer not found', 'error'); return; }
+      if (!res.ok) { showAdminToast(data.error || 'Customer not found', 'error'); return; }
       showCustomerPoints(data);
     } catch (err) {
-      adminToast('Lookup failed', 'error');
+      showAdminToast('Lookup failed', 'error');
     }
   }
 
@@ -2221,7 +2221,7 @@
   async function creditCustomerPoints() {
     if (!selectedCustomerUid) return;
     const amount = parseFloat(document.getElementById('creditAmount').value);
-    if (!amount || amount <= 0) { adminToast('Enter a valid purchase amount', 'error'); return; }
+    if (!amount || amount <= 0) { showAdminToast('Enter a valid purchase amount', 'error'); return; }
     const pointsEarned = Math.floor(amount);
     if (!confirm(`Credit ${pointsEarned.toLocaleString()} points for ₱${amount.toLocaleString()} purchase?`)) return;
     try {
@@ -2231,22 +2231,22 @@
         body: JSON.stringify({ uid: selectedCustomerUid, amount, note: 'In-store purchase' })
       });
       const data = await res.json();
-      if (!res.ok) { adminToast(data.error || 'Failed to credit points', 'error'); return; }
-      adminToast(`Credited ${data.pointsEarned.toLocaleString()} points! New balance: ${data.balance.toLocaleString()}`, 'success');
+      if (!res.ok) { showAdminToast(data.error || 'Failed to credit points', 'error'); return; }
+      showAdminToast(`Credited ${data.pointsEarned.toLocaleString()} points! New balance: ${data.balance.toLocaleString()}`, 'success');
       lookupCustomerByUid(selectedCustomerUid);
       loadAllPoints();
     } catch (err) {
-      adminToast('Failed to credit points', 'error');
+      showAdminToast('Failed to credit points', 'error');
     }
   }
 
   async function redeemCustomerPoints() {
     if (!selectedCustomerUid) return;
     const pts = parseInt(document.getElementById('redeemPoints').value);
-    if (!pts || pts <= 0) { adminToast('Enter valid points to redeem', 'error'); return; }
+    if (!pts || pts <= 0) { showAdminToast('Enter valid points to redeem', 'error'); return; }
     const currentBalance = parseInt(document.getElementById('pcBalance').textContent.replace(/,/g, '')) || 0;
     if (pts > currentBalance) {
-      adminToast('Cannot redeem more than current balance (' + currentBalance.toLocaleString() + ' pts)', 'error');
+      showAdminToast('Cannot redeem more than current balance (' + currentBalance.toLocaleString() + ' pts)', 'error');
       return;
     }
     const pesoVal = (pts / 100).toFixed(2);
@@ -2258,12 +2258,12 @@
         body: JSON.stringify({ uid: selectedCustomerUid, points: pts })
       });
       const data = await res.json();
-      if (!res.ok) { adminToast(data.error || 'Failed to redeem', 'error'); return; }
-      adminToast(`Redeemed ${pts.toLocaleString()} points (₱${data.pesoValue})! New balance: ${data.balance.toLocaleString()}`, 'success');
+      if (!res.ok) { showAdminToast(data.error || 'Failed to redeem', 'error'); return; }
+      showAdminToast(`Redeemed ${pts.toLocaleString()} points (₱${data.pesoValue})! New balance: ${data.balance.toLocaleString()}`, 'success');
       lookupCustomerByUid(selectedCustomerUid);
       loadAllPoints();
     } catch (err) {
-      adminToast('Failed to redeem points', 'error');
+      showAdminToast('Failed to redeem points', 'error');
     }
   }
 
