@@ -661,7 +661,7 @@ app.put('/api/admin/orders/:id/status', authMiddleware, (req, res) => {
   if (req.body.status === 'Completed' && prevStatus !== 'Completed' && order.customerUid) {
     const subtotal = (order.items || []).reduce((sum, item) => sum + ((parseFloat(item.price) || 0) * (item.qty || item.quantity || 1)), 0);
     if (subtotal > 0) {
-      const pointsEarned = Math.floor(subtotal); // 1 pt per ₱1
+      const pointsEarned = Math.floor(subtotal / 2); // 1 pt per ₱2
       const existing = getCustomerPoints(order.customerUid);
       const alreadyCredited = existing.history.some(h => h.orderId === order.id);
       if (!alreadyCredited) {

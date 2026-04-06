@@ -1064,11 +1064,11 @@
       <div class="points-how">
         <div class="points-how-item">
           <div class="points-how-icon" style="background:rgba(34,197,94,0.1);color:#22c55e">+</div>
-          <div class="points-how-text"><strong>Earn</strong> 1 point for every &#8369;2 you spend</div>
+          <div class="points-how-text"><strong>Earn</strong> &#8369;1 reward for every &#8369;200 you spend</div>
         </div>
         <div class="points-how-item">
           <div class="points-how-icon" style="background:rgba(139,47,201,0.1);color:#8b2fc9">&#8369;</div>
-          <div class="points-how-text"><strong>Spend</strong> your points — 100 pts = &#8369;1 discount</div>
+          <div class="points-how-text"><strong>Redeem</strong> your rewards as discount on any purchase</div>
         </div>
       </div>
       <div class="points-qr-section">
@@ -1746,7 +1746,7 @@
         .then(data => {
           userPointsData = data;
           const badge = document.getElementById('udPointsBadge');
-          if (badge) badge.textContent = (data.balance || 0).toLocaleString();
+          if (badge) badge.textContent = '₱' + (data.pesoValue || '0');
         })
         .catch(() => {});
     }
@@ -1765,7 +1765,7 @@
           document.getElementById('pmBalance').textContent = (data.balance || 0).toLocaleString();
           document.getElementById('pmPeso').textContent = data.pesoValue || '0.00';
           const badge = document.getElementById('udPointsBadge');
-          if (badge) badge.textContent = (data.balance || 0).toLocaleString();
+          if (badge) badge.textContent = '₱' + (data.pesoValue || '0');
           renderPointsHistory(data.history || []);
         })
         .catch(() => {});
@@ -1810,7 +1810,7 @@
             <div class="points-history-note">${h.note || (isEarn ? 'Points earned' : 'Points redeemed')}</div>
             <div class="points-history-date">${dateStr}</div>
           </div>
-          <div class="points-history-amount ${cls}">${sign}${h.points.toLocaleString()} pts</div>
+          <div class="points-history-amount ${cls}">${sign}&#8369;${(h.points / 100).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
         </div>`;
       }).join('');
     }
