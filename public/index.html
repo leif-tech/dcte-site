@@ -925,17 +925,12 @@
     }
     .points-overlay.open{display:flex}
     .points-modal{
-      background:#fff;border-radius:20px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;
-      box-shadow:0 20px 60px rgba(0,0,0,0.2);
-      scrollbar-width:thin;scrollbar-color:rgba(139,47,201,0.3) transparent;
+      background:#fff;border-radius:20px;max-width:420px;width:100%;max-height:90vh;overflow:hidden;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2);display:flex;flex-direction:column;
     }
-    .points-modal::-webkit-scrollbar{width:6px}
-    .points-modal::-webkit-scrollbar-track{background:transparent;border-radius:0 20px 20px 0}
-    .points-modal::-webkit-scrollbar-thumb{background:rgba(139,47,201,0.3);border-radius:6px}
-    .points-modal::-webkit-scrollbar-thumb:hover{background:rgba(139,47,201,0.5)}
     .points-modal-header{
-      text-align:center;padding:28px 24px 20px;
-      background:var(--grad);border-radius:20px 20px 0 0;color:#fff;position:relative;
+      text-align:center;padding:20px 20px 14px;
+      background:var(--grad);border-radius:20px 20px 0 0;color:#fff;position:relative;flex-shrink:0;
     }
     .points-modal-header .close{
       position:absolute;top:12px;right:16px;font-size:1.5rem;color:rgba(255,255,255,0.8);
@@ -943,23 +938,23 @@
     }
     .points-modal-header .close:hover{color:#fff}
     .points-modal-header h2{font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;margin:0;opacity:0.9}
-    .points-header-subtitle{font-size:0.75rem;opacity:0.8;margin-bottom:8px;letter-spacing:0.02em}
-    .points-peso-big{font-family:'Montserrat',sans-serif;font-size:2.8rem;font-weight:900;margin:6px 0 2px;letter-spacing:-0.02em}
-    .points-peso-label{font-size:0.9rem;font-weight:600;opacity:0.95;margin-bottom:6px}
-    .points-pts-small{font-size:0.72rem;opacity:0.7;background:rgba(255,255,255,0.15);display:inline-block;padding:3px 12px;border-radius:20px}
-    .points-how{display:flex;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
-    .points-how-item{display:flex;align-items:center;gap:8px;flex:1;padding:10px 12px;border-radius:10px;background:var(--bg,#f8f9fa)}
-    .points-how-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0}
-    .points-how-text{font-size:0.7rem;color:var(--navy,#1a1a3e);line-height:1.4}
-    .points-qr-section{text-align:center;padding:24px}
-    .points-qr-section canvas{border-radius:12px;border:3px solid var(--border)}
-    .points-qr-label{font-size:0.75rem;color:var(--text-dim);margin-top:10px;line-height:1.5}
-    .points-history{padding:0 24px 24px}
+    .points-header-subtitle{font-size:0.72rem;opacity:0.8;margin-bottom:4px;letter-spacing:0.02em}
+    .points-peso-big{font-family:'Montserrat',sans-serif;font-size:2.2rem;font-weight:900;margin:4px 0 2px;letter-spacing:-0.02em}
+    .points-peso-label{font-size:0.85rem;font-weight:600;opacity:0.95;margin-bottom:4px}
+    .points-pts-small{font-size:0.68rem;opacity:0.7;background:rgba(255,255,255,0.15);display:inline-block;padding:2px 10px;border-radius:20px}
+    .points-how{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .points-how-item{display:flex;align-items:center;gap:6px;flex:1;padding:8px 10px;border-radius:10px;background:var(--bg,#f8f9fa)}
+    .points-how-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0}
+    .points-how-text{font-size:0.65rem;color:var(--navy,#1a1a3e);line-height:1.3}
+    .points-qr-section{text-align:center;padding:14px;flex-shrink:0}
+    .points-qr-section canvas{border-radius:10px;border:2px solid var(--border)}
+    .points-qr-label{font-size:0.7rem;color:var(--text-dim);margin-top:8px;line-height:1.4}
+    .points-history{padding:0 20px 16px;min-height:0;flex:1;display:flex;flex-direction:column}
     .points-history h3{
       font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:700;color:var(--navy);
       margin-bottom:10px;
     }
-    .points-history-list{max-height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(139,47,201,0.25) transparent}
+    .points-history-list{max-height:180px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(139,47,201,0.25) transparent}
     .points-history-list::-webkit-scrollbar{width:4px}
     .points-history-list::-webkit-scrollbar-track{background:transparent}
     .points-history-list::-webkit-scrollbar-thumb{background:rgba(139,47,201,0.25);border-radius:4px}
@@ -1786,7 +1781,7 @@
           const canvas = document.getElementById('pmQrCanvas');
           if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
             QRCode.toCanvas(canvas, data.token, {
-              width: 200,
+              width: 160,
               margin: 2,
               color: { dark: '#1a1a3e', light: '#ffffff' }
             });
