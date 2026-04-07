@@ -1899,14 +1899,15 @@
       const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
       const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-preorder';
       const showCTA=siteSettings.showUrgencyCTA!==false;
-      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' on-hand':'On-Hand'):meta.stock==='low'?(showCTA?(meta.stockQty!==null?'&#128293; '+meta.stockQty+' left — grab yours!':'&#128293; Selling fast!'):(meta.stockQty!==null?meta.stockQty+' left':'Low Stock')):'Pre-Order';
+      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' on-hand':'On-Hand'):meta.stock==='low'?(showCTA?(meta.stockQty!==null?'&#128293; '+meta.stockQty+' left — grab yours!':'&#128293; Selling fast!'):''):'Pre-Order';
       const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
       const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
       const wishIcon=isWished(idx)?'&#9829;':'&#9825;';
       const wishClass=isWished(idx)?' wishlisted':'';
       const quickActions=`<div class="card-quick-actions"><button class="card-quick-btn${wishClass}" onclick="event.stopPropagation();toggleWish(${idx})" title="Wishlist">${wishIcon}</button><button class="card-quick-btn" onclick="event.stopPropagation();toggleCompare(${idx});showToast('Compare Updated','${p.name.replace(/'/g,"\\'")}','&#9878;')" title="Compare">&#9878;</button></div>`;
       const slug=toSlug(p.name);
-      return `<div class="${prefix}-card" onclick="navigateTo('/shop/${slug}')">${badgeHTML}<div class="stock-badge ${stockClass}">${stockText}</div><div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
+      const stockBadgeHTML=stockText?`<div class="stock-badge ${stockClass}">${stockText}</div>`:'';
+      return `<div class="${prefix}-card" onclick="navigateTo('/shop/${slug}')">${badgeHTML}${stockBadgeHTML}<div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
     }
 
     // ===== CATEGORY TILES (homepage) =====
@@ -2086,7 +2087,7 @@
             <div class="pd-cat">${p.label}</div>
             <h1 class="pd-name">${p.name}</h1>
             <div class="pd-brand">Brand: <strong>${brand}</strong></div>
-            <div class="pd-stock-pill ${meta.stock==='in'?'in':meta.stock==='low'?'low':'out'}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' On-Hand':'On-Hand'):meta.stock==='low'?(siteSettings.showUrgencyCTA!==false?(meta.stockQty!==null?'&#128293; Only '+meta.stockQty+' left — don\'t miss out!':'&#128293; Selling fast — grab yours!'):(meta.stockQty!==null?meta.stockQty+' left':'Low Stock')):'Pre-Order'}</div>
+            ${meta.stock==='low'&&siteSettings.showUrgencyCTA===false?'':`<div class="pd-stock-pill ${meta.stock==='in'?'in':meta.stock==='low'?'low':'out'}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' On-Hand':'On-Hand'):meta.stock==='low'?(meta.stockQty!==null?'&#128293; Only '+meta.stockQty+' left — don\'t miss out!':'&#128293; Selling fast — grab yours!'):'Pre-Order'}</div>`}
             ${p.cat==='bundle'?`<div style="font-size:0.95rem;color:var(--text-dim);text-decoration:line-through;margin-bottom:2px">${formatPrice(p.price+3000)}</div>`:''}
             <div class="pd-price">${formatPrice(p.price)}${p.cat==='bundle'?' <span style="font-size:0.7em;background:var(--pink);color:#fff;padding:2px 8px;border-radius:4px;vertical-align:middle">PROMO</span>':''}</div>
             <div class="pd-price-note">${p.cat==='bundle'?'Brand New w/ 1 Year Warranty &bull; Home Credit installment available':'Cash price &bull; Contact us for installment options'}</div>
