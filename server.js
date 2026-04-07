@@ -893,12 +893,6 @@ app.get('/api/admin/points', authMiddleware, (req, res) => {
   res.json(result);
 });
 
-// ── API 404 handler ──────────────────────────────────────────────
-
-app.all('/api/*', (req, res) => {
-  res.status(404).json({ error: 'Not found' });
-});
-
 // ── Site Settings ────────────────────────────────────────────────
 
 function readSettings() {
@@ -919,6 +913,12 @@ app.put('/api/admin/settings', authMiddleware, (req, res) => {
   const updated = { ...current, ...req.body };
   writeJSON('settings.json', updated);
   res.json({ success: true, settings: updated });
+});
+
+// ── API 404 handler ──────────────────────────────────────────────
+
+app.all('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Not found' });
 });
 
 // Serve admin panel
