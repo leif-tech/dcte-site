@@ -899,6 +899,28 @@ app.all('/api/*', (req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
 
+// ── Site Settings ────────────────────────────────────────────────
+
+function readSettings() {
+  const file = path.join(DATA_DIR, 'settings.json');
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch { return { showUrgencyCTA: true }; }
+}
+
+// GET /api/settings — public (frontend needs this)
+app.get('/api/settings', (req, res) => {
+  res.json(readSettings());
+});
+
+// PUT /api/admin/settings — admin only
+app.put('/api/admin/settings', authMiddleware, (req, res) => {
+  const current = readSettings();
+  const updated = { ...current, ...req.body };
+  writeJSON('settings.json', updated);
+  res.json({ success: true, settings: updated });
+});
+
 // Serve admin panel
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));

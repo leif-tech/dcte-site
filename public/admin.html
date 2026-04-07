@@ -291,6 +291,7 @@
     <button class="tab-btn" id="tabBtn-customers" onclick="switchTab('customers',this)">Customers</button>
     <button class="tab-btn" id="tabBtn-tradein" onclick="switchTab('tradein',this)">Trade-In</button>
     <button class="tab-btn" id="tabBtn-points" onclick="switchTab('points',this)">Points</button>
+    <button class="tab-btn" id="tabBtn-settings" onclick="switchTab('settings',this)">Settings</button>
   </div>
 
   <div class="content">
@@ -597,6 +598,34 @@
     </div>
   </div>
 </div>
+
+    <!-- Settings -->
+    <div class="tab-content" id="tab-settings">
+      <div class="toolbar">
+        <div>
+          <h3 style="font-family:'Montserrat',sans-serif;font-size:0.95rem;color:var(--navy);margin:0">Store Settings</h3>
+          <p style="font-size:0.72rem;color:var(--text-dim);margin-top:2px">Toggle storefront features on or off. Changes apply immediately.</p>
+        </div>
+      </div>
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:24px;box-shadow:var(--shadow)">
+        <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0 0 16px">Product Display</h4>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:0.82rem;font-weight:600;color:var(--navy);font-family:'Montserrat',sans-serif">Urgency CTA Badge</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:2px">"Only X left! Grab Now" shown on low-stock product cards and product detail pages</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;margin-left:16px;cursor:pointer">
+            <input type="checkbox" id="toggleUrgencyCTA" onchange="saveSettingToggle('showUrgencyCTA',this.checked)" style="opacity:0;width:0;height:0">
+            <span style="position:absolute;inset:0;background:#ccc;border-radius:24px;transition:background .2s"></span>
+            <span style="position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span>
+            <style>
+              #toggleUrgencyCTA:checked+span{background:var(--cyan,#5cb8e6)}
+              #toggleUrgencyCTA:checked+span+span{transform:translateX(20px)}
+            </style>
+          </label>
+        </div>
+      </div>
+    </div>
 
 <!-- Admin Guide Popups -->
 <div class="guide-overlay" id="guideDashboard">
@@ -945,6 +974,7 @@
     if (name === 'customers') loadCustomers();
     if (name === 'tradein') { loadTradein(); showAdminGuideOnce('tradein'); }
     if (name === 'points') loadPointsTab();
+    if (name === 'settings') loadSettings();
   }
 
   function showAdminGuideOnce(tab) {
@@ -2280,6 +2310,33 @@
   });
 
   // ── Init ───────────────────────────────────────────────────
+
+  // ── Settings ───────────────────────────────────────────────
+
+  async function loadSettings() {
+    try {
+      const res = await fetch(API + '/api/settings');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      document.getElementById('toggleUrgencyCTA').checked = data.showUrgencyCTA !== false;
+    } catch(e) {
+      document.getElementById('toggleUrgencyCTA').checked = true;
+    }
+  }
+
+  async function saveSettingToggle(key, value) {
+    try {
+      const res = await fetch(API + '/api/admin/settings', {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ [key]: value })
+      });
+      if (!res.ok) throw new Error();
+      showAdminToast(value ? 'Enabled' : 'Disabled', 'success');
+    } catch(e) {
+      showAdminToast('Failed to save setting', 'error');
+    }
+  }
 
   (async function init() {
     if (token && await verifyToken()) {

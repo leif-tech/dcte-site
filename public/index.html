@@ -1844,12 +1844,14 @@
     // PRODUCT DATA (loaded from API)
     let products=[], specDB={}, productMeta={};
     let productsLoaded=false;
+    let siteSettings={showUrgencyCTA:true};
 
     async function loadProducts(){
       try{
-        const res=await fetch('/api/products');
+        const [res,settingsRes]=await Promise.all([fetch('/api/products'),fetch('/api/settings')]);
         if(!res.ok)throw new Error('Server error '+res.status);
         const data=await res.json();
+        try{if(settingsRes.ok)siteSettings=await settingsRes.json();}catch(e){}
         products=data.map(p=>({cat:p.cat,label:p.label,name:p.name,price:p.price,img:p.img}));
         specDB={};productMeta={};
         data.forEach((p,i)=>{
@@ -1896,7 +1898,8 @@
       const imgInner=p.img?`<img src="${p.img}" alt="" loading="lazy">`:'';
       const badgeHTML=meta.badge?`<div class="badge badge-${meta.badge}">${meta.badge}</div>`:'';
       const stockClass=meta.stock==='in'?'stock-in':meta.stock==='low'?'stock-low':'stock-preorder';
-      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' on-hand':'On-Hand'):meta.stock==='low'?(meta.stockQty!==null?'Only '+meta.stockQty+' left! Grab Now':'Grab Now!'):'Pre-Order';
+      const showCTA=siteSettings.showUrgencyCTA!==false;
+      const stockText=meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' on-hand':'On-Hand'):meta.stock==='low'?(showCTA?(meta.stockQty!==null?'Only '+meta.stockQty+' left! Grab Now':'Grab Now!'):(meta.stockQty!==null?meta.stockQty+' left':'Low Stock')):'Pre-Order';
       const condClass=meta.condition==='new'?'cond-new':'cond-preowned';
       const condText=meta.condition==='new'?'Brand New':'Pre-Owned';
       const wishIcon=isWished(idx)?'&#9829;':'&#9825;';
@@ -2082,7 +2085,7 @@
             <div class="pd-cat">${p.label}</div>
             <h1 class="pd-name">${p.name}</h1>
             <div class="pd-brand">Brand: <strong>${brand}</strong></div>
-            <div class="pd-stock-pill ${meta.stock==='in'?'in':meta.stock==='low'?'low':'out'}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' On-Hand':'On-Hand'):meta.stock==='low'?(meta.stockQty!==null?'Only '+meta.stockQty+' left':'Low Stock'):'Pre-Order'}</div>
+            <div class="pd-stock-pill ${meta.stock==='in'?'in':meta.stock==='low'?'low':'out'}"><span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>${meta.stock==='in'?(meta.stockQty!==null?meta.stockQty+' On-Hand':'On-Hand'):meta.stock==='low'?(siteSettings.showUrgencyCTA!==false?(meta.stockQty!==null?'Only '+meta.stockQty+' left! Grab Now':'Grab Now!'):(meta.stockQty!==null?meta.stockQty+' left':'Low Stock')):'Pre-Order'}</div>
             ${p.cat==='bundle'?`<div style="font-size:0.95rem;color:var(--text-dim);text-decoration:line-through;margin-bottom:2px">${formatPrice(p.price+3000)}</div>`:''}
             <div class="pd-price">${formatPrice(p.price)}${p.cat==='bundle'?' <span style="font-size:0.7em;background:var(--pink);color:#fff;padding:2px 8px;border-radius:4px;vertical-align:middle">PROMO</span>':''}</div>
             <div class="pd-price-note">${p.cat==='bundle'?'Brand New w/ 1 Year Warranty &bull; Home Credit installment available':'Cash price &bull; Contact us for installment options'}</div>
