@@ -605,24 +605,26 @@
           <p style="font-size:0.72rem;color:var(--text-dim);margin-top:2px">Toggle storefront features on or off. Changes apply immediately.</p>
         </div>
       </div>
-      <div style="max-width:480px">
-        <div style="background:var(--card);border-radius:10px;border:1px solid var(--border);padding:18px;box-shadow:var(--shadow)">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px">
-            <svg width="14" height="14" fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            <h4 style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--navy);margin:0">Product Display</h4>
-          </div>
-          <label for="toggleUrgencyCTA" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border-radius:8px;cursor:pointer;gap:14px">
-            <div>
-              <div style="font-size:0.75rem;font-weight:600;color:var(--navy);font-family:'Montserrat',sans-serif;margin-bottom:2px">Urgency CTA Badge</div>
-              <div style="font-size:0.68rem;color:var(--text-dim);line-height:1.4">Show <strong>"Only X left! Grab Now"</strong> on low-stock cards &amp; detail pages</div>
-            </div>
-            <div style="position:relative;width:38px;min-width:38px;height:20px">
-              <input type="checkbox" id="toggleUrgencyCTA" onchange="saveSettingToggle('showUrgencyCTA',this.checked)" style="opacity:0;width:0;height:0;position:absolute">
-              <span id="toggleTrack" style="position:absolute;inset:0;background:#ccc;border-radius:20px;transition:background .2s"></span>
-              <span id="toggleThumb" style="position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span>
-            </div>
-          </label>
+
+      <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);padding:24px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <h4 style="font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--navy);margin:0">Product Display</h4>
         </div>
+        <p style="font-size:0.72rem;color:var(--text-dim);margin-bottom:18px">Control how product availability is shown to customers on the storefront.</p>
+        <label for="toggleUrgencyCTA" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg);border-radius:10px;cursor:pointer;gap:20px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#fef3c7,#fde68a);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem">&#128293;</div>
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:var(--navy);font-family:'Montserrat',sans-serif;margin-bottom:2px">Urgency CTA Badge</div>
+              <div style="font-size:0.68rem;color:var(--text-dim);line-height:1.4">Display stock urgency messages like <strong>"5 left — grab yours!"</strong> on low-stock items</div>
+            </div>
+          </div>
+          <div style="position:relative;width:40px;min-width:40px;height:22px">
+            <input type="checkbox" id="toggleUrgencyCTA" onchange="saveSettingToggle('showUrgencyCTA',this.checked)" style="opacity:0;width:0;height:0;position:absolute">
+            <span id="toggleTrack" style="position:absolute;inset:0;background:#d1d5db;border-radius:22px;transition:background .2s"></span>
+            <span id="toggleThumb" style="position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)"></span>
+          </div>
+        </label>
       </div>
       <style>
         #toggleUrgencyCTA:checked~#toggleTrack{background:var(--cyan,#5cb8e6)}
