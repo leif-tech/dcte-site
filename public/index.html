@@ -2653,7 +2653,7 @@
       tickerObs.observe(el);
     });
 
-    // Poll settings every 30s for real-time admin toggle changes
+    // Poll settings every 3s for real-time admin toggle changes
     setInterval(async()=>{
       try{
         const r=await fetch('/api/settings');
@@ -2667,7 +2667,7 @@
           if(pdEl&&pdEl.innerHTML&&window._currentPdSlug){navigateTo('/shop/'+window._currentPdSlug);}
         }
       }catch(e){}
-    },30000);
+    },3000);
 
     // Load products from API on page load
     loadProducts();
