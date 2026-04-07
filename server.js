@@ -907,11 +907,32 @@ app.get('/api/settings', (req, res) => {
   res.json(readSettings());
 });
 
+// SSE: real-time settings stream
+const settingsClients = new Set();
+app.get('/api/settings/stream', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive'
+  });
+  res.write('data: ' + JSON.stringify(readSettings()) + '\n\n');
+  settingsClients.add(res);
+  req.on('close', () => settingsClients.delete(res));
+});
+
+function broadcastSettings(settings) {
+  const msg = 'data: ' + JSON.stringify(settings) + '\n\n';
+  for (const client of settingsClients) {
+    client.write(msg);
+  }
+}
+
 // PUT /api/admin/settings — admin only
 app.put('/api/admin/settings', authMiddleware, (req, res) => {
   const current = readSettings();
   const updated = { ...current, ...req.body };
   writeJSON('settings.json', updated);
+  broadcastSettings(updated);
   res.json({ success: true, settings: updated });
 });
 

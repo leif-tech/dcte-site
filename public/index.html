@@ -2653,21 +2653,21 @@
       tickerObs.observe(el);
     });
 
-    // Poll settings every 3s for real-time admin toggle changes
-    setInterval(async()=>{
-      try{
-        const r=await fetch('/api/settings');
-        if(!r.ok)return;
-        const s=await r.json();
-        if(s.showUrgencyCTA!==siteSettings.showUrgencyCTA){
-          siteSettings=s;
-          if(productsLoaded){renderFeatured();if(typeof filterShop==='function')filterShop();}
-          // Re-render product detail if open
-          const pdEl=document.getElementById('pdContent');
-          if(pdEl&&pdEl.innerHTML&&window._currentPdSlug){navigateTo('/shop/'+window._currentPdSlug);}
-        }
-      }catch(e){}
-    },3000);
+    // SSE: real-time settings updates from server
+    (function connectSettingsStream(){
+      const es=new EventSource('/api/settings/stream');
+      es.onmessage=function(e){
+        try{
+          const s=JSON.parse(e.data);
+          if(s.showUrgencyCTA!==siteSettings.showUrgencyCTA){
+            siteSettings=s;
+            if(productsLoaded){renderFeatured();if(typeof filterShop==='function')filterShop();}
+            const pdEl=document.getElementById('pdContent');
+            if(pdEl&&pdEl.innerHTML&&window._currentPdSlug){navigateTo('/shop/'+window._currentPdSlug);}
+          }
+        }catch(ex){}
+      };
+    })();
 
     // Load products from API on page load
     loadProducts();
