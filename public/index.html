@@ -498,7 +498,7 @@
     .badge-hot{background:linear-gradient(135deg,#ef4444,#dc2626)}
     .badge-new{background:linear-gradient(135deg,#22c55e,#16a34a)}
     .badge-sale{background:linear-gradient(135deg,#f59e0b,#d97706)}
-    .stock-badge{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:6px;font-size:0.58rem;font-weight:700;z-index:1;letter-spacing:0.2px}
+    .stock-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:6px;font-size:0.56rem;font-weight:700;z-index:1;letter-spacing:0.2px}
     .stock-in{background:#dcfce7;color:#16a34a;border:1px solid rgba(34,197,94,0.15)}
     .stock-low{background:#fef3c7;color:#d97706;border:1px solid rgba(245,158,11,0.15)}
     .stock-preorder{background:#ede9fe;color:#7c3aed;border:1px solid rgba(124,58,237,0.15)}
@@ -1907,7 +1907,7 @@
       const quickActions=`<div class="card-quick-actions"><button class="card-quick-btn${wishClass}" onclick="event.stopPropagation();toggleWish(${idx})" title="Wishlist">${wishIcon}</button><button class="card-quick-btn" onclick="event.stopPropagation();toggleCompare(${idx});showToast('Compare Updated','${p.name.replace(/'/g,"\\'")}','&#9878;')" title="Compare">&#9878;</button></div>`;
       const slug=toSlug(p.name);
       const stockBadgeHTML=stockText?`<div class="stock-badge ${stockClass}">${stockText}</div>`:'';
-      return `<div class="${prefix}-card" onclick="navigateTo('/shop/${slug}')">${badgeHTML}${stockBadgeHTML}<div class="${prefix}-card-img">${quickActions}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
+      return `<div class="${prefix}-card" onclick="navigateTo('/shop/${slug}')">${badgeHTML}<div class="${prefix}-card-img">${quickActions}${stockBadgeHTML}${imgInner}</div><div class="${prefix}-card-body"><span class="cond-badge ${condClass}">${condText}</span><div class="${prefix}-card-cat">${p.label}</div><div class="${prefix}-card-name">${p.name}</div><div class="${prefix}-card-bottom"><span class="${prefix}-card-price">${formatPrice(p.price)}</span><button class="${prefix}-card-btn" onclick="event.stopPropagation();addToCart(${idx})">Add to Cart</button></div></div></div>`;
     }
 
     // ===== CATEGORY TILES (homepage) =====
