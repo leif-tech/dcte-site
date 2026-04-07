@@ -2068,6 +2068,7 @@
     // PRODUCT DETAIL PAGE
     function openProductDetail(idx,skipPush){
       const p=products[idx];if(!p)return;
+      window._currentPdSlug=toSlug(p.name);
       const meta=productMeta[idx]||{};
       const specs=specDB[p.name]||{};
       const fullImg=p.img||null;
@@ -2650,6 +2651,22 @@
       if (track) track.style.animationPlayState = 'paused';
       tickerObs.observe(el);
     });
+
+    // Poll settings every 30s for real-time admin toggle changes
+    setInterval(async()=>{
+      try{
+        const r=await fetch('/api/settings');
+        if(!r.ok)return;
+        const s=await r.json();
+        if(s.showUrgencyCTA!==siteSettings.showUrgencyCTA){
+          siteSettings=s;
+          if(productsLoaded){renderFeatured();if(typeof filterShop==='function')filterShop();}
+          // Re-render product detail if open
+          const pdEl=document.getElementById('pdContent');
+          if(pdEl&&pdEl.innerHTML&&window._currentPdSlug){navigateTo('/shop/'+window._currentPdSlug);}
+        }
+      }catch(e){}
+    },30000);
 
     // Load products from API on page load
     loadProducts();
